@@ -4,6 +4,7 @@ from django.forms import ModelForm#, Textarea, DateTimeField, MultipleChoiceFiel
 from .models import Goal, Plan, Task
 
 class GoalForm(forms.ModelForm):
+
     class Meta:
         model = Goal
         # fields = "__all__"
@@ -11,6 +12,6 @@ class GoalForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
             'due' : forms.SelectDateWidget(),
-            'priority' : forms.CheckboxSelectMultiple(choices=Goal.PriorityLevels.choices)
+            'priority' : forms.RadioSelect(choices=Goal.PriorityLevels)
         }
         # exclude = ['Cost']
