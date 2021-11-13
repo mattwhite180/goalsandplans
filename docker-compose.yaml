@@ -18,17 +18,17 @@ services:
       - POSTGRES_PASSWORD=password
   server:
     restart: always
-    build: api/
+    build: server/
     # command: /bin/bash -c "python tests.py"
     # command: bash -c "sleep infinity"
     # command: ls
     command: bash django-run.sh
     volumes:
-      - "./api/goalserver:/usr/src/app/"
+      - "./server/goalserver:/usr/src/app/"
     expose:
       - "8000"
     ports:
-      - "8000"
+      - "8000:8000"
     networks:
       - testing_net
     links:
@@ -40,6 +40,18 @@ services:
       - PGDATABASE=myproject
       - PGUSER=myprojectuser
       - PGPASSWORD=password
+  frontman:
+    image: nginx:latest
+    volumes:
+      - ./nginx-frontman.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - server
+    networks:
+      - testing_net
+    ports:
+      - "80:80"
+    expose:
+      - "80"
 
 volumes:
   postgres_data:
