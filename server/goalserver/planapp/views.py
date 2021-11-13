@@ -2,11 +2,25 @@ from django.shortcuts import get_object_or_404, render
 
 from django.http import HttpResponse
 
+from .models import Goal, Plan, Task
+from .forms import GoalForm
 
 def index(request):
-    goals_list = Goals.objects.all()
-    context = {'goals': goals_list}
-    return render(request, 'polls/index.html', context)
+    context = {}
+
+    #form = GoalForm(request.POST or None, request.FILES or None)
+    form = GoalForm(request.POST, use_required_attribute=False)
+
+    if form.is_valid():
+        g = form.save()
+        g.save()
+
+    context['form'] = form
+
+    goals_list = Goal.objects.all()
+    context['goals_list'] = goals_list
+
+    return render(request, 'planapp/index.html', context)
 
 def goal(request, goal_id):
     g = get_object_or_404(Goal, pk=goal_id)

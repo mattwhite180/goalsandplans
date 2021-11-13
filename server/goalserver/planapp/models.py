@@ -19,9 +19,9 @@ class Goal(models.Model):
     finished = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
     priority = models.IntegerField(choices=PriorityLevels.choices)
-    cost = models.IntegerField(default=1)
-    done_tasks = models.IntegerField(default=1)
-    total_tasks = models.IntegerField(default=1)
+    cost = models.IntegerField(default=0)
+    done_tasks = models.IntegerField(default=0)
+    total_tasks = models.IntegerField(default=0)
 
     def pull_report(self, *args, **kwargs):
         total = 0
