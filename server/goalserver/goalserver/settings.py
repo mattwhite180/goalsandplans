@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+from pathlib import Path
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -20,17 +21,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '$4e=8fa+)_*g9w=^4=dk%(hh$ql)yqrmqrz9=i#_c))9)#l1*^'
-
+secretkeyfile = open("djangosecret.txt", "r")
+SECRET_KEY = secretkeyfile.read()
+secretkeyfile.close()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "planapp.apps.PlanappConfig",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,9 +78,13 @@ WSGI_APPLICATION = 'goalserver.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "myproject",
+        "USER": "myprojectuser",
+        "PASSWORD": "password",
+        "HOST": "db",
+        "PORT": "5432",
     }
 }
 
@@ -105,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "America/Denver"
 
 USE_I18N = True
 
