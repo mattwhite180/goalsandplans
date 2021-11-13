@@ -7,11 +7,30 @@ class GoalForm(forms.ModelForm):
 
     class Meta:
         model = Goal
-        # fields = "__all__"
         fields = ('title', 'description', 'due', 'priority', 'cost')
         widgets = {
             'description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
             'due' : forms.SelectDateWidget(),
             'priority' : forms.RadioSelect(choices=Goal.PriorityLevels)
         }
-        # exclude = ['Cost']
+
+class PlanForm(forms.ModelForm):
+
+    class Meta:
+        model = Plan
+        fields = (
+            'title',
+            'description',
+            'continuous',
+            'limit',
+            'add_count',
+            'add_per_day',
+            'recurring_task_title',
+            'recurring_task_description',
+            'default_priority'
+        )
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
+            'recurring_task_description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
+            'default_priority' : forms.RadioSelect(choices=Goal.PriorityLevels)
+        }

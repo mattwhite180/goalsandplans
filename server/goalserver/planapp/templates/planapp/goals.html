@@ -1,0 +1,32 @@
+{% if goal %}
+<h1>{{ goal.title }}</h1>
+    <ul>
+        <li>Percentage: {{ percentage }}</li>
+        <li>Done: {{ done }}</li>
+        <li>Total: {{ total }}</li>
+        <li>Todo: {{ todo }}</li>
+    </ul>
+{% else %}
+    <p>goal isnt available.</p>
+{% endif %}
+{% if plan_list %}
+    <ul>
+    {% for plan in plan_list %}
+        <!-- <li>{{plan.title}}</li> -->
+        <li><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No plans associated with this goal are created yet.</p>
+{% endif %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+</form>
+
+<!-- <ul>
+    {% for goal in goals_list %}
+        <li><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></li>
+    {% endfor %}
+</ul> -->

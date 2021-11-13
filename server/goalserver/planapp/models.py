@@ -39,6 +39,13 @@ class Goal(models.Model):
 
 class Plan(models.Model):
 
+    class PriorityLevels(models.IntegerChoices):
+        BACKLOG = 1
+        LOW = 2
+        MEDIUM = 3
+        HIGH = 4
+        URGENT = 5
+
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE)
@@ -47,7 +54,8 @@ class Plan(models.Model):
     continuous = models.BooleanField(default=False)
     limit = models.IntegerField(default=10)
     add_count = models.IntegerField(default=1)
-    add_per_hour = models.IntegerField(default=24)
+    default_priority = models.IntegerField(choices=PriorityLevels.choices)
+    add_per_day = models.IntegerField(default=1)
     recurring_task_title = models.CharField(max_length=200, default='')
     recurring_task_description = models.CharField(max_length=2000, default='')
 
