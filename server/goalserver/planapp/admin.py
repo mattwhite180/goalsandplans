@@ -4,6 +4,16 @@ from .models import Goal, Plan, Task
 
 admin.site.site_url = "/planapp"
 
-admin.site.register(Goal)
-admin.site.register(Plan)
-admin.site.register(Task)
+class GoalAdmin(admin.ModelAdmin):
+    list_display = ('title', 'id', 'description', 'user')
+
+class PlanAdmin(admin.ModelAdmin):
+    list_display = ('title', 'id', 'description', 'goal')
+
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('title', 'id', 'description', 'finished', 'due', 'plan')
+
+admin.site.register(Goal, GoalAdmin)
+admin.site.register(Plan, PlanAdmin)
+admin.site.register(Task, TaskAdmin)
+

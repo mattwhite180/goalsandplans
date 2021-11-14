@@ -17,10 +17,7 @@ class Goal(models.Model):
 
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
-    created_on = models.DateTimeField('created on', default=timezone.now())
-    due = models.DateTimeField("due_date")
     finished = models.BooleanField(default=False)
-    active = models.BooleanField(default=False)
     priority = models.CharField(
         max_length=2,
         choices=PriorityLevels.choices,
@@ -37,10 +34,9 @@ class Goal(models.Model):
         done = 0
         for p in Plan.objects.filter(goal=self):
             for t in Task.objects.filter(plan=p):
-                if t.active:
-                    total += 1
-                    if t.finished:
-                        done += 1
+                total += 1
+                if t.finished:
+                    done += 1
         d = dict()
         d['t'] = total
         d['d'] = done
@@ -58,8 +54,6 @@ class Plan(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE)
-    active = models.BooleanField(default=False)
-    count_inactive = models.BooleanField(default=True)
     continuous = models.BooleanField(default=False)
     limit = models.IntegerField(default=10)
     add_count = models.IntegerField(default=1)
@@ -68,7 +62,8 @@ class Plan(models.Model):
         choices=PriorityLevels.choices,
         default=PriorityLevels.LOW,
     )
-    add_per_day = models.IntegerField(default=1)
+    last_updated = models.DateField('last_updated', default=timezone.now() - timezone.timedelta(days=1))
+    add_period = models.IntegerField(default=1)
     recurring_task_title = models.CharField(max_length=200, default='')
     recurring_task_description = models.CharField(max_length=2000, default='')
 
@@ -83,8 +78,7 @@ class Task(models.Model):
 
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
-    created_on = models.DateTimeField('created on', default=timezone.now())
-    due = models.DateTimeField("due_date")
+    due = models.DateField("due_date")
     finished = models.BooleanField(default=False)
     priority = models.CharField(
         max_length=2,
@@ -93,7 +87,6 @@ class Task(models.Model):
     )
     cost = models.IntegerField(default=1)
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
-    active = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

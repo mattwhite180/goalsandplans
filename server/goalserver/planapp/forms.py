@@ -6,10 +6,9 @@ class GoalForm(forms.ModelForm):
 
     class Meta:
         model = Goal
-        fields = ('title', 'description', 'due', 'priority', 'cost')
+        fields = ('title', 'description', 'priority', 'cost')
         widgets = {
             'description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
-            'due' : forms.SelectDateWidget(),
             'priority' : forms.RadioSelect(choices=Goal.PriorityLevels)
         }
 
@@ -23,7 +22,7 @@ class PlanForm(forms.ModelForm):
             'continuous',
             'limit',
             'add_count',
-            'add_per_day',
+            'add_period',
             'recurring_task_title',
             'recurring_task_description',
             'default_priority'
@@ -44,7 +43,6 @@ class TaskForm(forms.ModelForm):
             'due',
             'finished',
             'priority',
-            'active',
             'cost'
         )
         widgets = {
