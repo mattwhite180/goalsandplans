@@ -12,19 +12,24 @@ from .forms import GoalForm, PlanForm, TaskForm
 def create_account(request):
     context = dict()
 
-    form = UserCreationForm(request.POST)
+    if request.method == 'POST':
 
-    if form.is_valid():
-        u = form.save()
-        u.save()
-        if u is not None:
-            login(request, u)
-            return redirect("home")
-        else:
-            return render(request, 'planapp/index.html', {})
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+            u = form.save()
+            u.save()
+            if u is not None:
+                login(request, u)
+                return redirect("home")
+            else:
+                return render(request, 'planapp/index.html', {})
+
+    else:
+        form = UserCreationForm()
 
     context['form'] = form
-    return render(request, 'planapp/login.html', context)
+    return render(request, 'planapp/createaccount.html', context)
 
 
 def index(request):
@@ -39,16 +44,20 @@ def home(request):
     if not request.user.is_authenticated:
         return render(request, 'planapp/index.html', context)
 
-    #form = GoalForm(request.POST or None, request.FILES or None)
-    form = GoalForm(request.POST, use_required_attribute=False)
+    
+    if request.method == 'POST':
+        #form = GoalForm(request.POST or None, request.FILES or None)
+        form = GoalForm(request.POST)
 
-    if form.is_valid():
-        g = form.save(commit=False)
-        g.user = request.user
-        g.save()
+        if form.is_valid():
+            g = form.save(commit=False)
+            g.user = request.user
+            g.save()
+    
+    else:
+        form = GoalForm()
 
     context['form'] = form
-
     goals_list = Goal.objects.filter(user=request.user)
     context['goals_list'] = goals_list
 
@@ -60,12 +69,17 @@ def goal(request, goal_id):
 
     g = get_object_or_404(Goal, pk=goal_id)
 
-    form = PlanForm(request.POST, use_required_attribute=False)
+    if request.method == 'POST':
 
-    if form.is_valid():
-        p = form.save(commit=False)
-        p.goal = g
-        p.save()
+        form = PlanForm(request.POST)
+
+        if form.is_valid():
+            p = form.save(commit=False)
+            p.goal = g
+            p.save()
+
+    else:
+        form = PlanForm()
 
     r = g.pull_report()
     plan_list = Plan.objects.filter(goal=g)
@@ -86,12 +100,17 @@ def plan(request, plan_id):
 
     p = get_object_or_404(Plan, pk=plan_id)
 
-    form = TaskForm(request.POST, use_required_attribute=False)
+    if request.method == 'POST':
 
-    if form.is_valid():
-        t = form.save(commit=False)
-        t.plan = p
-        t.save()
+        form = TaskForm(request.POST, use_required_attribute=False)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.plan = p
+            t.save()
+
+    else:
+        form = TaskForm()
 
     task_list = Task.objects.filter(plan=p)
     context = {
