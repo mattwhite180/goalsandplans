@@ -3,15 +3,17 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
+
 
 class Goal(models.Model):
 
-    class PriorityLevels(models.IntegerChoices):
-        BACKLOG = 1
-        LOW = 2
-        MEDIUM = 3
-        HIGH = 4
-        URGENT = 5
+    class PriorityLevels(models.TextChoices):
+        BACKLOG = 'BK', _('Backlog')
+        LOW = 'LW', _('Low')
+        MEDIUM = 'MD', _('Medium')
+        HIGH = 'HI', _('High')
+        UG = 'UG', _('Urgent')
 
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
@@ -19,7 +21,11 @@ class Goal(models.Model):
     due = models.DateTimeField("due_date")
     finished = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
-    priority = models.IntegerField(choices=PriorityLevels.choices)
+    priority = models.CharField(
+        max_length=2,
+        choices=PriorityLevels.choices,
+        default=PriorityLevels.LOW,
+    )
     cost = models.IntegerField(default=0)
     done_tasks = models.IntegerField(default=0)
     total_tasks = models.IntegerField(default=0)
@@ -42,12 +48,12 @@ class Goal(models.Model):
 
 class Plan(models.Model):
 
-    class PriorityLevels(models.IntegerChoices):
-        BACKLOG = 1
-        LOW = 2
-        MEDIUM = 3
-        HIGH = 4
-        URGENT = 5
+    class PriorityLevels(models.TextChoices):
+        BACKLOG = 'BK', _('Backlog')
+        LOW = 'LW', _('Low')
+        MEDIUM = 'MD', _('Medium')
+        HIGH = 'HI', _('High')
+        UG = 'UG', _('Urgent')
 
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
@@ -57,26 +63,34 @@ class Plan(models.Model):
     continuous = models.BooleanField(default=False)
     limit = models.IntegerField(default=10)
     add_count = models.IntegerField(default=1)
-    default_priority = models.IntegerField(choices=PriorityLevels.choices)
+    default_priority = models.CharField(
+        max_length=2,
+        choices=PriorityLevels.choices,
+        default=PriorityLevels.LOW,
+    )
     add_per_day = models.IntegerField(default=1)
     recurring_task_title = models.CharField(max_length=200, default='')
     recurring_task_description = models.CharField(max_length=2000, default='')
 
 class Task(models.Model):
 
-    class PriorityLevels(models.IntegerChoices):
-        BACKLOG = 1
-        LOW = 2
-        MEDIUM = 3
-        HIGH = 4
-        URGENT = 5
+    class PriorityLevels(models.TextChoices):
+        BACKLOG = 'BK', _('Backlog')
+        LOW = 'LW', _('Low')
+        MEDIUM = 'MD', _('Medium')
+        HIGH = 'HI', _('High')
+        UG = 'UG', _('Urgent')
 
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
     created_on = models.DateTimeField('created on', default=timezone.now())
     due = models.DateTimeField("due_date")
     finished = models.BooleanField(default=False)
-    priority = models.IntegerField(choices=PriorityLevels.choices)
+    priority = models.CharField(
+        max_length=2,
+        choices=PriorityLevels.choices,
+        default=PriorityLevels.LOW,
+    )
     cost = models.IntegerField(default=1)
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
