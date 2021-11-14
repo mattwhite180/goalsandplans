@@ -2,6 +2,15 @@
 
 {% block content %}
 
+{% if form.errors %}
+    <h2>errors</h2>
+    <ul>
+    {% for f in form.errors %}
+        <li>There is a problem with the <b>{{ f }}</b> you tried to submit</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
 {% if goals_list %}
     <ul>
     {% for goal in goals_list %}

@@ -36,6 +36,9 @@ def index(request):
 def home(request):
     context = {}
 
+    if not request.user.is_authenticated:
+        return render(request, 'planapp/index.html', context)
+
     #form = GoalForm(request.POST or None, request.FILES or None)
     form = GoalForm(request.POST, use_required_attribute=False)
 
