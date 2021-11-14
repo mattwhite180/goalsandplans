@@ -6,7 +6,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Goal, Plan, Task
 from django.contrib.auth import authenticate, login
-from .forms import GoalForm, PlanForm, TaskForm, SignupForm
+from .forms import GoalForm, PlanForm, TaskForm
 
 
 def create_account(request):
@@ -40,13 +40,13 @@ def home(request):
     form = GoalForm(request.POST, use_required_attribute=False)
 
     if form.is_valid():
-        g = form.save()
+        g = form.save(commit=False)
+        g.user = request.user
         g.save()
 
     context['form'] = form
-    context['loggedin'] = request.user.is_authenticated
 
-    goals_list = Goal.objects.all()
+    goals_list = Goal.objects.filter(user=request.user)
     context['goals_list'] = goals_list
 
     return render(request, 'planapp/home.html', context)

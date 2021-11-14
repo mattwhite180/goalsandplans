@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class Goal(models.Model):
 
@@ -22,6 +23,8 @@ class Goal(models.Model):
     cost = models.IntegerField(default=0)
     done_tasks = models.IntegerField(default=0)
     total_tasks = models.IntegerField(default=0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
     def pull_report(self, *args, **kwargs):
         total = 0
