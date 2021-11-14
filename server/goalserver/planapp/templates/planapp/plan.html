@@ -1,3 +1,7 @@
+{% extends "planapp/base.html" %}
+
+{% block content %}
+
 {% if plan %}
 <h1>{{ plan.title }}</h1>
     <p>{{ plan.description }}</p>
@@ -25,3 +29,5 @@
         <li><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></li>
     {% endfor %}
 </ul> -->
+
+{% endblock %}
