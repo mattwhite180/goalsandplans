@@ -34,3 +34,22 @@ class PlanForm(forms.ModelForm):
             'recurring_task_description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
             'default_priority' : forms.RadioSelect(choices=Goal.PriorityLevels)
         }
+
+class TaskForm(forms.ModelForm):
+
+    class Meta:
+        model = Task
+        fields = (
+            'title',
+            'description',
+            'due',
+            'finished',
+            'priority',
+            'active',
+            'cost'
+        )
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
+            'priority' : forms.RadioSelect(choices=Goal.PriorityLevels),
+            'due' : forms.SelectDateWidget(),
+        }

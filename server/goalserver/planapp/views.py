@@ -3,7 +3,10 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 
 from .models import Goal, Plan, Task
-from .forms import GoalForm, PlanForm
+from .forms import GoalForm, PlanForm, TaskForm
+
+def loginPage(request):
+    pass
 
 def index(request):
     context = {}
@@ -47,8 +50,35 @@ def goal(request, goal_id):
     }
     return render(request, "planapp/goals.html", context)
 
-def plan(request):
-    pass
+def plan(request, plan_id):
+    context = {}
 
-def task(request):
-    pass
+    p = get_object_or_404(Plan, pk=plan_id)
+
+    form = TaskForm(request.POST, use_required_attribute=False)
+
+    if form.is_valid():
+        t = form.save(commit=False)
+        t.plan = p
+        t.save()
+
+    task_list = Task.objects.filter(plan=p)
+    context = {
+        'plan': p,
+        'task_list' : task_list,
+        'form': form
+    }
+    return render(request, "planapp/plan.html", context)
+
+def task(request, task_id):
+    context = {}
+
+    # t = get_object_or_404(Task, pk=task_id)
+
+    # task_list = Task.objects.filter(plan=p)
+    # context = {
+    #     'plan': p,
+    #     'task_list' : task_list,
+    #     'form': form
+    # }
+    return render(request, "planapp/task.html", context)

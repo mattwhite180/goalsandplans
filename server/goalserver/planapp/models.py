@@ -76,6 +76,7 @@ class Task(models.Model):
     priority = models.IntegerField(choices=PriorityLevels.choices)
     cost = models.IntegerField(default=1)
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    active = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
