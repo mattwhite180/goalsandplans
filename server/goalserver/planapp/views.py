@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Goal, Plan, Task
 from django.contrib.auth import authenticate, login
 from .forms import GoalForm, PlanForm, TaskForm
-
+from django.core.management import call_command
 
 def create_account(request):
     context = dict()
@@ -31,6 +31,9 @@ def create_account(request):
     context['form'] = form
     return render(request, 'planapp/createaccount.html', context)
 
+def run_jobs(request):
+    call_command('crontask')
+    return redirect("home")
 
 def index(request):
     context = {}

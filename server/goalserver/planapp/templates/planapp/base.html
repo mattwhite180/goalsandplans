@@ -13,6 +13,9 @@
   {% block topbar %}
   <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+    <li class="nav-item">
+        <a class="nav-link" href="https://github.com/mattwhite180/goalsandplans/">Github</a>
+    </li>
     {% if user.is_authenticated %}
         <li><a class="nav-item navbar-brand disabled" href="#">Welcome {{ user.username }}!</a></li>
         <a class="navbar-brand" href="{% url 'home' %}">Home</a>
@@ -21,6 +24,9 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{% url 'task_todo' %}">Todo</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'run_jobs' %}">Cron</a>
         </li>
         <!-- <li class="nav-item">
             {#<a class="nav-link" href="{% url 'change_password' %}">Change password?</a>#}
