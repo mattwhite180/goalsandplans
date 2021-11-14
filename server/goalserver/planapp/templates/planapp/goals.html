@@ -22,10 +22,22 @@
 {% else %}
     <p>No plans associated with this goal are created yet.</p>
 {% endif %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit">
-</form>
+
+<div class="card text-center">
+    <div class="card-header">
+      Create a new Plan
+    </div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit">
+        </form>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+    <div class="card-footer text-muted">
+      Fill out form and click Submit
+    </div>
+</div>
 
 {% endblock %}
