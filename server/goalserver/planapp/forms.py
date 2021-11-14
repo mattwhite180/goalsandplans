@@ -1,8 +1,22 @@
 from django import forms
 from django.forms import ModelForm#, Textarea, DateTimeField, MultipleChoiceField
-
+from django.contrib.auth.models import User
 from .models import Goal, Plan, Task
 
+class SignupForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+        widgets = {
+            'password': forms.PasswordInput()
+        }
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+        return user
 
 class GoalForm(forms.ModelForm):
 
