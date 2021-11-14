@@ -1,3 +1,7 @@
+{% extends "planapp/base.html" %}
+
+{% block content %}
+
 {% if goal %}
 <h1>{{ goal.title }}</h1>
     <ul>
@@ -12,7 +16,6 @@
 {% if plan_list %}
     <ul>
     {% for plan in plan_list %}
-        <!-- <li>{{plan.title}}</li> -->
         <li><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></li>
     {% endfor %}
     </ul>
@@ -25,8 +28,4 @@
     <input type="submit" value="Submit">
 </form>
 
-<!-- <ul>
-    {% for goal in goals_list %}
-        <li><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></li>
-    {% endfor %}
-</ul> -->
+{% endblock %}

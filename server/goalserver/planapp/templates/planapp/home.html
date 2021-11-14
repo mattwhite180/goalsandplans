@@ -1,0 +1,20 @@
+{% extends "planapp/base.html" %}
+
+{% block content %}
+
+{% if goals_list %}
+    <ul>
+    {% for goal in goals_list %}
+        <li><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No goals are created yet.</p>
+{% endif %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock %}

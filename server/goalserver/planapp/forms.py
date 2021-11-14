@@ -3,6 +3,7 @@ from django.forms import ModelForm#, Textarea, DateTimeField, MultipleChoiceFiel
 
 from .models import Goal, Plan, Task
 
+
 class GoalForm(forms.ModelForm):
 
     class Meta:
