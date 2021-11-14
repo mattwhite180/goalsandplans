@@ -5,7 +5,7 @@
 {% if goal %}
 <div class="card text-center">
     <div class="card-header">
-        {{ goal.title }}
+        <h1>{{ goal.title }}</h1>
     </div>
     <div class="card-body">
       <h5 class="card-title">{{ goal.description }}</h5>
@@ -19,8 +19,8 @@
 {% else %}
     <p>goal isnt available.</p>
 {% endif %}
+<br>
 {% if plan_list %}
-    <ul>
     {% for plan in plan_list %}
         <div class="card">
             <h5 class="card-header"><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></h5>
@@ -32,11 +32,10 @@
         </div>
         <br>
     {% endfor %}
-    </ul>
 {% else %}
     <p>No plans associated with this goal are created yet.</p>
 {% endif %}
-
+<br>
 <div class="card text-center">
     <div class="card-header">
       Create a new Plan

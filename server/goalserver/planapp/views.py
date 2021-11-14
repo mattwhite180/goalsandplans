@@ -140,6 +140,28 @@ def edit_plan(request, plan_id):
 
 
 @login_required
+def edit_task(request, task_id):
+    context = {}
+
+    t = get_object_or_404(Task, pk=task_id)
+
+    if request.method == 'POST':
+        #form = GoalForm(request.POST or None, request.FILES or None)
+        form = TaskForm(request.POST, instance=t)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.user = request.user
+            t.save()
+            return HttpResponseRedirect(reverse('task', args=(task_id,)))
+    
+    else:
+        form = TaskForm(instance=t)
+    
+    context['form'] = form
+    return render(request, "planapp/formedit.html", context)
+
+@login_required
 def plan(request, plan_id):
     context = {}
 
@@ -169,12 +191,8 @@ def plan(request, plan_id):
 def task(request, task_id):
     context = {}
 
-    # t = get_object_or_404(Task, pk=task_id)
+    t = get_object_or_404(Task, pk=task_id)
 
-    # task_list = Task.objects.filter(plan=p)
-    # context = {
-    #     'plan': p,
-    #     'task_list' : task_list,
-    #     'form': form
-    # }
+    context = {'task': t}
+
     return render(request, "planapp/task.html", context)

@@ -17,7 +17,7 @@
     {% for goal in goals_list %}
     <div class="card text-center">
         <div class="card-header">
-            <a href="{% url 'goal' goal.id %}">{{ goal.title }}</a>
+            <h1><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></h1>
         </div>
         <div class="card-body">
           <h5 class="card-title">{{ goal.description }}</h5>
@@ -35,7 +35,7 @@
 {% else %}
     <p>No goals are created yet.</p>
 {% endif %}
-
+<br>
 <div class="card text-center">
     <div class="card-header">
       Create a new goal
