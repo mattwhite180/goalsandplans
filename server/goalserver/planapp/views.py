@@ -43,7 +43,6 @@ def home(request):
     if not request.user.is_authenticated:
         return render(request, 'planapp/index.html', context)
 
-    
     if request.method == 'POST':
         #form = GoalForm(request.POST or None, request.FILES or None)
         form = GoalForm(request.POST)
@@ -107,7 +106,7 @@ def edit_goal(request, goal_id):
             g = form.save(commit=False)
             g.user = request.user
             g.save()
-            return HttpResponseRedirect(reverse(home))
+            return HttpResponseRedirect(reverse('goal', args=(goal_id,)))
     
     else:
         form = GoalForm(instance=g)
@@ -115,6 +114,30 @@ def edit_goal(request, goal_id):
     context['form'] = form
     return render(request, "planapp/formedit.html", context)
     # return HttpResponseRedirect(reverse(home))
+
+
+@login_required
+def edit_plan(request, plan_id):
+    context = {}
+
+    p = get_object_or_404(Plan, pk=plan_id)
+
+    if request.method == 'POST':
+        #form = GoalForm(request.POST or None, request.FILES or None)
+        form = PlanForm(request.POST, instance=p)
+
+        if form.is_valid():
+            p = form.save(commit=False)
+            p.user = request.user
+            p.save()
+            return HttpResponseRedirect(reverse('plan', args=(plan_id,)))
+    
+    else:
+        form = PlanForm(instance=p)
+    
+    context['form'] = form
+    return render(request, "planapp/formedit.html", context)
+
 
 @login_required
 def plan(request, plan_id):

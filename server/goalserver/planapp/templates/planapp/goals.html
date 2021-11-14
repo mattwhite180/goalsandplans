@@ -3,20 +3,34 @@
 {% block content %}
 
 {% if goal %}
-<h1>{{ goal.title }}</h1>
-    <ul>
-        <li>Percentage: {{ percentage }}</li>
-        <li>Done: {{ done }}</li>
-        <li>Total: {{ total }}</li>
-        <li>Todo: {{ todo }}</li>
-    </ul>
+<div class="card text-center">
+    <div class="card-header">
+        {{ goal.title }}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{ goal.description }}</h5>
+      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+      <a href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>
+    </div>
+    <div class="card-footer text-muted">
+      footer goes here
+    </div>
+</div>
 {% else %}
     <p>goal isnt available.</p>
 {% endif %}
 {% if plan_list %}
     <ul>
     {% for plan in plan_list %}
-        <li><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></li>
+        <div class="card">
+            <h5 class="card-header"><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></h5>
+            <div class="card-body">
+            <h5 class="card-title">{{ plan.description }}</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+        <br>
     {% endfor %}
     </ul>
 {% else %}
@@ -31,9 +45,8 @@
       <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="Submit">
+            <input class="btn btn-primary" type="submit" value="Submit">
         </form>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
     </div>
     <div class="card-footer text-muted">
       Fill out form and click Submit

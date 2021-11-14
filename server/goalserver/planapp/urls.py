@@ -17,6 +17,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('goal/<int:goal_id>/', views.goal, name='goal'),
     path('goal/<int:goal_id>/edit', views.edit_goal, name='edit_goal'),
+    path('goal/<int:plan_id>/edit', views.edit_plan, name='edit_plan'),
     path('plan/<int:plan_id>/', views.plan, name='plan'),
     path('task/<int:task_id>/', views.task, name='task'),
 ]
