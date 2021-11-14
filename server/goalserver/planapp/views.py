@@ -227,3 +227,16 @@ def task(request, task_id):
     context = {'task': t}
 
     return render(request, "planapp/task.html", context)
+
+
+@login_required
+def task_todo(request):
+    context = {}
+
+    goal_list = Goal.objects.filter(user=request.user)
+    plan_list = Plan.objects.filter(goal__in=goal_list)
+    task_list = Task.objects.filter(plan__in=plan_list)
+
+    context = {'task_list': task_list}
+
+    return render(request, "planapp/todo.html", context)
