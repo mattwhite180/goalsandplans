@@ -11,6 +11,7 @@
       <h5 class="card-title">{{ plan.description }}</h5>
       <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
       <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
+      <a href="{% url 'delete_plan' plan.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Plan</a>
     </div>
     <div class="card-footer text-muted">
       footer goes here
@@ -29,6 +30,7 @@
             <h5 class="card-title">{{ task.description }}</h5>
             <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
             <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Edit Task</a>
+            <a href="{% url 'delete_task' task.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Task</a>
             </div>
         </div>
         <br>

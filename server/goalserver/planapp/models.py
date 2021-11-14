@@ -31,16 +31,10 @@ class Goal(models.Model):
 
     def pull_report(self, *args, **kwargs):
         total = 0
-        done = 0
         for p in Plan.objects.filter(goal=self):
             for t in Task.objects.filter(plan=p):
                 total += 1
-                if t.finished:
-                    done += 1
-        d = dict()
-        d['t'] = total
-        d['d'] = done
-        return d
+        return total
 
 class Plan(models.Model):
 
@@ -62,7 +56,8 @@ class Plan(models.Model):
         choices=PriorityLevels.choices,
         default=PriorityLevels.LOW,
     )
-    last_updated = models.DateField('last_updated', default=timezone.now() - timezone.timedelta(days=1))
+    default_cost = models.IntegerField(default=1)
+    last_updated = models.DateField('last_updated', default=datetime.date.today() - datetime.timedelta(hours=24))
     add_period = models.IntegerField(default=1)
     recurring_task_title = models.CharField(max_length=200, default='')
     recurring_task_description = models.CharField(max_length=2000, default='')
@@ -78,8 +73,7 @@ class Task(models.Model):
 
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
-    due = models.DateField("due_date")
-    finished = models.BooleanField(default=False)
+    created_on = models.DateField("due_date", default=datetime.date.today())
     priority = models.CharField(
         max_length=2,
         choices=PriorityLevels.choices,

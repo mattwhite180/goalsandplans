@@ -1,0 +1,24 @@
+{% extends "planapp/base.html" %}
+
+{% block content %}
+
+% if task_list %}
+<ul>
+{% for task in task_list %}
+    <div class="card">
+        <h5 class="card-header"><a href="{% url 'task' task.id %}">{{ task.title }}</a></h5>
+        <div class="card-body">
+        <h5 class="card-title">{{ task.description }}</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Edit Task</a>
+        <a href="{% url 'delete_task' task.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Task</a>
+        </div>
+    </div>
+    <br>
+{% endfor %}
+</ul>
+{% else %}
+<p>No tasks associated with this plan are created yet.</p>
+{% endif %}
+
+{% endblock %}

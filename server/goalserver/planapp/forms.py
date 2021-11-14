@@ -40,13 +40,10 @@ class TaskForm(forms.ModelForm):
         fields = (
             'title',
             'description',
-            'due',
-            'finished',
             'priority',
             'cost'
         )
         widgets = {
             'description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
             'priority' : forms.RadioSelect(choices=Goal.PriorityLevels),
-            'due' : forms.SelectDateWidget(),
         }

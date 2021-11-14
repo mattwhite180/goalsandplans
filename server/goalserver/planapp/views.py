@@ -79,15 +79,11 @@ def goal(request, goal_id):
     else:
         form = PlanForm()
 
-    r = g.pull_report()
     plan_list = Plan.objects.filter(goal=g)
     context = {
         'goal': g,
         'plan_list' : plan_list,
-        'percentage': r['t'] / r['d'] if r['d'] != 0 else 0,
-        'done': r['d'],
-        'total': r['t'],
-        'todo': r['t'] - r['d'],
+        'todo': g.pull_report(),
         'form': form
     }
     return render(request, "planapp/goals.html", context)
@@ -160,6 +156,41 @@ def edit_task(request, task_id):
     
     context['form'] = form
     return render(request, "planapp/formedit.html", context)
+
+@login_required
+def delete_task(request, task_id):
+    context = {}
+
+    t = get_object_or_404(Task, pk=task_id)
+    plan_id = t.plan.id
+    
+    t.delete()
+
+    return HttpResponseRedirect(reverse('plan', args=(plan_id,)))
+
+
+@login_required
+def delete_plan(request, plan_id):
+    context = {}
+
+    p = get_object_or_404(Plan, pk=plan_id)
+    goal_id = p.goal
+    
+    p.delete()
+
+    return HttpResponseRedirect(reverse('goal', args=(goal_id,)))
+
+
+@login_required
+def delete_goal(request, goal_id):
+    context = {}
+
+    g = get_object_or_404(Goal, pk=goal_id)
+    
+    t.delete()
+
+    return HttpResponseRedirect(reverse('home'))
+
 
 @login_required
 def plan(request, plan_id):

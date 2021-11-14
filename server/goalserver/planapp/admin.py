@@ -11,7 +11,7 @@ class PlanAdmin(admin.ModelAdmin):
     list_display = ('title', 'id', 'description', 'goal')
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'id', 'description', 'finished', 'due', 'plan')
+    list_display = ('title', 'id', 'description', 'plan')
 
 admin.site.register(Goal, GoalAdmin)
 admin.site.register(Plan, PlanAdmin)

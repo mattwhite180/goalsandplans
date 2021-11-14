@@ -26,6 +26,7 @@
           <p class="card-text">Priority: {{ goal.priority }}</p>
           <p class="card-text">Cost: {{ goal.cost }}</p>
           <a href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>
+          <a href="{% url 'delete_goal' goal.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Goal</a>
         </div>
         <div class="card-footer text-muted">
         </div>
