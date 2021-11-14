@@ -16,6 +16,7 @@ urlpatterns = [
     # path('logout/', views.logout_view, name='logout'),
     path('', views.index, name='index'),
     path('goal/<int:goal_id>/', views.goal, name='goal'),
+    path('goal/<int:goal_id>/edit', views.edit_goal, name='edit_goal'),
     path('plan/<int:plan_id>/', views.plan, name='plan'),
     path('task/<int:task_id>/', views.task, name='task'),
 ]

@@ -37,7 +37,6 @@ def index(request):
 
     return render(request, 'planapp/index.html', context)
 
-@login_required
 def home(request):
     context = {}
 
@@ -93,6 +92,29 @@ def goal(request, goal_id):
         'form': form
     }
     return render(request, "planapp/goals.html", context)
+
+@login_required
+def edit_goal(request, goal_id):
+    context = {}
+
+    g = get_object_or_404(Goal, pk=goal_id)
+
+    if request.method == 'POST':
+        #form = GoalForm(request.POST or None, request.FILES or None)
+        form = GoalForm(request.POST, instance=g)
+
+        if form.is_valid():
+            g = form.save(commit=False)
+            g.user = request.user
+            g.save()
+            return HttpResponseRedirect(reverse(home))
+    
+    else:
+        form = GoalForm(instance=g)
+    
+    context['form'] = form
+    return render(request, "planapp/formedit.html", context)
+    # return HttpResponseRedirect(reverse(home))
 
 @login_required
 def plan(request, plan_id):
