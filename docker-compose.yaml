@@ -52,18 +52,18 @@ services:
       - "80:80"
     expose:
       - "80"
-  frontmansecure:
-    image: nginx:latest
-    volumes:
-      - ./nginx-frontman-secure.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - server
-    networks:
-      - testing_net
-    ports:
-      - "443:443"
-    expose:
-      - "443"
+  # frontmansecure:
+  #   image: nginx:latest
+  #   volumes:
+  #     - ./nginx-frontman-secure.conf:/etc/nginx/nginx.conf:ro
+  #   depends_on:
+  #     - server
+  #   networks:
+  #     - testing_net
+  #   ports:
+  #     - "443:443"
+  #   expose:
+  #     - "443"
 
 volumes:
   postgres_data:
