@@ -9,12 +9,10 @@
     <title>{% block title %}Goals And Plans{% endblock %}</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: purple;">
   {% block topbar %}
-  <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+  <ul class="nav justify-content-center">
     <li class="nav-item">
-        <a class="nav-link" href="https://github.com/mattwhite180/goalsandplans/">Github</a>
+        <a class="nav-link active" style="color: red" href="https://github.com/mattwhite180/goalsandplans/">Github</a>
     </li>
     {% if user.is_authenticated %}
         <li><a class="nav-item navbar-brand disabled" href="#">Welcome {{ user.username }}!</a></li>
@@ -47,7 +45,6 @@
     </ul>
   </div>
   {% endblock %}
-</nav>
     <div id="content">
         {% block content %}{% endblock %}
     </div>
