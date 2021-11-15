@@ -25,7 +25,7 @@ secretkeyfile = open("djangosecret.txt", "r")
 SECRET_KEY = secretkeyfile.read()
 secretkeyfile.close()
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 

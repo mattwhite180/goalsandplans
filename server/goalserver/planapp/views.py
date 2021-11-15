@@ -35,6 +35,9 @@ def run_jobs(request):
     call_command('crontask')
     return redirect("home")
 
+def handler404(request, exception=None):
+    return render(request, 'planapp/index.html', {})
+
 def index(request):
     context = {}
 
