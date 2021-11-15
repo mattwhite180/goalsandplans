@@ -193,7 +193,7 @@ def delete_goal(request, goal_id):
 
     g = get_object_or_404(Goal, pk=goal_id)
     
-    t.delete()
+    g.delete()
 
     return HttpResponseRedirect(reverse('home'))
 
