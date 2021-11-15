@@ -48,7 +48,7 @@ class Plan(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE)
-    continuous = models.BooleanField(default=False)
+    continuous = models.BooleanField(default=True)
     limit = models.IntegerField(default=10)
     add_count = models.IntegerField(default=1)
     default_priority = models.CharField(
