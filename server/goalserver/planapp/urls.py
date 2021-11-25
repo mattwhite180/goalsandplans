@@ -10,6 +10,7 @@ urlpatterns = [
     path('accounts/create/', views.create_account, name='create'),
     # path('accounts/create/', auth_views.PasswordChangeView.as_view(template_name='planapp/login.html'), name='create'),
     path('home/', views.home, name='home'),
+    path('planapp/', views.home, name='home'),
     # path('accounts/change_password/', auth_views.PasswordChangeView.as_view(), name='change_password'),
     # path('accounts/', include('django.contrib.auth.urls')),
     # path('login/', views.login_view, name='login'),
