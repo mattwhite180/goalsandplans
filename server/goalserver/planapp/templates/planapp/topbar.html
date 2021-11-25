@@ -1,0 +1,41 @@
+{% extends "planapp/bootstrap.html" %}
+
+
+{% block topbar %}
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+      <a class="nav-link active" style="color: red" href="https://github.com/mattwhite180/goalsandplans/">Github</a>
+  </li>
+  {% if user.is_authenticated %}
+      <li><a class="nav-item navbar-brand disabled" href="#">Welcome {{ user.username }}!</a></li>
+      <a class="navbar-brand" href="{% url 'home' %}">Home</a>
+      <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Logout?</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="{% url 'task_todo' %}">Todo</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="{% url 'run_jobs' %}">Cron</a>
+      </li>
+      <!-- <li class="nav-item">
+          {#<a class="nav-link" href="{% url 'change_password' %}">Change password?</a>#}
+      </li> -->
+      {% if user.is_superuser %}
+      <li class="nav-item">
+          <a class="nav-link" href="/admin/">Admin</a>
+      </li>
+      {% endif %}
+  {% else %}
+  <li class="nav-item">
+      <a class="nav-link" href="{% url 'login' %}">Login?</a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link" href="{% url 'create' %}">Create account?</a>
+  </li>
+  {% endif %}
+  </ul>
+</div>
+{% endblock %}
+
+{% block content %}{% endblock %}
