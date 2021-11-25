@@ -9,12 +9,11 @@
     </div>
     <div class="card-body">
       <h5 class="card-title">{{ plan.description }}</h5>
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+      <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">{{ plan.default_priority|slice:"2:" }}</span></div>
       <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
       <a href="{% url 'delete_plan' plan.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Plan</a>
     </div>
     <div class="card-footer text-muted">
-      footer goes here
     </div>
 </div>
 {% else %}
@@ -28,7 +27,7 @@
             <h5 class="card-header"><a href="{% url 'task' task.id %}">{{ task.title }}</a></h5>
             <div class="card-body">
             <h5 class="card-title">{{ task.description }}</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ task.priority|slice:"2:" }}</span></div>
             <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Edit Task</a>
             <a href="{% url 'delete_task' task.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Task</a>
             </div>
