@@ -26,6 +26,9 @@
             <h5 class="card-header"><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></h5>
             <div class="card-body">
             <h5 class="card-title">{{ plan.description }}</h5>
+            {% if plan.continuous %}
+              <div class="card-text"><span class="badge badge-pill badge-info">continuous</span></div>
+            {% endif %}
             <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">{{ plan.default_priority|slice:"2:" }}</span></div>
             <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
             <a href="{% url 'delete_plan' plan.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Plan</a>
