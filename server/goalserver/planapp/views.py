@@ -88,7 +88,7 @@ def home(request):
         form = GoalForm()
 
     context['form'] = form
-    goals_list = Goal.objects.filter(user=request.user)
+    goals_list = Goal.objects.filter(user=request.user).order_by('-priority')
     context['goals_list'] = goals_list
 
     return render(request, 'planapp/home.html', context)
@@ -116,7 +116,7 @@ def goal(request, goal_id):
     else:
         form = PlanForm()
 
-    plan_list = Plan.objects.filter(goal=g)
+    plan_list = Plan.objects.filter(goal=g).order_by('-default_priority')
     context = {
         'goal': g,
         'plan_list' : plan_list,
@@ -277,7 +277,7 @@ def plan(request, plan_id):
     else:
         form = TaskForm()
 
-    task_list = Task.objects.filter(plan=p)
+    task_list = Task.objects.filter(plan=p).order_by('-priority')
     context = {
         'plan': p,
         'task_list' : task_list,
