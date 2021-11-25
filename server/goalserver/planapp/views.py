@@ -307,7 +307,7 @@ def task_todo(request):
 
     goal_list = Goal.objects.filter(user=request.user)
     plan_list = Plan.objects.filter(goal__in=goal_list)
-    task_list = Task.objects.filter(plan__in=plan_list)
+    task_list = Task.objects.filter(plan__in=plan_list).order_by('-priority')
 
     context = {'task_list': task_list}
 
