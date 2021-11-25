@@ -17,15 +17,11 @@ class Goal(models.Model):
 
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
-    finished = models.BooleanField(default=False)
     priority = models.CharField(
         max_length=4,
         choices=PriorityLevels.choices,
         default=PriorityLevels.LOW,
     )
-    cost = models.IntegerField(default=0)
-    done_tasks = models.IntegerField(default=0)
-    total_tasks = models.IntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
@@ -56,7 +52,6 @@ class Plan(models.Model):
         choices=PriorityLevels.choices,
         default=PriorityLevels.LOW,
     )
-    default_cost = models.IntegerField(default=1)
     last_updated = models.DateField('last_updated', default=datetime.date.today() - datetime.timedelta(hours=24))
     add_period = models.IntegerField(default=1)
     recurring_task_title = models.CharField(max_length=200, default='')
@@ -73,13 +68,11 @@ class Task(models.Model):
 
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
-    created_on = models.DateField("due_date", default=datetime.date.today())
     priority = models.CharField(
         max_length=4,
         choices=PriorityLevels.choices,
         default=PriorityLevels.LOW,
     )
-    cost = models.IntegerField(default=1)
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
 
     def __str__(self):

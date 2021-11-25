@@ -6,7 +6,7 @@ class GoalForm(forms.ModelForm):
 
     class Meta:
         model = Goal
-        fields = ('title', 'description', 'priority', 'cost')
+        fields = ('title', 'description', 'priority')
         widgets = {
             'description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
             'priority' : forms.RadioSelect(choices=Goal.PriorityLevels)
@@ -41,7 +41,6 @@ class TaskForm(forms.ModelForm):
             'title',
             'description',
             'priority',
-            'cost'
         )
         widgets = {
             'description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
