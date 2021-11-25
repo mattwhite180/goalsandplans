@@ -43,11 +43,9 @@ def create_account(request):
         if form.is_valid():
             u = form.save()
             u.save()
-            if u is not None:
-                login(request, u)
-                return redirect("home")
-            else:
-                return HttpResponseRedirect(reverse('home'))
+            login(request, u)
+            return redirect("home")
+
         else:
             context['error_list'] = get_errors(form)
 
