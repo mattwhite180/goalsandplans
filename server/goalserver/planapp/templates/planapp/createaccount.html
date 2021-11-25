@@ -2,17 +2,6 @@
 
 {% block content %}
 
-<div id=errorblock>
-    {% if form.errors %}
-        <h2>errors</h2>
-        {% for f in form.errors %}
-        <div class="alert alert-warning" role="alert">
-            There is a problem with the <b>{{ f }}</b> you tried to submit
-        </div>
-        {% endfor %}
-    {% endif %}
-  </div>
-
 <div class="card text-center">
     <div class="card-header">
       GoalsAndPlans

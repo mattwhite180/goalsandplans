@@ -12,6 +12,7 @@
     {% autoescape off %}
         {% block topbar %}{% endblock %}
         <div id="content">
+            {% block error %}{% endblock %}
             {% block content %}{% endblock %}
         </div>
     {% endautoescape %}

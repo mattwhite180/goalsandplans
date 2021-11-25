@@ -60,4 +60,16 @@
 </div>
 {% endblock %}
 
+{% block error %}
+<div id=errorblock>
+    {% if error_list %}
+        {% for e in error_list %}
+        <div class="alert alert-warning" role="alert">
+            {{ e }}
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}
+
 {% block content %}{% endblock %}

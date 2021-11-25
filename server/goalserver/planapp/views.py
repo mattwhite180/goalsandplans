@@ -8,6 +8,8 @@ from .models import Goal, Plan, Task
 from django.contrib.auth import authenticate, login
 from .forms import GoalForm, PlanForm, TaskForm
 from django.core.management import call_command
+import json
+
 
 def userOwnsGoal(u, g):
     return g.user.id == u.id
@@ -19,6 +21,17 @@ def userOwnsPlan(u, p):
 def userOwnsTask(u, t):
     p = t.plan
     return userOwnsPlan(u, p)
+
+def get_errors(f):
+    errorList = list()
+    myDict = json.loads(f.errors.as_json())
+    for i in myDict:
+        errors = myDict[i]
+        for error in errors:
+            errorList.append(error['message'])
+    errorList.sort()
+    return errorList
+
 
 def create_account(request):
     context = dict()
@@ -35,6 +48,8 @@ def create_account(request):
                 return redirect("home")
             else:
                 return HttpResponseRedirect(reverse('home'))
+        else:
+            context['error_list'] = get_errors(form)
 
     else:
         form = UserCreationForm()
@@ -68,7 +83,9 @@ def home(request):
             g = form.save(commit=False)
             g.user = request.user
             g.save()
-    
+        else:
+            context['error_list'] = get_errors(form)
+
     else:
         form = GoalForm()
 
@@ -95,6 +112,8 @@ def goal(request, goal_id):
             p = form.save(commit=False)
             p.goal = g
             p.save()
+        else:
+            context['error_list'] = get_errors(form)
 
     else:
         form = PlanForm()
@@ -126,7 +145,9 @@ def edit_goal(request, goal_id):
             g.user = request.user
             g.save()
             return HttpResponseRedirect(reverse('goal', args=(goal_id,)))
-    
+        else:
+            context['error_list'] = get_errors(form)
+
     else:
         form = GoalForm(instance=g)
     
@@ -153,7 +174,9 @@ def edit_plan(request, plan_id):
             p.user = request.user
             p.save()
             return HttpResponseRedirect(reverse('plan', args=(plan_id,)))
-    
+        else:
+            context['error_list'] = get_errors(form)
+
     else:
         form = PlanForm(instance=p)
     
@@ -179,7 +202,9 @@ def edit_task(request, task_id):
             t.user = request.user
             t.save()
             return HttpResponseRedirect(reverse('task', args=(task_id,)))
-    
+        else:
+            context['error_list'] = get_errors(form)
+
     else:
         form = TaskForm(instance=t)
     
