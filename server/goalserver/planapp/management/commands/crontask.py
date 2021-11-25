@@ -22,7 +22,6 @@ class Command(BaseCommand):
                                 title=plan.recurring_task_title,
                                 description=plan.recurring_task_description,
                                 priority=plan.default_priority,
-                                cost=plan.default_cost,
                                 plan=plan
                             )
                             newT.save()

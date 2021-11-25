@@ -8,6 +8,8 @@ from .models import Goal, Plan, Task
 from django.contrib.auth import authenticate, login
 from .forms import GoalForm, PlanForm, TaskForm
 from django.core.management import call_command
+import json
+
 
 def userOwnsGoal(u, g):
     return g.user.id == u.id
@@ -20,6 +22,17 @@ def userOwnsTask(u, t):
     p = t.plan
     return userOwnsPlan(u, p)
 
+def get_errors(f):
+    errorList = list()
+    myDict = json.loads(f.errors.as_json())
+    for i in myDict:
+        errors = myDict[i]
+        for error in errors:
+            errorList.append(error['message'])
+    errorList.sort()
+    return errorList
+
+
 def create_account(request):
     context = dict()
 
@@ -30,11 +43,11 @@ def create_account(request):
         if form.is_valid():
             u = form.save()
             u.save()
-            if u is not None:
-                login(request, u)
-                return redirect("home")
-            else:
-                return HttpResponseRedirect(reverse('home'))
+            login(request, u)
+            return redirect("home")
+
+        else:
+            context['error_list'] = get_errors(form)
 
     else:
         form = UserCreationForm()
@@ -68,12 +81,14 @@ def home(request):
             g = form.save(commit=False)
             g.user = request.user
             g.save()
-    
+        else:
+            context['error_list'] = get_errors(form)
+
     else:
         form = GoalForm()
 
     context['form'] = form
-    goals_list = Goal.objects.filter(user=request.user)
+    goals_list = Goal.objects.filter(user=request.user).order_by('-priority')
     context['goals_list'] = goals_list
 
     return render(request, 'planapp/home.html', context)
@@ -95,11 +110,13 @@ def goal(request, goal_id):
             p = form.save(commit=False)
             p.goal = g
             p.save()
+        else:
+            context['error_list'] = get_errors(form)
 
     else:
         form = PlanForm()
 
-    plan_list = Plan.objects.filter(goal=g)
+    plan_list = Plan.objects.filter(goal=g).order_by('-default_priority')
     context = {
         'goal': g,
         'plan_list' : plan_list,
@@ -126,7 +143,9 @@ def edit_goal(request, goal_id):
             g.user = request.user
             g.save()
             return HttpResponseRedirect(reverse('goal', args=(goal_id,)))
-    
+        else:
+            context['error_list'] = get_errors(form)
+
     else:
         form = GoalForm(instance=g)
     
@@ -153,7 +172,9 @@ def edit_plan(request, plan_id):
             p.user = request.user
             p.save()
             return HttpResponseRedirect(reverse('plan', args=(plan_id,)))
-    
+        else:
+            context['error_list'] = get_errors(form)
+
     else:
         form = PlanForm(instance=p)
     
@@ -179,7 +200,9 @@ def edit_task(request, task_id):
             t.user = request.user
             t.save()
             return HttpResponseRedirect(reverse('task', args=(task_id,)))
-    
+        else:
+            context['error_list'] = get_errors(form)
+
     else:
         form = TaskForm(instance=t)
     
@@ -254,7 +277,7 @@ def plan(request, plan_id):
     else:
         form = TaskForm()
 
-    task_list = Task.objects.filter(plan=p)
+    task_list = Task.objects.filter(plan=p).order_by('-priority')
     context = {
         'plan': p,
         'task_list' : task_list,
@@ -284,7 +307,7 @@ def task_todo(request):
 
     goal_list = Goal.objects.filter(user=request.user)
     plan_list = Plan.objects.filter(goal__in=goal_list)
-    task_list = Task.objects.filter(plan__in=plan_list)
+    task_list = Task.objects.filter(plan__in=plan_list).order_by('-priority')
 
     context = {'task_list': task_list}
 
