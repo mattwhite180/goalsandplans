@@ -9,6 +9,17 @@ from django.contrib.auth import authenticate, login
 from .forms import GoalForm, PlanForm, TaskForm
 from django.core.management import call_command
 
+def userOwnsGoal(u, g):
+    return g.user.id == u.id
+
+def userOwnsPlan(u, p):
+    g = p.goal
+    return userOwnsGoal(u, g)
+
+def userOwnsTask(u, t):
+    p = t.plan
+    return userOwnsPlan(u, p)
+
 def create_account(request):
     context = dict()
 
@@ -23,7 +34,7 @@ def create_account(request):
                 login(request, u)
                 return redirect("home")
             else:
-                return render(request, 'planapp/index.html', {})
+                return HttpResponseRedirect(reverse('home'))
 
     else:
         form = UserCreationForm()
@@ -36,7 +47,7 @@ def run_jobs(request):
     return redirect("home")
 
 def handler404(request, exception=None):
-    return render(request, 'planapp/index.html', {})
+    return HttpResponseRedirect(reverse('home'))
 
 def index(request):
     context = {}
@@ -47,7 +58,7 @@ def home(request):
     context = {}
 
     if not request.user.is_authenticated:
-        return render(request, 'planapp/index.html', context)
+        return HttpResponseRedirect(reverse('home'))
 
     if request.method == 'POST':
         #form = GoalForm(request.POST or None, request.FILES or None)
@@ -72,6 +83,9 @@ def goal(request, goal_id):
     context = {}
 
     g = get_object_or_404(Goal, pk=goal_id)
+
+    if not userOwnsGoal(request.user, g):
+        return HttpResponseRedirect(reverse('home'))
 
     if request.method == 'POST':
 
@@ -100,6 +114,9 @@ def edit_goal(request, goal_id):
 
     g = get_object_or_404(Goal, pk=goal_id)
 
+    if not userOwnsGoal(request.user, g):
+        return HttpResponseRedirect(reverse('home'))
+
     if request.method == 'POST':
         #form = GoalForm(request.POST or None, request.FILES or None)
         form = GoalForm(request.POST, instance=g)
@@ -124,6 +141,9 @@ def edit_plan(request, plan_id):
 
     p = get_object_or_404(Plan, pk=plan_id)
 
+    if not userOwnsPlan(request.user, p):
+        return HttpResponseRedirect(reverse('home'))
+
     if request.method == 'POST':
         #form = GoalForm(request.POST or None, request.FILES or None)
         form = PlanForm(request.POST, instance=p)
@@ -147,6 +167,9 @@ def edit_task(request, task_id):
 
     t = get_object_or_404(Task, pk=task_id)
 
+    if not userOwnsTask(request.user, t):
+        return HttpResponseRedirect(reverse('home'))
+
     if request.method == 'POST':
         #form = GoalForm(request.POST or None, request.FILES or None)
         form = TaskForm(request.POST, instance=t)
@@ -165,11 +188,15 @@ def edit_task(request, task_id):
 
 @login_required
 def delete_task(request, task_id):
+
     context = {}
 
     t = get_object_or_404(Task, pk=task_id)
     plan_id = t.plan.id
     
+    if not userOwnsTask(request.user, t):
+        return HttpResponseRedirect(reverse('home'))
+
     t.delete()
 
     return HttpResponseRedirect(reverse('plan', args=(plan_id,)))
@@ -182,6 +209,10 @@ def delete_plan(request, plan_id):
     p = get_object_or_404(Plan, pk=plan_id)
     goal_id = p.goal
     
+    if not userOwnsPlan(request.user, p):
+        return HttpResponseRedirect(reverse('home'))
+
+
     p.delete()
 
     return HttpResponseRedirect(reverse('goal', args=(goal_id,)))
@@ -193,6 +224,10 @@ def delete_goal(request, goal_id):
 
     g = get_object_or_404(Goal, pk=goal_id)
     
+    if not userOwnsGoal(request.user, g):
+        return HttpResponseRedirect(reverse('home'))
+
+
     g.delete()
 
     return HttpResponseRedirect(reverse('home'))
@@ -203,6 +238,9 @@ def plan(request, plan_id):
     context = {}
 
     p = get_object_or_404(Plan, pk=plan_id)
+
+    if not userOwnsPlan(request.user, p):
+        return HttpResponseRedirect(reverse('home'))
 
     if request.method == 'POST':
 
@@ -229,6 +267,11 @@ def task(request, task_id):
     context = {}
 
     t = get_object_or_404(Task, pk=task_id)
+
+    if not userOwnsTask(request.user, t):
+        return HttpResponseRedirect(reverse('home'))
+
+
 
     context = {'task': t}
 
