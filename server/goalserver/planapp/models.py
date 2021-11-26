@@ -16,7 +16,7 @@ class Goal(models.Model):
         UG = '4 UG', _('Urgent')
 
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=20000, default="<no description>", blank=False)
+    description = models.CharField(max_length=20000)
     priority = models.CharField(
         max_length=4,
         choices=PriorityLevels.choices,
@@ -42,20 +42,20 @@ class Plan(models.Model):
         UG = '4 UG', _('Urgent')
 
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=20000, default="<no description>", blank=False)
+    description = models.CharField(max_length=20000)
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE)
     continuous = models.BooleanField(default=True)
-    limit = models.IntegerField(default=10, blank=False)
-    add_count = models.IntegerField(default=1, blank=False)
+    limit = models.IntegerField(default=10)
+    add_count = models.IntegerField(default=1)
     default_priority = models.CharField(
         max_length=4,
         choices=PriorityLevels.choices,
         default=PriorityLevels.LOW,
     )
     last_updated = models.DateField('last_updated', default=datetime.date.today() - datetime.timedelta(hours=24))
-    add_period = models.IntegerField(default=1, blank=False)
-    recurring_task_title = models.CharField(max_length=200, default='<recurring task title>', blank=False)
-    recurring_task_description = models.CharField(max_length=2000, default='<recurring task description>', blank=False)
+    add_period = models.IntegerField(default=1)
+    recurring_task_title = models.CharField(max_length=200, default='<recurring task title>')
+    recurring_task_description = models.CharField(max_length=2000, default='<recurring task description>')
 
 class Task(models.Model):
 
@@ -67,7 +67,7 @@ class Task(models.Model):
         UG = '4 UG', _('Urgent')
 
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=20000, default='<task description>', blank=False)
+    description = models.CharField(max_length=20000, default='<task description>')
     priority = models.CharField(
         max_length=4,
         choices=PriorityLevels.choices,

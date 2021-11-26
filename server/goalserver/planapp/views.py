@@ -217,10 +217,8 @@ def delete_task(request, task_id):
     t = get_object_or_404(Task, pk=task_id)
     plan_id = t.plan.id
     
-    if not userOwnsTask(request.user, t):
-        return HttpResponseRedirect(reverse('home'))
-
-    t.delete()
+    if userOwnsTask(request.user, t):
+        t.delete()
 
     return HttpResponseRedirect(reverse('plan', args=(plan_id,)))
 
@@ -232,13 +230,10 @@ def delete_plan(request, plan_id):
     p = get_object_or_404(Plan, pk=plan_id)
     goal_id = p.goal
     
-    if not userOwnsPlan(request.user, p):
-        return HttpResponseRedirect(reverse('home'))
+    if userOwnsPlan(request.user, p):
+        p.delete()
 
-
-    p.delete()
-
-    return HttpResponseRedirect(reverse('goal', args=(goal_id,)))
+    return HttpResponseRedirect(reverse('home'))
 
 
 @login_required
