@@ -18,14 +18,16 @@ class Command(BaseCommand):
                     plan.save()
                     try:
                         for i in range(plan.add_count):
-                            newT = Task.objects.create(
-                                title=plan.recurring_task_title,
-                                description=plan.recurring_task_description,
-                                priority=plan.default_priority,
-                                plan=plan
-                            )
-                            newT.save()
-                            created += 1
+                            currentCount = Task.objects.filter(plan=plan).count()
+                            if currentCount < plan.limit:
+                                newT = Task.objects.create(
+                                    title=plan.recurring_task_title,
+                                    description=plan.recurring_task_description,
+                                    priority=plan.default_priority,
+                                    plan=plan
+                                )
+                                newT.save()
+                                created += 1
                     except:
                         raise CommandError('error running crontask.py')
 
