@@ -8,6 +8,7 @@ WORKDIR /usr/src/app
 RUN apt-get update -y \                                                                                        
     && apt-get install -y \                                                                                    
     postgresql \
+    ipython3 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --upgrade pip setuptools wheel

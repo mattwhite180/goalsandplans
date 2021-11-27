@@ -9,6 +9,7 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
+        self.stdout.write(self.style.SUCCESS(datetime.datetime.now()))
         created = 0
         for plan in Plan.objects.all():
             if plan.continuous:
@@ -31,4 +32,4 @@ class Command(BaseCommand):
                     except:
                         raise CommandError('error running crontask.py')
 
-            self.stdout.write(self.style.SUCCESS('Successfully created "%s" tasks' % created))
+            self.stdout.write(self.style.SUCCESS('Successfully created "%s" tasks\n----' % created))
