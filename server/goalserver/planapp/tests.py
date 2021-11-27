@@ -1,19 +1,21 @@
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 from django.core.management import call_command
 from .models import Goal, Plan, Task
 from django.contrib.auth.models import AnonymousUser, User
-
+from .views import run_jobs
+from django.test import Client
 
 class CronTaskTestCase(TestCase):
     def setUp(self):
-        user_test = User.objects.create_user(
+        self.factory = RequestFactory()
+        test_user = User.objects.create_user(
             username='testuser',
             password='1234'
             )
         g = Goal.objects.create(
             title='test goal',
             description='test goal description',
-            user = user_test
+            user = test_user
         )
         Plan.objects.create(
             title='test plan (continuous)',
@@ -72,6 +74,21 @@ class CronTaskTestCase(TestCase):
 
     def test_task_limit(self):
         call_command('crontask')
+        val = Task.objects.count()
+        expected = 5 + 0 + 0 + 20
+        errmsg = "expected " + str(expected) + " tasks, but counted " + str(val) + " tasks" + """
+        if the number of tasks counted is over 100 then there might be an issue with the continuous flag
+        if the number of tasks counted is over 1000 then the add period might not be working"""
+        self.assertEqual(val, expected, errmsg)
+
+    def test_client_side(self):
+        c = Client()
+        response = c.post('/run_jobs/', {'username': 'testuser', 'password': '1234'})
+        val = response.status_code
+        expected = 302
+        errmsg = ("expected a response code of '" + str(expected) + "', but got a response " +
+            "code of '" + str(val) + "'")
+        self.assertEqual(val, expected, errmsg)
         val = Task.objects.count()
         expected = 5 + 0 + 0 + 20
         errmsg = "expected " + str(expected) + " tasks, but counted " + str(val) + " tasks" + """

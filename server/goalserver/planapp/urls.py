@@ -26,5 +26,5 @@ urlpatterns = [
     path('plan/<int:plan_id>/', views.plan, name='plan'),
     path('task/<int:task_id>/', views.task, name='task'),
     path('task_todo/', views.task_todo, name='task_todo'),
-    path('run_jobs', views.run_jobs, name='run_jobs'),
+    path('run_jobs/', views.run_jobs, name='run_jobs'),
 ]
