@@ -24,6 +24,8 @@ class Goal(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.title
 
     def pull_report(self, *args, **kwargs):
         total = 0
@@ -57,6 +59,9 @@ class Plan(models.Model):
     recurring_task_title = models.CharField(max_length=200, default='<recurring task title>')
     recurring_task_description = models.CharField(max_length=2000, default='<recurring task description>')
 
+    def __str__(self):
+        return self.title
+
 class Task(models.Model):
 
     class PriorityLevels(models.TextChoices):
@@ -80,3 +85,6 @@ class Task(models.Model):
 
     def is_due_soon(self):
         return self.due < timezone.now() + datetime.timedelta(days=2)
+
+    def __str__(self):
+        return self.title
