@@ -1,34 +1,28 @@
-{% extends "planapp/bootstrap.html" %}
+{% extends "planapp/bootstrap.html" %} 
 
 {% block content %}
 
-<div id=errorblock>
-    {% if form.errors %}
-        <h2>errors</h2>
-        {% for f in form.errors %}
-        <div class="alert alert-warning" role="alert">
-            There is a problem with the <b>{{ f }}</b> you tried to submit
-        </div>
-        {% endfor %}
-    {% endif %}
+<div id="errorblock">
+  {% if form.errors %}
+  <h2>errors</h2>
+  {% for f in form.errors %}
+  <div class="alert alert-warning" role="alert">
+    There is a problem with the <b>{{ f }}</b> you tried to submit
+  </div>
+  {% endfor %} {% endif %}
 </div>
 
-
 <div class="card text-center">
-    <div class="card-header">
-      GoalsAndPlans
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">Fill out form</h5>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input class="btn btn-primary" type="submit" value="Submit">
-        </form>
-    </div>
-    <div class="card-footer text-muted">
-      GoalsAndPlans
-    </div>
+  <div class="card-header">GoalsAndPlans</div>
+  <div class="card-body">
+    <h5 class="card-title">Fill out form</h5>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input class="btn btn-primary" type="submit" value="Submit" />
+    </form>
   </div>
+  <div class="card-footer text-muted">GoalsAndPlans</div>
+</div>
 
 {% endblock %}
