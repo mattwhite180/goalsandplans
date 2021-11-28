@@ -1,0 +1,61 @@
+{% extends "planapp/bootstrap.html" %}
+
+{% block topbar %}
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a href="https://github.com/mattwhite180/goalsandplans/" class="badge badge-pill badge-danger">GitHub!</a>
+  </li>
+  {% if user.is_authenticated %}
+      <li class="nav-item disabled">
+        <a href="#" class="badge badge-pill badge-primary">Welcome {{ user.username }}!</a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'home' %}" class="badge badge-pill badge-success">Home</a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'logout' %}" class="badge badge-pill badge-warning">Logout</a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'task_todo' %}" class="badge badge-pill badge-info">Todo</a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'run_jobs' %}" class="badge badge-pill badge-dark">Cron</a>
+      </li>
+      <!-- <li class="nav-item">
+          {#<a class="nav-link" href="{% url 'change_password' %}">Change password?</a>#}
+      </li> -->
+      {% if user.is_superuser %}
+      <li class="nav-item">
+        <a href="/admin/" class="badge badge-pill badge-secondary">Admin</a>
+      </li>
+      {% endif %}
+  {% else %}
+  <li class="nav-item">
+    <a href="{% url 'login' %}" class="badge badge-pill badge-primary">Login</a>
+  </li>
+  <li class="nav-item">
+    <a href="{% url 'create' %}" class="badge badge-pill badge-success">Create Account</a>
+  </li>
+  {% endif %}
+  </ul>
+</div>
+{% endblock %}
+
+{% block error %}
+    <div id=errorblock>
+        {% if error_list %}
+            {% for e in error_list %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{ e }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block content %}{% endblock %}
+{% block leftcontent %}{% endblock %}
+{% block rightcontent %}{% endblock %}
