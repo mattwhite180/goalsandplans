@@ -16,35 +16,26 @@
           {% include "planapp/topbar.html" %}
         {% endif %}
         {% block error %}
-            <div id=errorblock>
-                {% if error_list %}
-                    {% for e in error_list %}
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>{{ e }}</strong>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
+          <div id=errorblock>
+            {% if error_list %}
+              {% for e in error_list %}
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <strong>{{ e }}</strong>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              {% endfor %}
+            {% endif %}
+          </div>
         {% endblock %}
         <div id="content" class="float-container">
             {% block content %}{% endblock %}
-            {% if not is_mobile %}
-              <div class="float-child">
-                <div class="green">
-            {% endif %}
-            {% block leftcontent %}{% endblock %}
-            {% if not is_mobile %}
-              </div></div>
-              <div class="float-child">
-                <div class="blue">
-            {% endif %}
+            <div {% if not is_mobile %} class="float-child" {% endif %}>
+              {% block leftcontent %}{% endblock %}
+            </div>
+            <div {% if not is_mobile %} class="float-child" {% endif %}>
               {% block rightcontent %}{% endblock %}
-            {% if not is_mobile %}
-              </div></div>
-            {% endif %}
         </div>
     {% endautoescape %}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
