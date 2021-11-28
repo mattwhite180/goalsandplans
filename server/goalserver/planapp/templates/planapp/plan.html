@@ -1,29 +1,46 @@
 {% extends "planapp/topbar.html" %}
 
-{% block content %}
+{% block leftcontent %}
+    {% if plan %}
+    <div class="card text-center">
+        <div class="card-header">
+            <h1>{{ plan.title }}</h1>
+        </div>
+        <div class="card-body">
+        <h5 class="card-title">{{ plan.description }}</h5>
+            {% if plan.continuous %}
+                <div class="card-text"><span class="badge badge-pill badge-info">continuous</span></div>
+            {% endif %}
+        <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">{{ plan.default_priority|slice:"2:" }}</span></div>
+        <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
+        <a href="{% url 'delete_plan' plan.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Plan</a>
+        </div>
+        <div class="card-footer text-muted">
+        </div>
+    </div>
+    {% else %}
+        <p>Plan isnt available.</p>
+    {% endif %}
+    <br>
+    <div class="card text-center">
+        <div class="card-header">
+        Create a new task
+        </div>
+        <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input class="btn btn-primary" type="submit" value="Submit">
+            </form>
+        </div>
+        <div class="card-footer text-muted">
+        Fill out form and click Submit
+        </div>
+    </div>
+{% endblock %}
 
-{% if plan %}
-<div class="card text-center">
-    <div class="card-header">
-        <h1>{{ plan.title }}</h1>
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">{{ plan.description }}</h5>
-        {% if plan.continuous %}
-            <div class="card-text"><span class="badge badge-pill badge-info">continuous</span></div>
-        {% endif %}
-      <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">{{ plan.default_priority|slice:"2:" }}</span></div>
-      <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
-      <a href="{% url 'delete_plan' plan.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Plan</a>
-    </div>
-    <div class="card-footer text-muted">
-    </div>
-</div>
-{% else %}
-    <p>goal isnt available.</p>
-{% endif %}
-<br>
-{% if task_list %}
+{% block rightcontent %}
+    {% if task_list %}
     <ul>
     {% for task in task_list %}
         <div class="card">
@@ -38,30 +55,7 @@
         <br>
     {% endfor %}
     </ul>
-{% else %}
+    {% else %}
     <p>No tasks associated with this plan are created yet.</p>
-{% endif %}
-<br>
-<div class="card text-center">
-    <div class="card-header">
-      Create a new task
-    </div>
-    <div class="card-body">
-      <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input class="btn btn-primary" type="submit" value="Submit">
-        </form>
-    </div>
-    <div class="card-footer text-muted">
-      Fill out form and click Submit
-    </div>
-</div>
-
-<!-- <ul>
-    {% for goal in goals_list %}
-        <li><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></li>
-    {% endfor %}
-</ul> -->
-
+    {% endif %}
 {% endblock %}

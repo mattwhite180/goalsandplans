@@ -1,42 +1,41 @@
 {% extends "planapp/topbar.html" %}
 
-{% block content %}
+{% block leftcontent %}
+    <div class="card text-center">
+        <div class="card-header">
+            Create a new goal
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input class="btn btn-primary" type="submit" value="Submit">
+            </form>
+        </div>
+        <div class="card-footer text-muted">
+            Fill out form and click Submit
+        </div>
+    </div>
+{% endblock %}
 
-{% if goals_list %}
-{% for goal in goals_list %}
-<div class="card text-center">
-    <div class="card-header">
-        <h2><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></h2>
+{% block rightcontent %}
+    {% if goals_list %}
+    {% for goal in goals_list %}
+    <div class="card text-center">
+        <div class="card-header">
+            <h2><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></h2>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ goal.description }}</h5>
+            <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ goal.priority|slice:"2:" }}</span></div>
+            <a href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>
+            <a href="{% url 'delete_goal' goal.id %}" class="btn btn-primary"
+                style="background-color: red; border-color: red;">Delete Goal</a>
+        </div>
     </div>
-    <div class="card-body">
-        <h5 class="card-title">{{ goal.description }}</h5>
-        <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ goal.priority|slice:"2:" }}</span></div>
-        <a href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>
-        <a href="{% url 'delete_goal' goal.id %}" class="btn btn-primary"
-            style="background-color: red; border-color: red;">Delete Goal</a>
-    </div>
-</div>
-<br>
-{% endfor %}
-{% else %}
-<p>No goals are created yet.</p>
-{% endif %}
-<br>
-<div class="card text-center">
-    <div class="card-header">
-        Create a new goal
-    </div>
-    <div class="card-body">
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input class="btn btn-primary" type="submit" value="Submit">
-        </form>
-    </div>
-    <div class="card-footer text-muted">
-        Fill out form and click Submit
-    </div>
-</div>
-
-
+    <br>
+    {% endfor %}
+    {% else %}
+        <p>No goals are created yet.</p>
+    {% endif %}
 {% endblock %}
