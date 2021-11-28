@@ -71,7 +71,7 @@ def home(request):
     context = {}
 
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('index'))
 
     if request.method == 'POST':
         #form = GoalForm(request.POST or None, request.FILES or None)
