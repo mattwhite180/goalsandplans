@@ -10,8 +10,25 @@
 </head>
 <body>
     {% autoescape off %}
-        {% block topbar %}{% endblock %}
-        {% block error %}{% endblock %}
+        {% if is_mobile %}
+          {% include "planapp/topbar-mobile.html" %}
+        {% else %}
+          {% include "planapp/topbar.html" %}
+        {% endif %}
+        {% block error %}
+            <div id=errorblock>
+                {% if error_list %}
+                    {% for e in error_list %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>{{ e }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endblock %}
         <div id="content" class="float-container">
             {% block content %}{% endblock %}
             {% if not is_mobile %}
