@@ -9,7 +9,17 @@ from django.contrib.auth import authenticate, login
 from .forms import GoalForm, PlanForm, TaskForm
 from django.core.management import call_command
 import json
+import re
 
+def mobile(request):
+    # Return True if the request comes from a mobile device.
+
+    MOBILE_AGENT_RE=re.compile(r".*(iphone|mobile|androidtouch)",re.IGNORECASE)
+
+    if MOBILE_AGENT_RE.match(request.META['HTTP_USER_AGENT']):
+        return True
+    else:
+        return False
 
 def userOwnsGoal(u, g):
     return g.user.id == u.id
@@ -53,6 +63,7 @@ def create_account(request):
         form = UserCreationForm()
 
     context['form'] = form
+    context['is_mobile'] = mobile(request)
     return render(request, 'planapp/createaccount.html', context)
 
 def run_jobs(request):
@@ -65,6 +76,7 @@ def handler404(request, exception=None):
 def index(request):
     context = {}
 
+    context['is_mobile'] = mobile(request)
     return render(request, 'planapp/index.html', context)
 
 def home(request):
@@ -90,6 +102,7 @@ def home(request):
     context['form'] = form
     goals_list = Goal.objects.filter(user=request.user).order_by('-priority')
     context['goals_list'] = goals_list
+    context['is_mobile'] = mobile(request)
 
     return render(request, 'planapp/home.html', context)
 
@@ -121,7 +134,8 @@ def goal(request, goal_id):
         'goal': g,
         'plan_list' : plan_list,
         'todo': g.pull_report(),
-        'form': form
+        'form': form,
+        'is_mobile': mobile(request)
     }
     return render(request, "planapp/goals.html", context)
 
@@ -150,6 +164,7 @@ def edit_goal(request, goal_id):
         form = GoalForm(instance=g)
     
     context['form'] = form
+    context['is_mobile'] = mobile(request)
     return render(request, "planapp/formedit.html", context)
     # return HttpResponseRedirect(reverse(home))
 
@@ -179,6 +194,7 @@ def edit_plan(request, plan_id):
         form = PlanForm(instance=p)
     
     context['form'] = form
+    context['is_mobile'] = mobile(request)
     return render(request, "planapp/formedit.html", context)
 
 
@@ -207,6 +223,7 @@ def edit_task(request, task_id):
         form = TaskForm(instance=t)
     
     context['form'] = form
+    context['is_mobile'] = mobile(request)
     return render(request, "planapp/formedit.html", context)
 
 @login_required
@@ -220,6 +237,7 @@ def delete_task(request, task_id):
     if userOwnsTask(request.user, t):
         t.delete()
 
+    context['is_mobile'] = mobile(request)
     return HttpResponseRedirect(reverse('plan', args=(plan_id,)))
 
 
@@ -233,6 +251,7 @@ def delete_plan(request, plan_id):
     if userOwnsPlan(request.user, p):
         p.delete()
 
+    context['is_mobile'] = mobile(request)
     return HttpResponseRedirect(reverse('home'))
 
 
@@ -248,6 +267,7 @@ def delete_goal(request, goal_id):
 
     g.delete()
 
+    context['is_mobile'] = mobile(request)
     return HttpResponseRedirect(reverse('home'))
 
 
@@ -276,7 +296,8 @@ def plan(request, plan_id):
     context = {
         'plan': p,
         'task_list' : task_list,
-        'form': form
+        'form': form,
+        'is_mobile': mobile(request)
     }
     return render(request, "planapp/plan.html", context)
 
@@ -292,7 +313,7 @@ def task(request, task_id):
 
 
     context = {'task': t}
-
+    context['is_mobile'] = mobile(request)
     return render(request, "planapp/task.html", context)
 
 
@@ -305,5 +326,5 @@ def task_todo(request):
     task_list = Task.objects.filter(plan__in=plan_list).order_by('-priority')
 
     context = {'task_list': task_list}
-
+    context['is_mobile'] = mobile(request)
     return render(request, "planapp/todo.html", context)
