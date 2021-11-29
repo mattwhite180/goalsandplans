@@ -5,10 +5,10 @@ from .models import Goal, Plan, Task
 admin.site.site_url = "/planapp"
 
 class GoalAdmin(admin.ModelAdmin):
-    list_display = ('title', 'id', 'description', 'user')
+    list_display = ('title', 'id', 'description', 'priority', 'user')
 
 class PlanAdmin(admin.ModelAdmin):
-    list_display = ('title', 'id', 'description', 'goal')
+    list_display = ('title', 'id', 'description', 'default_priority', 'goal')
 
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('title', 'id', 'description', 'priority', 'plan')

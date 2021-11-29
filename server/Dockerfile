@@ -15,8 +15,8 @@ RUN pip3 install --upgrade pip setuptools wheel
 COPY requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-COPY goalserver /usr/src/app/
+# COPY goalserver /usr/src/app/
 
-CMD bash django-run.sh
+# CMD bash django-run.sh
 
-# CMD echo "done building server"
+CMD echo "done building server"
