@@ -5,13 +5,13 @@ from django.contrib.auth.models import AnonymousUser, User
 from .views import run_jobs
 from django.test import Client
 
-class CronTaskTestCase(TestCase):
+class CronTestCase(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         test_user = User.objects.create_user(
             username='testuser',
             password='1234'
-            )
+        )
         g = Goal.objects.create(
             title='test goal',
             description='test goal description',
