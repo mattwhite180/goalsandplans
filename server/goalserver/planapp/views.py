@@ -8,8 +8,24 @@ from .models import Goal, Plan, Task
 from django.contrib.auth import authenticate, login
 from .forms import GoalForm, PlanForm, TaskForm
 from django.core.management import call_command
+from django.contrib import messages
 import json
 import re
+
+def message_generator(verb, obj):
+    if hasattr(obj, 'title'):
+        name = obj.title
+    elif hasattr(obj, 'username'):
+        name = obj.username
+    else:
+        name = '(instance name)'
+    
+    try:
+        model_name = obj._meta.model_name
+    except:
+        model_name = 'User'
+    return str(verb) + " a " + str(model_name) + ": " + str(name) + " (id=" + str(obj.id) + ")"
+
 
 def mobile(request):
     # Return True if the request comes from a mobile device.
@@ -54,6 +70,7 @@ def create_account(request):
             u = form.save()
             u.save()
             login(request, u)
+            messages.success(request, message_generator("created", u))
             return redirect("home")
 
         else:
@@ -68,6 +85,7 @@ def create_account(request):
 
 def run_jobs(request):
     call_command('crontask')
+    messages.success(request, "ran cron task")
     return redirect("home")
 
 def handler404(request, exception=None):
@@ -93,6 +111,7 @@ def home(request):
             g = form.save(commit=False)
             g.user = request.user
             g.save()
+            messages.success(request, message_generator("created", g))
         else:
             context['error_list'] = get_errors(form)
 
@@ -123,6 +142,7 @@ def goal(request, goal_id):
             p = form.save(commit=False)
             p.goal = g
             p.save()
+            messages.success(request, message_generator("created", p))
         else:
             context['error_list'] = get_errors(form)
 
@@ -156,6 +176,7 @@ def edit_goal(request, goal_id):
             g = form.save(commit=False)
             g.user = request.user
             g.save()
+            messages.info(request, message_generator("edited", g))
             return HttpResponseRedirect(reverse('goal', args=(goal_id,)))
         else:
             context['error_list'] = get_errors(form)
@@ -186,6 +207,7 @@ def edit_plan(request, plan_id):
             p = form.save(commit=False)
             p.user = request.user
             p.save()
+            messages.info(request, message_generator("edited", p))
             return HttpResponseRedirect(reverse('plan', args=(plan_id,)))
         else:
             context['error_list'] = get_errors(form)
@@ -215,6 +237,7 @@ def edit_task(request, task_id):
             t = form.save(commit=False)
             t.user = request.user
             t.save()
+            messages.info(request, message_generator("edited", t))
             return HttpResponseRedirect(reverse('task', args=(task_id,)))
         else:
             context['error_list'] = get_errors(form)
@@ -235,6 +258,7 @@ def delete_task(request, task_id):
     plan_id = t.plan.id
     
     if userOwnsTask(request.user, t):
+        messages.warning(request, message_generator("deleted", t))
         t.delete()
 
     context['is_mobile'] = mobile(request)
@@ -246,29 +270,16 @@ def delete_plan(request, plan_id):
     context = {}
 
     p = get_object_or_404(Plan, pk=plan_id)
-    goal_id = p.goal
+    goal_id = p.goal.id
     
     if userOwnsPlan(request.user, p):
+        for t in Task.objects.filter(plan=p):
+            messages.warning(request, message_generator("deleted", t))
+        messages.warning(request, message_generator("deleted", p))
         p.delete()
 
     context['is_mobile'] = mobile(request)
-    return HttpResponseRedirect(reverse('home'))
-
-
-@login_required
-def delete_goal(request, goal_id):
-    context = {}
-
-    g = get_object_or_404(Goal, pk=goal_id)
-    
-    if not userOwnsGoal(request.user, g):
-        return HttpResponseRedirect(reverse('home'))
-
-
-    g.delete()
-
-    context['is_mobile'] = mobile(request)
-    return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('goal', args=(goal_id,)))
 
 
 @login_required
@@ -288,6 +299,7 @@ def plan(request, plan_id):
             t = form.save(commit=False)
             t.plan = p
             t.save()
+            messages.success(request, message_generator("created", t))
 
     else:
         form = TaskForm()
@@ -310,11 +322,27 @@ def task(request, task_id):
     if not userOwnsTask(request.user, t):
         return HttpResponseRedirect(reverse('home'))
 
-
-
     context = {'task': t}
     context['is_mobile'] = mobile(request)
     return render(request, "planapp/task.html", context)
+
+
+@login_required
+def delete_goal(request, goal_id):
+    context = {}
+
+    g = get_object_or_404(Goal, pk=goal_id)
+    
+    if userOwnsGoal(request.user, g):
+        for p in Plan.objects.filter(goal=g):
+            messages.warning(request, message_generator("deleted", p))
+            for t in Task.objects.filter(plan=p):
+                messages.warning(request, message_generator("deleted", t))
+        messages.warning(request, message_generator("deleted", g))
+        g.delete()
+
+    context['is_mobile'] = mobile(request)
+    return HttpResponseRedirect(reverse('home'))
 
 
 @login_required
