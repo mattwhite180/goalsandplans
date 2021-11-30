@@ -1,38 +1,44 @@
-<ul class="nav justify-content-center">
-  <li class="nav-item">
-    <a href="https://github.com/mattwhite180/goalsandplans/" class="badge badge-pill badge-danger">GitHub!</a>
-  </li>
-  {% if user.is_authenticated %}
-      <li class="nav-item disabled">
-        <a href="#" class="badge badge-pill badge-primary">Welcome {{ user.username }}!</a>
-      </li>
-      <li class="nav-item">
-        <a href="{% url 'home' %}" class="badge badge-pill badge-success">Home</a>
-      </li>
-      <li class="nav-item">
-        <a href="{% url 'logout' %}" class="badge badge-pill badge-warning">Logout</a>
-      </li>
-      <li class="nav-item">
-        <a href="{% url 'task_todo' %}" class="badge badge-pill badge-info">Todo</a>
-      </li>
-      <li class="nav-item">
-        <a href="{% url 'run_jobs' %}" class="badge badge-pill badge-dark">Cron</a>
-      </li>
-      <!-- <li class="nav-item">
-          {#<a class="nav-link" href="{% url 'change_password' %}">Change password?</a>#}
-      </li> -->
-      {% if user.is_superuser %}
-      <li class="nav-item">
-        <a href="/admin/" class="badge badge-pill badge-secondary">Admin</a>
-      </li>
-      {% endif %}
-  {% else %}
-  <li class="nav-item">
-    <a href="{% url 'login' %}" class="badge badge-pill badge-primary">Login</a>
-  </li>
-  <li class="nav-item">
-    <a href="{% url 'create' %}" class="badge badge-pill badge-success">Create Account</a>
-  </li>
-  {% endif %}
-  </ul>
+<div class="pos-f-t">
+  <div class="collapse" id="navbarToggleExternalContent">
+    <div class="bg-blue p-4">
+        <a class="nav-link active" href="https://github.com/mattwhite180/goalsandplans/">
+            <button type="button" class="btn btn-danger">GitHub!</button>
+        </a>
+        {% if user.is_authenticated %}
+          <a class="nav-link active" href="#">
+              <button type="button" class="btn btn-primary">Welcome {{ user.username }}!</button>
+          </a>
+          <a class="nav-link active" href="{% url 'home' %}">
+              <button type="button" class="btn btn-success">Home</button>
+          </a>
+          <a class="nav-link active" href="{% url 'logout' %}">
+              <button type="button" class="btn btn-warning">Logout</button>
+          </a>
+          <a class="nav-link active" href="{% url 'task_todo' %}">
+              <button type="button" class="btn btn-info">Todo</button>
+          </a>
+          <a class="nav-link active" href="{% url 'run_jobs' %}">
+              <button type="button" class="btn btn-dark">Cron</button>
+          </a>
+          {% if user.is_superuser %}
+              <a class="nav-link active" href="/admin/">
+                  <button type="button" class="btn btn-secondary">Admin</button>
+              </a>
+          {% endif %}
+          {% else %}
+          <a class="nav-link active" href="{% url 'login' %}">
+              <button type="button" class="btn btn-primary">Login</button>
+          </a>
+          <a class="nav-link active" href="{% url 'create' %}">
+              <button type="button" class="btn btn-success">Create Account</button>
+          </a>
+          {% endif %}
+    </div>
+  </div>
+  <nav class="navbar navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
 </div>
+
