@@ -20,6 +20,7 @@
       {% csrf_token %}
       {{ form.as_p }}
       <input class="btn btn-primary" type="submit" value="Submit" />
+      <button onclick="goBack()" class="btn btn-primary" style="background-color: orange; border-color: orange;">Go Back</button>
     </form>
   </div>
   <div class="card-footer text-muted">GoalsAndPlans</div>
