@@ -157,7 +157,7 @@ def goal(request, goal_id):
         'form': form,
         'is_mobile': mobile(request)
     }
-    return render(request, "planapp/goals.html", context)
+    return render(request, "planapp/goal.html", context)
 
 @login_required
 def edit_goal(request, goal_id):
