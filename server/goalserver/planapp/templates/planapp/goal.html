@@ -46,7 +46,7 @@
               <div class="card-body">
               <h5 class="card-title">{{ plan.description }}</h5>
               {% if plan.continuous %}
-                <div class="card-text"><span class="badge badge-pill badge-info">continuous</span></div>
+                <div class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
               {% endif %}
               <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">{{ plan.default_priority|slice:"2:" }}</span></div>
               <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
