@@ -10,23 +10,38 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        root_user = User.objects.create_user(
-            username='root',
-            password='asdf',
-            is_superuser=True,
-            is_staff=True
-        )
-        root_user.save()
-        test_user = User.objects.create_user(
-            username='test',
-            password='1234'
-        )
-        test_user.save()
-        mattw = User.objects.create_user(
-            username='mattw',
-            password='mw'
-        )
-        mattw.save()
+        for g in Goal.objects.all():
+            g.delete()
+        usernameList = list()
+        for u in User.objects.all():
+            usernameList.append(u.username)
+        
+        if 'root' in usernameList:
+            root_user = User.objects.get(username='root')
+        else:
+            root_user = User.objects.create_user(
+                username='root',
+                password='asdf',
+                is_superuser=True,
+                is_staff=True
+            )
+            root_user.save()
+        if 'test' in usernameList:
+            test_user = User.objects.get(username='test')
+        else:
+            test_user = User.objects.create_user(
+                username='test',
+                password='1234'
+            )
+            test_user.save()
+        if 'mattw' in usernameList:
+            mattw = User.objects.get(username='mattw')
+        else:
+            mattw = User.objects.create_user(
+                username='mattw',
+                password='mw'
+            )
+            mattw.save()
         g = Goal.objects.create(
             title='test goal',
             description='test goal description',
