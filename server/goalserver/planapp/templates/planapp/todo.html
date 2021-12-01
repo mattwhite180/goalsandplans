@@ -55,6 +55,7 @@
     {% if minitodo_list %}
     <ul>
     {% for mini in minitodo_list %}
+        <br>
         <div class="card">
             <h5 class="card-header"><a href="{% url 'minitodo' mini.id %}">{{ mini.title }}</a></h5>
             <div class="card-body">

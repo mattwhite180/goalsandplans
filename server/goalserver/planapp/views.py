@@ -246,7 +246,7 @@ def plan(request, plan_id):
 
     else:
         form = TaskForm()
-        form.fields['miniTodo'].queryset = MiniTodo.objects.filter(user=request.user)
+        form.fields['minitodo'].queryset = MiniTodo.objects.filter(user=request.user)
 
     task_list = Task.objects.filter(plan=p).order_by('-priority')
     context = {
@@ -344,6 +344,7 @@ def edit_task(request, task_id):
 
     else:
         form = TaskForm(instance=t)
+        form.fields['minitodo'].queryset = MiniTodo.objects.filter(user=request.user)
     
     context['form'] = form
     context['is_mobile'] = mobile(request)
@@ -399,12 +400,61 @@ def task_todo(request):
     context['is_mobile'] = mobile(request)
     return render(request, "planapp/todo.html", context)
 
-def miniTodo(request, mini_id):
-    return HttpResponseRedirect(reverse('home'))
+@login_required
+def minitodo(request, mini_id):
+    context = {}
 
-def edit_miniTodo(request, mini_id):
-    return HttpResponseRedirect(reverse('home'))
+    m = get_object_or_404(MiniTodo, pk=mini_id)
 
+    if m.user.id != request.user.id:
+        return HttpResponseRedirect(reverse('home'))
 
-def delete_miniTodo(request, mini_id):
-    return HttpResponseRedirect(reverse('home'))
+    task_list = Task.objects.filter(minitodo=m).order_by('-priority')
+    context = {
+        'minitodo': m,
+        'task_list' : task_list,
+        'is_mobile': mobile(request)
+    }
+    return render(request, "planapp/minitodo.html", context)
+
+@login_required
+def edit_minitodo(request, mini_id):
+    context = {}
+
+    m = get_object_or_404(MiniTodo, pk=mini_id)
+
+    if request.user.id != m.user.id:
+        return HttpResponseRedirect(reverse('home'))
+
+    if request.method == 'POST':
+        #form = GoalForm(request.POST or None, request.FILES or None)
+        form = MiniTodoForm(request.POST, instance=m)
+
+        if form.is_valid():
+            m = form.save(commit=False)
+            m.user = request.user
+            m.save()
+            messages.info(request, message_generator("edited", m))
+            return HttpResponseRedirect(reverse('minitodo', args=(mini_id,)))
+        else:
+            context['error_list'] = get_errors(form)
+
+    else:
+        form = TaskForm(instance=m)
+    
+    context['form'] = form
+    context['is_mobile'] = mobile(request)
+    return render(request, "planapp/formedit.html", context)
+
+@login_required
+def delete_minitodo(request, mini_id):
+
+    context = {}
+
+    m = get_object_or_404(MiniTodo, pk=mini_id)
+    
+    if request.user.id == m.user.id:
+        messages.warning(request, message_generator("deleted", m))
+        m.delete()
+
+    return HttpResponseRedirect(reverse('task_todo'))

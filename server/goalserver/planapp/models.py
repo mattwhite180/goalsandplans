@@ -101,7 +101,7 @@ class Task(models.Model):
         default=PriorityLevels.LOW,
     )
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
-    miniTodo = models.ForeignKey(MiniTodo, models.SET_NULL, blank=True, null=True)
+    minitodo = models.ForeignKey(MiniTodo, models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title

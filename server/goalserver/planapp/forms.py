@@ -41,12 +41,12 @@ class TaskForm(forms.ModelForm):
             'title',
             'description',
             'priority',
-            'miniTodo',
+            'minitodo',
         )
         widgets = {
             'description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
             'priority' : forms.RadioSelect(choices=Task.PriorityLevels),
-            # 'miniTodo' : forms.ModelChoiceField(empty_label="(Nothing)", queryset=MiniTodo.objects.all())
+            # 'minitodo' : forms.ModelChoiceField(empty_label="(Nothing)", queryset=MiniTodo.objects.all())
         }
 
 class MiniTodoForm(forms.ModelForm):
