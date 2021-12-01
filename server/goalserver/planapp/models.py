@@ -16,7 +16,7 @@ class Goal(models.Model):
         UG = '4 UG', _('Urgent')
 
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=20000)
+    description = models.CharField(max_length=2000)
     priority = models.CharField(
         max_length=4,
         choices=PriorityLevels.choices,
@@ -62,6 +62,28 @@ class Plan(models.Model):
     def __str__(self):
         return self.title
 
+
+class MiniTodo(models.Model):
+
+    class PriorityLevels(models.TextChoices):
+        BACKLOG = '0 BK', _('Backlog')
+        LOW = '1 LW', _('Low')
+        MEDIUM = '2 MD', _('Medium')
+        HIGH = '3 HI', _('High')
+        UG = '4 UG', _('Urgent')
+
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=20000)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    priority = models.CharField(
+        max_length=4,
+        choices=PriorityLevels.choices,
+        default=PriorityLevels.LOW,
+    )
+
+    def __str__(self):
+        return self.title
+
 class Task(models.Model):
 
     class PriorityLevels(models.TextChoices):
@@ -72,13 +94,14 @@ class Task(models.Model):
         UG = '4 UG', _('Urgent')
 
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=20000, default='<task description>')
+    description = models.CharField(max_length=2000, default='<task description>')
     priority = models.CharField(
         max_length=4,
         choices=PriorityLevels.choices,
         default=PriorityLevels.LOW,
     )
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    miniTodo = models.ForeignKey(MiniTodo, models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title

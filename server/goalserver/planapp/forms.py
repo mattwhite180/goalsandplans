@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm#, Textarea, DateTimeField, MultipleChoiceField
-from .models import Goal, Plan, Task
+from .models import Goal, Plan, Task, MiniTodo
 
 class GoalForm(forms.ModelForm):
 
@@ -30,13 +30,29 @@ class PlanForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
             'recurring_task_description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
-            'default_priority' : forms.RadioSelect(choices=Goal.PriorityLevels)
+            'default_priority' : forms.RadioSelect(choices=Plan.PriorityLevels)
         }
 
 class TaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
+        fields = (
+            'title',
+            'description',
+            'priority',
+            'miniTodo',
+        )
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 20, 'rows': 10}),
+            'priority' : forms.RadioSelect(choices=Task.PriorityLevels),
+            # 'miniTodo' : forms.ModelChoiceField(empty_label="(Nothing)", queryset=MiniTodo.objects.all())
+        }
+
+class MiniTodoForm(forms.ModelForm):
+
+    class Meta:
+        model = MiniTodo
         fields = (
             'title',
             'description',

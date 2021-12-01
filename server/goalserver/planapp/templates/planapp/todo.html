@@ -29,5 +29,45 @@
 {% endblock %}
 
 {% block rightcontent %}
-<p>todo</p>
+    <div id="errorblock">
+    {% if form.errors %}
+    <h2>errors</h2>
+    {% for f in form.errors %}
+    <div class="alert alert-warning" role="alert">
+        There is a problem with the <b>{{ f }}</b> you tried to submit
+    </div>
+    {% endfor %} {% endif %}
+    </div>
+
+    <div class="card text-center">
+    <div class="card-header">Mini Todo List</div>
+    <div class="card-body">
+        <h5 class="card-title">Create a mini todo list to organize your tasks</h5>
+        <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-primary" type="submit" value="Submit" />
+        </form>
+    </div>
+    <div class="card-footer text-muted">GoalsAndPlans</div>
+    </div>
+
+    {% if minitodo_list %}
+    <ul>
+    {% for mini in minitodo_list %}
+        <div class="card">
+            <h5 class="card-header"><a href="{% url 'minitodo' mini.id %}">{{ mini.title }}</a></h5>
+            <div class="card-body">
+            <h5 class="card-title">{{ mini.description }}</h5>
+            <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ mini.priority|slice:"2:" }}</span></div>
+            <a href="{% url 'edit_minitodo' mini.id %}" class="btn btn-primary">Edit MiniTodo</a>
+            <a href="{% url 'delete_minitodo' mini.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete MiniTodo</a>
+            </div>
+        </div>
+        <br>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>No MiniTodo lists are created yet.</p>
+    {% endif %}
 {% endblock %}

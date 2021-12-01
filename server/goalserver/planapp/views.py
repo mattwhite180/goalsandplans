@@ -4,9 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Goal, Plan, Task
+from .models import Goal, Plan, Task, MiniTodo
 from django.contrib.auth import authenticate, login
-from .forms import GoalForm, PlanForm, TaskForm
+from .forms import GoalForm, PlanForm, TaskForm, MiniTodoForm
 from django.core.management import call_command
 from django.contrib import messages
 import json
@@ -36,6 +36,17 @@ def mobile(request):
         return True
     else:
         return False
+
+def userOwnsGoal(u, g):
+    return g.user.id == u.id
+
+def userOwnsPlan(u, p):
+    g = p.goal
+    return userOwnsGoal(u, g)
+
+def userOwnsTask(u, t):
+    p = t.plan
+    return userOwnsPlan(u, p)
 
 def get_errors(f):
     errorList = list()
@@ -120,7 +131,7 @@ def goal(request, goal_id):
 
     g = get_object_or_404(Goal, pk=goal_id)
 
-    if not request.user.id == g.user.id:
+    if not userOwnsGoal(request.user, g):
         return HttpResponseRedirect(reverse('home'))
 
     if request.method == 'POST':
@@ -154,7 +165,7 @@ def edit_goal(request, goal_id):
 
     g = get_object_or_404(Goal, pk=goal_id)
 
-    if not request.user.id == g.user.id:
+    if not userOwnsGoal(request.user, g):
         return HttpResponseRedirect(reverse('home'))
 
     if request.method == 'POST':
@@ -185,7 +196,7 @@ def edit_plan(request, plan_id):
 
     p = get_object_or_404(Plan, pk=plan_id)
 
-    if not request.user.id == p.goal.user.id:
+    if not userOwnsPlan(request.user, p):
         return HttpResponseRedirect(reverse('home'))
 
     if request.method == 'POST':
@@ -215,7 +226,7 @@ def edit_task(request, task_id):
 
     t = get_object_or_404(Task, pk=task_id)
 
-    if not request.user.id == t.plan.goal.user.id:
+    if not userOwnsTask(request.user, t):
         return HttpResponseRedirect(reverse('home'))
 
     if request.method == 'POST':
@@ -246,7 +257,7 @@ def delete_task(request, task_id):
     t = get_object_or_404(Task, pk=task_id)
     plan_id = t.plan.id
     
-    if request.user.id == t.plan.goal.user.id:
+    if userOwnsTask(request.user, t):
         messages.warning(request, message_generator("deleted", t))
         t.delete()
 
@@ -261,7 +272,7 @@ def delete_plan(request, plan_id):
     p = get_object_or_404(Plan, pk=plan_id)
     goal_id = p.goal.id
     
-    if request.user.id == p.goal.user.id:
+    if userOwnsPlan(request.user, p):
         for t in Task.objects.filter(plan=p):
             messages.warning(request, message_generator("deleted", t))
         messages.warning(request, message_generator("deleted", p))
@@ -277,7 +288,7 @@ def plan(request, plan_id):
 
     p = get_object_or_404(Plan, pk=plan_id)
 
-    if not request.user.id == p.goal.user.id:
+    if not userOwnsPlan(request.user, p):
         return HttpResponseRedirect(reverse('home'))
 
     if request.method == 'POST':
@@ -292,6 +303,7 @@ def plan(request, plan_id):
 
     else:
         form = TaskForm()
+        form.fields['miniTodo'].queryset = MiniTodo.objects.filter(user=request.user)
 
     task_list = Task.objects.filter(plan=p).order_by('-priority')
     context = {
@@ -308,7 +320,7 @@ def task(request, task_id):
 
     t = get_object_or_404(Task, pk=task_id)
 
-    if not request.user.id == t.plan.goal.user.id:
+    if not userOwnsTask(request.user, t):
         return HttpResponseRedirect(reverse('home'))
 
     context = {'task': t}
@@ -322,7 +334,7 @@ def delete_goal(request, goal_id):
 
     g = get_object_or_404(Goal, pk=goal_id)
     
-    if request.user.id == g.user.id:
+    if userOwnsGoal(request.user, g):
         for p in Plan.objects.filter(goal=g):
             messages.warning(request, message_generator("deleted", p))
             for t in Task.objects.filter(plan=p):
@@ -338,10 +350,38 @@ def delete_goal(request, goal_id):
 def task_todo(request):
     context = {}
 
+    if request.method == 'POST':
+
+        form = MiniTodoForm(request.POST, use_required_attribute=False)
+
+        if form.is_valid():
+            m = form.save(commit=False)
+            m.user = request.user
+            m.save()
+            messages.success(request, message_generator("created", m))
+
+    else:
+        form = MiniTodoForm()
+
     goal_list = Goal.objects.filter(user=request.user)
     plan_list = Plan.objects.filter(goal__in=goal_list)
     task_list = Task.objects.filter(plan__in=plan_list).order_by('-priority')
 
-    context = {'task_list': task_list}
+    context = {
+        'task_list': task_list,
+        'form': form,
+        'minitodo_list' : MiniTodo.objects.filter(user=request.user)
+    }
+
     context['is_mobile'] = mobile(request)
     return render(request, "planapp/todo.html", context)
+
+def miniTodo(request, mini_id):
+    return HttpResponseRedirect(reverse('home'))
+
+def edit_miniTodo(request, mini_id):
+    return HttpResponseRedirect(reverse('home'))
+
+
+def delete_miniTodo(request, mini_id):
+    return HttpResponseRedirect(reverse('home'))
