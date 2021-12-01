@@ -394,7 +394,7 @@ def task_todo(request):
     context = {
         'task_list': task_list,
         'form': form,
-        'minitodo_list' : MiniTodo.objects.filter(user=request.user)
+        'minitodo_list' : MiniTodo.objects.filter(user=request.user).order_by('-priority')
     }
 
     context['is_mobile'] = mobile(request)
