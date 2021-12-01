@@ -12,6 +12,11 @@ from django.contrib import messages
 import json
 import re
 
+"""
+#####
+Helpful functions used by views
+"""
+
 def message_generator(verb, obj):
     if hasattr(obj, 'title'):
         name = obj.title
@@ -58,6 +63,10 @@ def get_errors(f):
     errorList.sort()
     return errorList
 
+"""
+#####
+Non-model views
+"""
 
 def create_account(request):
     context = dict()
@@ -125,6 +134,11 @@ def home(request):
 
     return render(request, 'planapp/home.html', context)
 
+"""
+#####
+Goal Views
+"""
+
 @login_required
 def goal(request, goal_id):
     context = {}
@@ -189,6 +203,59 @@ def edit_goal(request, goal_id):
     return render(request, "planapp/formedit.html", context)
     # return HttpResponseRedirect(reverse(home))
 
+@login_required
+def delete_goal(request, goal_id):
+    context = {}
+
+    g = get_object_or_404(Goal, pk=goal_id)
+    
+    if userOwnsGoal(request.user, g):
+        for p in Plan.objects.filter(goal=g):
+            messages.warning(request, message_generator("deleted", p))
+            for t in Task.objects.filter(plan=p):
+                messages.warning(request, message_generator("deleted", t))
+        messages.warning(request, message_generator("deleted", g))
+        g.delete()
+
+    context['is_mobile'] = mobile(request)
+    return HttpResponseRedirect(reverse('home'))
+
+"""
+#####
+Plan Views
+"""
+
+@login_required
+def plan(request, plan_id):
+    context = {}
+
+    p = get_object_or_404(Plan, pk=plan_id)
+
+    if not userOwnsPlan(request.user, p):
+        return HttpResponseRedirect(reverse('home'))
+
+    if request.method == 'POST':
+
+        form = TaskForm(request.POST, use_required_attribute=False)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.plan = p
+            t.save()
+            messages.success(request, message_generator("created", t))
+
+    else:
+        form = TaskForm()
+        form.fields['miniTodo'].queryset = MiniTodo.objects.filter(user=request.user)
+
+    task_list = Task.objects.filter(plan=p).order_by('-priority')
+    context = {
+        'plan': p,
+        'task_list' : task_list,
+        'form': form,
+        'is_mobile': mobile(request)
+    }
+    return render(request, "planapp/plan.html", context)
 
 @login_required
 def edit_plan(request, plan_id):
@@ -219,6 +286,39 @@ def edit_plan(request, plan_id):
     context['is_mobile'] = mobile(request)
     return render(request, "planapp/formedit.html", context)
 
+@login_required
+def delete_plan(request, plan_id):
+    context = {}
+
+    p = get_object_or_404(Plan, pk=plan_id)
+    goal_id = p.goal.id
+    
+    if userOwnsPlan(request.user, p):
+        for t in Task.objects.filter(plan=p):
+            messages.warning(request, message_generator("deleted", t))
+        messages.warning(request, message_generator("deleted", p))
+        p.delete()
+
+    context['is_mobile'] = mobile(request)
+    return HttpResponseRedirect(reverse('goal', args=(goal_id,)))
+
+"""
+#####
+Task Views
+"""
+
+@login_required
+def task(request, task_id):
+    context = {}
+
+    t = get_object_or_404(Task, pk=task_id)
+
+    if not userOwnsTask(request.user, t):
+        return HttpResponseRedirect(reverse('home'))
+
+    context = {'task': t}
+    context['is_mobile'] = mobile(request)
+    return render(request, "planapp/task.html", context)
 
 @login_required
 def edit_task(request, task_id):
@@ -264,87 +364,10 @@ def delete_task(request, task_id):
     context['is_mobile'] = mobile(request)
     return HttpResponseRedirect(reverse('plan', args=(plan_id,)))
 
-
-@login_required
-def delete_plan(request, plan_id):
-    context = {}
-
-    p = get_object_or_404(Plan, pk=plan_id)
-    goal_id = p.goal.id
-    
-    if userOwnsPlan(request.user, p):
-        for t in Task.objects.filter(plan=p):
-            messages.warning(request, message_generator("deleted", t))
-        messages.warning(request, message_generator("deleted", p))
-        p.delete()
-
-    context['is_mobile'] = mobile(request)
-    return HttpResponseRedirect(reverse('goal', args=(goal_id,)))
-
-
-@login_required
-def plan(request, plan_id):
-    context = {}
-
-    p = get_object_or_404(Plan, pk=plan_id)
-
-    if not userOwnsPlan(request.user, p):
-        return HttpResponseRedirect(reverse('home'))
-
-    if request.method == 'POST':
-
-        form = TaskForm(request.POST, use_required_attribute=False)
-
-        if form.is_valid():
-            t = form.save(commit=False)
-            t.plan = p
-            t.save()
-            messages.success(request, message_generator("created", t))
-
-    else:
-        form = TaskForm()
-        form.fields['miniTodo'].queryset = MiniTodo.objects.filter(user=request.user)
-
-    task_list = Task.objects.filter(plan=p).order_by('-priority')
-    context = {
-        'plan': p,
-        'task_list' : task_list,
-        'form': form,
-        'is_mobile': mobile(request)
-    }
-    return render(request, "planapp/plan.html", context)
-
-@login_required
-def task(request, task_id):
-    context = {}
-
-    t = get_object_or_404(Task, pk=task_id)
-
-    if not userOwnsTask(request.user, t):
-        return HttpResponseRedirect(reverse('home'))
-
-    context = {'task': t}
-    context['is_mobile'] = mobile(request)
-    return render(request, "planapp/task.html", context)
-
-
-@login_required
-def delete_goal(request, goal_id):
-    context = {}
-
-    g = get_object_or_404(Goal, pk=goal_id)
-    
-    if userOwnsGoal(request.user, g):
-        for p in Plan.objects.filter(goal=g):
-            messages.warning(request, message_generator("deleted", p))
-            for t in Task.objects.filter(plan=p):
-                messages.warning(request, message_generator("deleted", t))
-        messages.warning(request, message_generator("deleted", g))
-        g.delete()
-
-    context['is_mobile'] = mobile(request)
-    return HttpResponseRedirect(reverse('home'))
-
+"""
+#####
+MiniTodo Views
+"""
 
 @login_required
 def task_todo(request):
