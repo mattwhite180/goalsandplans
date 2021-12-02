@@ -5,7 +5,7 @@
             <button type="button" class="btn btn-danger">GitHub!</button>
         </a>
         {% if user.is_authenticated %}
-          <a class="nav-link active" href="#">
+          <a class="nav-link active" href="{% url 'home' %}">
               <button type="button" class="btn btn-primary">Welcome {{ user.username }}!</button>
           </a>
           <a class="nav-link active" href="{% url 'home' %}">

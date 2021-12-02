@@ -6,7 +6,7 @@
   </li>
   {% if user.is_authenticated %}
       <li class="nav-item navbar-brand disabled">
-        <a class="nav-link active" href="#">
+        <a class="nav-link active" href="{% url 'home' %}">
             <span class="badge badge-pill badge-primary">Welcome {{ user.username }}!</span>
         </a>
       </li>
