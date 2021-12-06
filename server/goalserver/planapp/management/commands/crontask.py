@@ -3,8 +3,9 @@ from django.contrib.auth.models import AnonymousUser, User
 from planapp.models import Goal, Plan, Task
 import datetime
 
+
 class Command(BaseCommand):
-    help = 'creates tasks from plans'
+    help = "creates tasks from plans"
 
     def add_arguments(self, parser):
         pass
@@ -25,12 +26,14 @@ class Command(BaseCommand):
                                     title=plan.recurring_task_title,
                                     description=plan.recurring_task_description,
                                     priority=plan.default_priority,
-                                    plan=plan
+                                    plan=plan,
                                 )
                                 newT.save()
                                 created += 1
                     except:
-                        raise CommandError('error running crontask.py')
+                        raise CommandError("error running crontask.py")
 
         self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
-        self.stdout.write(self.style.SUCCESS('Successfully created "%s" tasks\n----' % created))
+        self.stdout.write(
+            self.style.SUCCESS('Successfully created "%s" tasks\n----' % created)
+        )

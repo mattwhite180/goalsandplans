@@ -7,20 +7,17 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Goal(models.Model):
-
     class PriorityLevels(models.TextChoices):
-        BACKLOG = '0 BK', _('Backlog')
-        LOW = '1 LW', _('Low')
-        MEDIUM = '2 MD', _('Medium')
-        HIGH = '3 HI', _('High')
-        UG = '4 UG', _('Urgent')
+        BACKLOG = "0 BK", _("Backlog")
+        LOW = "1 LW", _("Low")
+        MEDIUM = "2 MD", _("Medium")
+        HIGH = "3 HI", _("High")
+        UG = "4 UG", _("Urgent")
 
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=2000)
     priority = models.CharField(
-        max_length=4,
-        choices=PriorityLevels.choices,
-        default=PriorityLevels.LOW,
+        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -34,14 +31,14 @@ class Goal(models.Model):
                 total += 1
         return total
 
-class Plan(models.Model):
 
+class Plan(models.Model):
     class PriorityLevels(models.TextChoices):
-        BACKLOG = '0 BK', _('Backlog')
-        LOW = '1 LW', _('Low')
-        MEDIUM = '2 MD', _('Medium')
-        HIGH = '3 HI', _('High')
-        UG = '4 UG', _('Urgent')
+        BACKLOG = "0 BK", _("Backlog")
+        LOW = "1 LW", _("Low")
+        MEDIUM = "2 MD", _("Medium")
+        HIGH = "3 HI", _("High")
+        UG = "4 UG", _("Urgent")
 
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
@@ -50,55 +47,54 @@ class Plan(models.Model):
     limit = models.IntegerField(default=10)
     add_count = models.IntegerField(default=1)
     default_priority = models.CharField(
-        max_length=4,
-        choices=PriorityLevels.choices,
-        default=PriorityLevels.LOW,
+        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
-    last_updated = models.DateField('last_updated', default=datetime.date.today() - datetime.timedelta(hours=24))
+    last_updated = models.DateField(
+        "last_updated", default=datetime.date.today() - datetime.timedelta(hours=24)
+    )
     add_period = models.IntegerField(default=1)
-    recurring_task_title = models.CharField(max_length=200, default='<recurring task title>')
-    recurring_task_description = models.CharField(max_length=2000, default='<recurring task description>')
+    recurring_task_title = models.CharField(
+        max_length=200, default="<recurring task title>"
+    )
+    recurring_task_description = models.CharField(
+        max_length=2000, default="<recurring task description>"
+    )
 
     def __str__(self):
         return self.title
 
 
 class MiniTodo(models.Model):
-
     class PriorityLevels(models.TextChoices):
-        BACKLOG = '0 BK', _('Backlog')
-        LOW = '1 LW', _('Low')
-        MEDIUM = '2 MD', _('Medium')
-        HIGH = '3 HI', _('High')
-        UG = '4 UG', _('Urgent')
+        BACKLOG = "0 BK", _("Backlog")
+        LOW = "1 LW", _("Low")
+        MEDIUM = "2 MD", _("Medium")
+        HIGH = "3 HI", _("High")
+        UG = "4 UG", _("Urgent")
 
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=20000)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     priority = models.CharField(
-        max_length=4,
-        choices=PriorityLevels.choices,
-        default=PriorityLevels.LOW,
+        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
 
     def __str__(self):
         return self.title
 
-class Task(models.Model):
 
+class Task(models.Model):
     class PriorityLevels(models.TextChoices):
-        BACKLOG = '0 BK', _('Backlog')
-        LOW = '1 LW', _('Low')
-        MEDIUM = '2 MD', _('Medium')
-        HIGH = '3 HI', _('High')
-        UG = '4 UG', _('Urgent')
+        BACKLOG = "0 BK", _("Backlog")
+        LOW = "1 LW", _("Low")
+        MEDIUM = "2 MD", _("Medium")
+        HIGH = "3 HI", _("High")
+        UG = "4 UG", _("Urgent")
 
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=2000, default='<task description>')
+    description = models.CharField(max_length=2000, default="<task description>")
     priority = models.CharField(
-        max_length=4,
-        choices=PriorityLevels.choices,
-        default=PriorityLevels.LOW,
+        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     minitodo = models.ForeignKey(MiniTodo, models.SET_NULL, blank=True, null=True)
