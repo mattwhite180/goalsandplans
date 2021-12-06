@@ -1,0 +1,16 @@
+{% extends "planapp/bootstrap.html" %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-header">
+    Backup JSON
+  </div>
+  <div class="card-body">
+    <a onclick="copyToClipboard('data')" class="btn btn-primary">Copy</a>
+    <a href="{% url 'home' %}" class="btn btn-primary" style="background-color: orange; border-color: orange;">Home</a>
+    <p id="data">{{ data }}</p>
+  </div>
+</div>
+
+{% endblock %}
