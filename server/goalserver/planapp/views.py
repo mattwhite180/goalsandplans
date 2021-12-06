@@ -17,6 +17,75 @@ import re
 Helpful functions used by views
 """
 
+def dataToJson():
+    dataList = list()
+    for g in Goal.objects.all():
+        dataList.append(
+            {
+                "goal": {
+                    "title": g.title,
+                    "description": g.description,
+                    "priority": g.priority,
+                    "user": g.user.username
+                }
+            }
+        )
+    for p in Plan.objects.all():
+        dataList.append(
+            {
+                "plan": {
+                    "title": p.title,
+                    "description": p.description,
+                    "priority": p.default_priority,
+                    "goal": p.goal.title,
+                    "continuous": str(p.continuous),
+                    "limit": str(p.limit),
+                    "default_priority": p.default_priority,
+                    "add_period": str(p.add_period),
+                    "recurring_task_title": p.recurring_task_title,
+                    "recurring_task_description": p.recurring_task_description
+                }
+            }
+        )
+    for t in Task.objects.all():
+        if t.minitodo:
+            minititle = t.minitodo.title
+        else:
+            minititle = ''
+        dataList.append(
+            {
+                "task": {
+                    "title": t.title,
+                    "description": t.description,
+                    "priority": t.priority,
+                    "plan": t.plan.title,
+                    "minitodo": minititle
+                }
+            }
+        )
+
+    for m in MiniTodo.objects.all():
+        dataList.append(
+            {
+                "minitodo": {
+                    "title": m.title,
+                    "description": m.description,
+                    "priority": m.priority,
+                    "user": m.user.username
+                }
+            }
+        )
+    return json.dumps(dataList)
+
+
+def create_backup(request):
+    if request.user.is_superuser and request.user.is_staff:
+        return HttpResponse(
+            dataToJson()
+        )
+    else:
+        return HttpResponseRedirect(reverse('home'))
+
 def message_generator(verb, obj):
     if hasattr(obj, 'title'):
         name = obj.title

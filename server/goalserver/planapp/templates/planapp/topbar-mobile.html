@@ -24,6 +24,9 @@
               <a class="nav-link active" href="/admin/">
                   <button type="button" class="btn btn-secondary">Admin</button>
               </a>
+              <a class="nav-link active" href="{% url 'create_backup' %}">
+                  <button type="button" class="btn btn-secondary">Create Backup</button>
+              </a>
           {% endif %}
           {% else %}
           <a class="nav-link active" href="{% url 'login' %}">
