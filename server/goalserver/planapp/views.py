@@ -6,7 +6,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Goal, Plan, Task, MiniTodo
 from django.contrib.auth import authenticate, login
-from .forms import GoalForm, PlanForm, TaskForm, MiniTodoForm
+from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, MiniTodoForm
 from django.core.management import call_command
 from django.contrib import messages
 import json
@@ -406,6 +406,33 @@ def delete_plan(request, plan_id):
 #####
 Task Views
 """
+
+
+@login_required
+def quick_task(request):
+    context = {}
+
+    if request.method == "POST":
+        # form = GoalForm(request.POST or None, request.FILES or None)
+        form = QuickTaskForm(request.POST)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.user = request.user
+            t.save()
+            messages.info(request, message_generator("created", t))
+            return HttpResponseRedirect(reverse("home"))
+        else:
+            context["error_list"] = get_errors(form)
+
+    else:
+        form = QuickTaskForm()
+        goal_list = Goal.objects.filter(user=request.user)
+        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list)
+
+    context["form"] = form
+    context["is_mobile"] = mobile(request)
+    return render(request, "planapp/formedit.html", context)
 
 
 @login_required

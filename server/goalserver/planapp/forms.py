@@ -36,6 +36,16 @@ class PlanForm(forms.ModelForm):
         }
 
 
+class QuickTaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ("title", "description", "priority", "minitodo", "plan")
+        widgets = {
+            "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
+            "priority": forms.RadioSelect(choices=Task.PriorityLevels),
+        }
+
+
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
@@ -43,7 +53,6 @@ class TaskForm(forms.ModelForm):
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.RadioSelect(choices=Task.PriorityLevels),
-            # 'minitodo' : forms.ModelChoiceField(empty_label="(Nothing)", queryset=MiniTodo.objects.all())
         }
 
 

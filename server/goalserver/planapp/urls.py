@@ -35,6 +35,7 @@ urlpatterns = [
     path("plan/<int:plan_id>/", views.plan, name="plan"),
     path("task/<int:task_id>/", views.task, name="task"),
     path("task_todo/", views.task_todo, name="task_todo"),
+    path("quick_task/", views.quick_task, name="quick_task"),
     path("run_jobs/", views.run_jobs, name="run_jobs"),
     path("create_backup/", views.create_backup, name="create_backup"),
 ]
