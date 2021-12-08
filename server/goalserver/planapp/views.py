@@ -407,34 +407,6 @@ def delete_plan(request, plan_id):
 Task Views
 """
 
-
-@login_required
-def quick_task(request):
-    context = {}
-
-    if request.method == "POST":
-        # form = GoalForm(request.POST or None, request.FILES or None)
-        form = QuickTaskForm(request.POST)
-
-        if form.is_valid():
-            t = form.save(commit=False)
-            t.user = request.user
-            t.save()
-            messages.info(request, message_generator("created", t))
-            return HttpResponseRedirect(reverse("home"))
-        else:
-            context["error_list"] = get_errors(form)
-
-    else:
-        form = QuickTaskForm()
-        goal_list = Goal.objects.filter(user=request.user)
-        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list)
-
-    context["form"] = form
-    context["is_mobile"] = mobile(request)
-    return render(request, "planapp/formedit.html", context)
-
-
 @login_required
 def task(request, task_id):
     context = {}
@@ -495,6 +467,32 @@ def delete_task(request, task_id):
     context["is_mobile"] = mobile(request)
     return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
+@login_required
+def quick_task(request):
+    context = {}
+
+    if request.method == "POST":
+        # form = GoalForm(request.POST or None, request.FILES or None)
+        form = QuickTaskForm(request.POST)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.user = request.user
+            t.save()
+            messages.info(request, message_generator("created", t))
+            return HttpResponseRedirect(reverse("home"))
+        else:
+            context["error_list"] = get_errors(form)
+
+    else:
+        form = QuickTaskForm()
+        goal_list = Goal.objects.filter(user=request.user)
+        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list)
+        form.fields["minitodo"].queryset = MiniTodo.objects.filter(user=request.user)
+
+    context["form"] = form
+    context["is_mobile"] = mobile(request)
+    return render(request, "planapp/formedit.html", context)
 
 """
 #####
