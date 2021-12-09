@@ -3,6 +3,8 @@ djangosecret.txt
 .postgres_test
 migrations
 
+.env
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
