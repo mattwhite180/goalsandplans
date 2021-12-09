@@ -132,7 +132,7 @@ WSGI_APPLICATION = "goalserver.wsgi.application"
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 
-if 'SECRET' in os.environ or True:
+if 'SECRET' in os.environ:
     secrets = get_secret()
     DATABASES = {
         "default": {
