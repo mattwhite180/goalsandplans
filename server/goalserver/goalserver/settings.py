@@ -19,6 +19,7 @@ from botocore.exceptions import ClientError
 
 def get_secret():
 
+    secret = {}
     secret_name = os.environ['SECRET']
     region_name = os.environ['REGION']
 
@@ -64,7 +65,10 @@ def get_secret():
         if 'SecretString' in get_secret_value_response:
             secret = get_secret_value_response['SecretString']
         else:
-            decoded_binary_secret = base64.b64decode(get_secret_value_response['SecretBinary'])
+            secret = base64.b64decode(get_secret_value_response['SecretBinary'])
+    # if secret == None:
+    #     return secret
+    # else:
     return json.loads(secret)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -132,6 +136,17 @@ WSGI_APPLICATION = "goalserver.wsgi.application"
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "myproject",
+        "USER": "myprojectuser",
+        "PASSWORD": "password",
+        "HOST": "db",
+        "PORT": "5432",
+    }
+}
+
 if 'SECRET' in os.environ:
     secrets = get_secret()
     DATABASES = {
@@ -144,17 +159,7 @@ if 'SECRET' in os.environ:
             "PORT": secrets["port"],
         }
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": "myproject",
-            "USER": "myprojectuser",
-            "PASSWORD": "password",
-            "HOST": "db",
-            "PORT": "5432",
-        }
-    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
