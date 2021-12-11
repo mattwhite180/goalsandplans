@@ -407,6 +407,7 @@ def delete_plan(request, plan_id):
 Task Views
 """
 
+
 @login_required
 def task(request, task_id):
     context = {}
@@ -467,6 +468,7 @@ def delete_task(request, task_id):
     context["is_mobile"] = mobile(request)
     return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
+
 @login_required
 def quick_task(request):
     context = {}
@@ -493,6 +495,7 @@ def quick_task(request):
     context["form"] = form
     context["is_mobile"] = mobile(request)
     return render(request, "planapp/formedit.html", context)
+
 
 """
 #####

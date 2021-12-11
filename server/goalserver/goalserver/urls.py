@@ -19,6 +19,9 @@ from django.views.static import serve
 from . import settings
 
 
-urlpatterns = [path("", include("planapp.urls")), path("admin/", admin.site.urls),
-re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT})]
+urlpatterns = [
+    path("", include("planapp.urls")),
+    path("admin/", admin.site.urls),
+    re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
+]
 handler404 = "planapp.views.handler404"
