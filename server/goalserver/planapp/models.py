@@ -54,10 +54,10 @@ class Plan(models.Model):
     )
     add_period = models.IntegerField(default=1)
     recurring_task_title = models.CharField(
-        max_length=200, default="<recurring task title>"
+        max_length=200, default="recurring task title"
     )
     recurring_task_description = models.CharField(
-        max_length=2000, default="<recurring task description>"
+        max_length=2000, default="recurring task description"
     )
 
     def __str__(self):
@@ -92,7 +92,7 @@ class Task(models.Model):
         UG = "4 UG", _("Urgent")
 
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=2000, default="<task description>")
+    description = models.CharField(max_length=2000, default="task description")
     priority = models.CharField(
         max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )

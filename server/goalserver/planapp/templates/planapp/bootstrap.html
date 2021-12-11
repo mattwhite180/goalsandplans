@@ -1,85 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'planapp/style.css' %}">
-    <title>Goals And Plans</title>
-</head>
-<body>
-    {% autoescape off %}
-      {% if is_mobile %}
-        {% include "planapp/topbar-mobile.html" %}
-      {% else %}
-        {% include "planapp/topbar.html" %}
-      {% endif %}
-      {% block error %}
-        {% if error_list %}
-          <div id=errorblock>
-          {% for e in error_list %}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>{{ e }}</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          {% endfor %}
+{% extends "planapp/security.html" %}
+
+{% block website %}
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      {% load static %}
+      <link rel="stylesheet" href="{% static 'planapp/style.css' %}">
+      <title>Goals And Plans</title>
+  </head>
+  <body>
+    {% if is_mobile %}
+      {% include "planapp/topbar-mobile.html" %}
+    {% else %}
+      {% include "planapp/topbar.html" %}
+    {% endif %}
+    {% block error %}
+      {% if error_list %}
+        <div id=errorblock>
+        {% for e in error_list %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{ e }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-        {% endif %}
-        {% endblock %}
-        {% block message %}
-            {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-                  <strong>{{ message }}</strong>
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                {% endfor %}
-            </ul>
-            {% endif %}
-        {% endblock %}
-        <div id="content" class="float-container">
-            {% block content %}{% endblock %}
-            <div {% if not is_mobile %} class="float-child" {% endif %}>
-              {% block leftcontent %}{% endblock %}
-            </div>
-            <div {% if not is_mobile %} class="float-child" {% endif %}>
-              {% block rightcontent %}{% endblock %}
+        {% endfor %}
         </div>
-    {% endautoescape %}
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script>
-        function copyToClipboard(elementId) {
+      {% endif %}
+      {% endblock %}
+      {% block message %}
+          {% if messages %}
+          <ul class="messages">
+              {% for message in messages %}
+              <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              {% endfor %}
+          </ul>
+          {% endif %}
+      {% endblock %}
+      <div id="content" class="float-container">
+          {% block content %}{% endblock %}
+          <div {% if not is_mobile %} class="float-child" {% endif %}>
+            {% block leftcontent %}{% endblock %}
+          </div>
+          <div {% if not is_mobile %} class="float-child" {% endif %}>
+            {% block rightcontent %}{% endblock %}
+      </div>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <script>
+          function copyToClipboard(elementId) {
 
-          // Create a "hidden" input
-          var aux = document.createElement("input");
+            // Create a "hidden" input
+            var aux = document.createElement("input");
 
-          // Assign it the value of the specified element
-          aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+            // Assign it the value of the specified element
+            aux.setAttribute("value", document.getElementById(elementId).innerHTML);
 
-          // Append it to the body
-          document.body.appendChild(aux);
+            // Append it to the body
+            document.body.appendChild(aux);
 
-          // Highlight its content
-          aux.select();
+            // Highlight its content
+            aux.select();
 
-          // Copy the highlighted text
-          document.execCommand("copy");
+            // Copy the highlighted text
+            document.execCommand("copy");
 
-          // Remove it from the body
-          document.body.removeChild(aux);
+            // Remove it from the body
+            document.body.removeChild(aux);
 
-        }
-    </script>
-</body>
-</html>
+          }
+      </script>
+  </body>
+  </html>
+
+{% endblock %}
 
 <!-- <div class="float-child">
   <div class="green">{% block testleftcontent %}{% endblock %}</div>
