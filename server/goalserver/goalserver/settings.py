@@ -17,8 +17,9 @@ import base64
 import json
 from botocore.exceptions import ClientError
 
-def get_secret():
 
+# get the AWS RDS login info from the AWS secrets manager
+def get_secret():
     secret = {}
     secret_name = os.environ['SECRET']
     region_name = os.environ['REGION']
@@ -29,10 +30,6 @@ def get_secret():
         service_name='secretsmanager',
         region_name=region_name
     )
-
-    # In this sample we only handle the specific exceptions for the 'GetSecretValue' API.
-    # See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-    # We rethrow the exception by default.
 
     try:
         get_secret_value_response = client.get_secret_value(
@@ -66,14 +63,10 @@ def get_secret():
             secret = get_secret_value_response['SecretString']
         else:
             secret = base64.b64decode(get_secret_value_response['SecretBinary'])
-    # if secret == None:
-    #     return secret
-    # else:
     return json.loads(secret)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -83,7 +76,7 @@ secretkeyfile = open("djangosecret.txt", "r")
 SECRET_KEY = secretkeyfile.read()
 secretkeyfile.close()
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -136,6 +129,8 @@ WSGI_APPLICATION = "goalserver.wsgi.application"
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 
+# This is the 'local' database for testing
+# see docker-compose.yaml
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -147,6 +142,7 @@ DATABASES = {
     }
 }
 
+# This is the prod AWS RDS database
 if 'SECRET' in os.environ:
     secrets = get_secret()
     DATABASES = {
