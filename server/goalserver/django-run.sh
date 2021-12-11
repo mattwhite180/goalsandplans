@@ -24,5 +24,6 @@ python3 manage.py makemigrations planapp && \
 python3 manage.py makemigrations
 python3 manage.py makemigrations && \
 python3 manage.py migrate && \
+python3 manage.py collectstatic
 echo 'done with migrations. running server'
 python3 manage.py runserver 0:8000

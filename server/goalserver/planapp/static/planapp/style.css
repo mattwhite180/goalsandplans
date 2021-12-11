@@ -1,4 +1,6 @@
-ul.errorlist {display:none;}
+ul.errorlist {
+    display: none;
+}
 
 .float-container {
     border: 3px solid #fff;
