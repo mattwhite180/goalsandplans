@@ -17,6 +17,7 @@ import base64
 import json
 from botocore.exceptions import ClientError
 from django.core.management.utils import get_random_secret_key
+from django.contrib.messages import constants as messages
 
 
 # get the AWS RDS login info from the AWS secrets manager
@@ -122,6 +123,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "goalserver.wsgi.application"
 
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

@@ -187,6 +187,7 @@ def run_jobs(request):
 
 
 def handler404(request, exception=None):
+    messages.error(request, "404: Page not found. Redirecting to home")
     return HttpResponseRedirect(reverse("home"))
 
 
