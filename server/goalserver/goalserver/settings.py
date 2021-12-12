@@ -16,6 +16,7 @@ import boto3
 import base64
 import json
 from botocore.exceptions import ClientError
+from django.core.management.utils import get_random_secret_key
 
 
 # get the AWS RDS login info from the AWS secrets manager
@@ -68,9 +69,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-secretkeyfile = open("djangosecret.txt", "r")
-SECRET_KEY = secretkeyfile.read()
-secretkeyfile.close()
+if "DJANGOSECRET" in os.environ:
+    SECRET_KEY = os.environ["DJANGOSECRET"]
+else:
+    SECRET_KEY = get_random_secret_key()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
