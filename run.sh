@@ -1,3 +1,4 @@
+#!/bin/bash
 cd ~/goalsandplans
 
 FILE=secrets.env
