@@ -140,8 +140,11 @@ DATABASES = {
     }
 }
 
+PROD = False
+
 # This is the prod AWS RDS database
 if "SECRET" in os.environ:
+    PROD = True
     secrets = get_secret()
     DATABASES = {
         "default": {

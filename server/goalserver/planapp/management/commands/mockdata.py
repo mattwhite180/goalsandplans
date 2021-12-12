@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import AnonymousUser, User
+from django.conf import settings
 from planapp.models import Goal, Plan, Task
 import datetime
 
@@ -11,12 +12,12 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        for g in Goal.objects.all():
-            g.delete()
+        if not settings.PROD:
+            for g in Goal.objects.all():
+                g.delete()
         usernameList = list()
         for u in User.objects.all():
             usernameList.append(u.username)
-
         if "root" in usernameList:
             root_user = User.objects.get(username="root")
         else:
