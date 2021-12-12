@@ -50,7 +50,7 @@ class Plan(models.Model):
         max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
     last_updated = models.DateField(
-        "last_updated", default=datetime.date.today() - datetime.timedelta(hours=24)
+        "last_updated", default=datetime.date.today() - datetime.timedelta(days=366)
     )
     add_period = models.IntegerField(default=1)
     recurring_task_title = models.CharField(
