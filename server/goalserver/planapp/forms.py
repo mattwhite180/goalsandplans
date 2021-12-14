@@ -64,3 +64,6 @@ class MiniTodoForm(forms.ModelForm):
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.RadioSelect(choices=Goal.PriorityLevels),
         }
+
+class BackupForm(forms.Form):
+    copypasta = forms.CharField(widget=forms.Textarea(attrs={"cols": 100, "rows": 30}))

@@ -7,7 +7,7 @@ from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Goal, Plan, Task, MiniTodo
 from django.contrib.auth import authenticate, login
-from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, MiniTodoForm
+from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, MiniTodoForm, BackupForm
 from django.core.management import call_command
 from django.contrib import messages
 from django.conf import settings
@@ -90,12 +90,12 @@ def dataToJson():
         )
     return json.dumps(dataList)
 
+def jsonToData(data):
+    pass
 
 def mobile(request):
     # Return True if the request comes from a mobile device.
-
     MOBILE_AGENT_RE = re.compile(r".*(iphone|mobile|androidtouch)", re.IGNORECASE)
-
     if MOBILE_AGENT_RE.match(request.META["HTTP_USER_AGENT"]):
         return True
     else:
@@ -114,6 +114,50 @@ def create_backup(request):
         return render(request, "planapp/backup.html", context)
     else:
         return HttpResponseRedirect(reverse("home"))
+
+def restore_backup(request):
+    context = get_context(request)
+    if request.user.is_superuser or request.user.is_staff:
+        if request.method == "POST":
+
+            form = BackupForm(request.POST)
+
+            if form.is_valid():
+                cd = form.cleaned_data
+                data = cd.get('copypasta')
+                j = json.loads(data)
+                jsonToData(j)
+                message.success("restored backup")
+            else:
+                messages.error("an error has occured with the backup request")
+
+            return HttpResponseRedirect(reverse("home"))
+        else:
+            form = BackupForm()
+            context["form"] = form
+            return render(request, "planapp/formedit.html", context)
+    else:
+        return render(request, "planapp/home.html", context)
+
+    if request.method == "POST":
+
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+            u = form.save()
+            u.save()
+            login(request, u)
+            messages.success(request, message_generator("created", u))
+            return redirect("home")
+
+        else:
+            context["error_list"] = get_errors(form)
+
+    else:
+        form = UserCreationForm()
+
+    context["form"] = form
+    return render(request, "planapp/createaccount.html", context)
 
 
 def message_generator(verb, obj):
