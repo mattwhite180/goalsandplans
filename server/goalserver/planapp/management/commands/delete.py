@@ -15,7 +15,7 @@ class Command(BaseCommand):
         if settings.DEBUG:
             for u in User.objects.all():
                 u.delete()
-        self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
-        self.stdout.write(self.style.SUCCESS("deleted all data"))
+            self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
+            self.stdout.write(self.style.SUCCESS("deleted all data"))
         else:
             self.stdout.write(self.style.FAILURE("cannot run delete on prod"))

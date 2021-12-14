@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import logout
+from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Goal, Plan, Task, MiniTodo
 from django.contrib.auth import authenticate, login
@@ -501,7 +502,6 @@ def quick_task(request):
 MiniTodo Views
 """
 
-
 @login_required
 def task_todo(request):
     context = get_context(request)
@@ -527,7 +527,7 @@ def task_todo(request):
     context["form"] = form
     context["minitodo_list"] = MiniTodo.objects.filter(user=request.user).order_by(
         "-priority"
-    ),
+    )
 
     return render(request, "planapp/todo.html", context)
 
