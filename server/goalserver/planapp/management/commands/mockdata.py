@@ -12,7 +12,7 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        if not settings.PROD:
+        if settings.DEBUG:
             for g in Goal.objects.all():
                 g.delete()
         usernameList = list()

@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login
 from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, MiniTodoForm
 from django.core.management import call_command
 from django.contrib import messages
+from django.conf import settings
 import json
 import re
 
@@ -17,9 +18,19 @@ import re
 Helpful functions used by views
 """
 
+def debug():
+    return settings.DEBUG
 
 def dataToJson():
     dataList = list()
+    for u in User.objects.all():
+        dataList.append(
+            {
+                "user": {
+                    "username": u.username
+                }
+            }
+        )
     for g in Goal.objects.all():
         dataList.append(
             {
@@ -89,11 +100,15 @@ def mobile(request):
     else:
         return False
 
+def get_context(request):
+    context = {}
+    context["is_mobile"] = mobile(request)
+    context["debug"] = debug()
+    return context
 
 def create_backup(request):
     if request.user.is_superuser or request.user.is_staff:
-        context = {}
-        context["is_mobile"] = mobile(request)
+        context = get_context(request)
         context["data"] = dataToJson()
         return render(request, "planapp/backup.html", context)
     else:
@@ -156,7 +171,7 @@ Non-model views
 
 
 def create_account(request):
-    context = dict()
+    context = get_context(request)
 
     if request.method == "POST":
 
@@ -176,7 +191,6 @@ def create_account(request):
         form = UserCreationForm()
 
     context["form"] = form
-    context["is_mobile"] = mobile(request)
     return render(request, "planapp/createaccount.html", context)
 
 
@@ -192,14 +206,13 @@ def handler404(request, exception=None):
 
 
 def index(request):
-    context = {}
+    context = get_context(request)
 
-    context["is_mobile"] = mobile(request)
     return render(request, "planapp/index.html", context)
 
 
 def home(request):
-    context = {}
+    context = get_context(request)
 
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("index"))
@@ -222,7 +235,6 @@ def home(request):
     context["form"] = form
     goals_list = Goal.objects.filter(user=request.user).order_by("-priority")
     context["goals_list"] = goals_list
-    context["is_mobile"] = mobile(request)
 
     return render(request, "planapp/home.html", context)
 
@@ -235,7 +247,7 @@ Goal Views
 
 @login_required
 def goal(request, goal_id):
-    context = {}
+    context = get_context(request)
 
     g = get_object_or_404(Goal, pk=goal_id)
 
@@ -258,19 +270,16 @@ def goal(request, goal_id):
         form = PlanForm()
 
     plan_list = Plan.objects.filter(goal=g).order_by("-default_priority")
-    context = {
-        "goal": g,
-        "plan_list": plan_list,
-        "todo": g.pull_report(),
-        "form": form,
-        "is_mobile": mobile(request),
-    }
+    context["goal"] = g
+    context["plan_list"] = plan_list
+    context["todo"] = g.pull_report()
+    context["form"] = form
     return render(request, "planapp/goal.html", context)
 
 
 @login_required
 def edit_goal(request, goal_id):
-    context = {}
+    context = get_context(request)
 
     g = get_object_or_404(Goal, pk=goal_id)
 
@@ -294,14 +303,13 @@ def edit_goal(request, goal_id):
         form = GoalForm(instance=g)
 
     context["form"] = form
-    context["is_mobile"] = mobile(request)
     return render(request, "planapp/formedit.html", context)
     # return HttpResponseRedirect(reverse(home))
 
 
 @login_required
 def delete_goal(request, goal_id):
-    context = {}
+    context = get_context(request)
 
     g = get_object_or_404(Goal, pk=goal_id)
 
@@ -313,7 +321,6 @@ def delete_goal(request, goal_id):
         messages.warning(request, message_generator("deleted", g))
         g.delete()
 
-    context["is_mobile"] = mobile(request)
     return HttpResponseRedirect(reverse("home"))
 
 
@@ -325,7 +332,7 @@ Plan Views
 
 @login_required
 def plan(request, plan_id):
-    context = {}
+    context = get_context(request)
 
     p = get_object_or_404(Plan, pk=plan_id)
 
@@ -347,18 +354,15 @@ def plan(request, plan_id):
         form.fields["minitodo"].queryset = MiniTodo.objects.filter(user=request.user)
 
     task_list = Task.objects.filter(plan=p).order_by("-priority")
-    context = {
-        "plan": p,
-        "task_list": task_list,
-        "form": form,
-        "is_mobile": mobile(request),
-    }
+    context["plan"] = p
+    context["task_list"] = task_list
+    context["form"] = form
     return render(request, "planapp/plan.html", context)
 
 
 @login_required
 def edit_plan(request, plan_id):
-    context = {}
+    context = get_context(request)
 
     p = get_object_or_404(Plan, pk=plan_id)
 
@@ -382,13 +386,12 @@ def edit_plan(request, plan_id):
         form = PlanForm(instance=p)
 
     context["form"] = form
-    context["is_mobile"] = mobile(request)
     return render(request, "planapp/formedit.html", context)
 
 
 @login_required
 def delete_plan(request, plan_id):
-    context = {}
+    context = get_context(request)
 
     p = get_object_or_404(Plan, pk=plan_id)
     goal_id = p.goal.id
@@ -399,7 +402,6 @@ def delete_plan(request, plan_id):
         messages.warning(request, message_generator("deleted", p))
         p.delete()
 
-    context["is_mobile"] = mobile(request)
     return HttpResponseRedirect(reverse("goal", args=(goal_id,)))
 
 
@@ -411,7 +413,7 @@ Task Views
 
 @login_required
 def task(request, task_id):
-    context = {}
+    context = get_context(request)
 
     t = get_object_or_404(Task, pk=task_id)
 
@@ -419,13 +421,12 @@ def task(request, task_id):
         return HttpResponseRedirect(reverse("home"))
 
     context = {"task": t}
-    context["is_mobile"] = mobile(request)
     return render(request, "planapp/task.html", context)
 
 
 @login_required
 def edit_task(request, task_id):
-    context = {}
+    context = get_context(request)
 
     t = get_object_or_404(Task, pk=task_id)
 
@@ -450,14 +451,13 @@ def edit_task(request, task_id):
         form.fields["minitodo"].queryset = MiniTodo.objects.filter(user=request.user)
 
     context["form"] = form
-    context["is_mobile"] = mobile(request)
     return render(request, "planapp/formedit.html", context)
 
 
 @login_required
 def delete_task(request, task_id):
 
-    context = {}
+    context = get_context(request)
 
     t = get_object_or_404(Task, pk=task_id)
     plan_id = t.plan.id
@@ -466,13 +466,12 @@ def delete_task(request, task_id):
         messages.warning(request, message_generator("deleted", t))
         t.delete()
 
-    context["is_mobile"] = mobile(request)
     return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
 
 @login_required
 def quick_task(request):
-    context = {}
+    context = get_context(request)
 
     if request.method == "POST":
         # form = GoalForm(request.POST or None, request.FILES or None)
@@ -494,7 +493,6 @@ def quick_task(request):
         form.fields["minitodo"].queryset = MiniTodo.objects.filter(user=request.user)
 
     context["form"] = form
-    context["is_mobile"] = mobile(request)
     return render(request, "planapp/formedit.html", context)
 
 
@@ -506,7 +504,7 @@ MiniTodo Views
 
 @login_required
 def task_todo(request):
-    context = {}
+    context = get_context(request)
 
     if request.method == "POST":
 
@@ -525,21 +523,18 @@ def task_todo(request):
     plan_list = Plan.objects.filter(goal__in=goal_list)
     task_list = Task.objects.filter(plan__in=plan_list).order_by("-priority")
 
-    context = {
-        "task_list": task_list,
-        "form": form,
-        "minitodo_list": MiniTodo.objects.filter(user=request.user).order_by(
-            "-priority"
-        ),
-    }
+    context["task_list"] = task_list
+    context["form"] = form
+    context["minitodo_list"] = MiniTodo.objects.filter(user=request.user).order_by(
+        "-priority"
+    ),
 
-    context["is_mobile"] = mobile(request)
     return render(request, "planapp/todo.html", context)
 
 
 @login_required
 def minitodo(request, mini_id):
-    context = {}
+    context = get_context(request)
 
     m = get_object_or_404(MiniTodo, pk=mini_id)
 
@@ -547,13 +542,14 @@ def minitodo(request, mini_id):
         return HttpResponseRedirect(reverse("home"))
 
     task_list = Task.objects.filter(minitodo=m).order_by("-priority")
-    context = {"minitodo": m, "task_list": task_list, "is_mobile": mobile(request)}
+    context["minitodo"] = m
+    context["task_list"] = task_list
     return render(request, "planapp/minitodo.html", context)
 
 
 @login_required
 def edit_minitodo(request, mini_id):
-    context = {}
+    context = get_context(request)
 
     m = get_object_or_404(MiniTodo, pk=mini_id)
 
@@ -577,14 +573,13 @@ def edit_minitodo(request, mini_id):
         form = TaskForm(instance=m)
 
     context["form"] = form
-    context["is_mobile"] = mobile(request)
     return render(request, "planapp/formedit.html", context)
 
 
 @login_required
 def delete_minitodo(request, mini_id):
 
-    context = {}
+    context = get_context(request)
 
     m = get_object_or_404(MiniTodo, pk=mini_id)
 

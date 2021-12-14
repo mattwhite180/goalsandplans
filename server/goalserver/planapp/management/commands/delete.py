@@ -12,7 +12,7 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        if not settings.PROD:
+        if settings.DEBUG:
             for u in User.objects.all():
                 u.delete()
         self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))

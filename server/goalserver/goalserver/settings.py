@@ -74,6 +74,8 @@ if "DJANGOSECRET" in os.environ:
     SECRET_KEY = os.environ["DJANGOSECRET"]
 else:
     SECRET_KEY = get_random_secret_key()
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
@@ -144,11 +146,8 @@ DATABASES = {
     }
 }
 
-PROD = False
-
 # This is the prod AWS RDS database
-if "SECRET" in os.environ:
-    PROD = True
+if ("SECRET" in os.environ) and (DEBUG == False):
     secrets = get_secret()
     DATABASES = {
         "default": {
