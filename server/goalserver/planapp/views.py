@@ -91,7 +91,10 @@ def dataToJson():
     return json.dumps(dataList)
 
 def jsonToData(data):
-    pass
+    try:
+        pass
+    except Exception as e:
+        raise e
 
 def mobile(request):
     # Return True if the request comes from a mobile device.
@@ -123,13 +126,16 @@ def restore_backup(request):
             form = BackupForm(request.POST)
 
             if form.is_valid():
-                cd = form.cleaned_data
-                data = cd.get('copypasta')
-                j = json.loads(data)
-                jsonToData(j)
-                message.success("restored backup")
+                try:
+                    cd = form.cleaned_data
+                    data = cd.get('copypasta')
+                    j = json.loads(data)
+                    jsonToData(j)
+                    messages.success(request, "restored backup")
+                except Exception as e:
+                    messages.error(request, str(e))
             else:
-                messages.error("an error has occured with the backup request")
+                messages.error(request, "an error has occured with the backup request")
 
             return HttpResponseRedirect(reverse("home"))
         else:
