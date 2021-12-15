@@ -7,10 +7,11 @@ from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Goal, Plan, Task, MiniTodo
 from django.contrib.auth import authenticate, login
-from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, MiniTodoForm, BackupForm
+from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, MiniTodoForm, BackupRestoreForm, BackupCreateForm
 from django.core.management import call_command
 from django.contrib import messages
 from django.conf import settings
+from django.core import serializers
 import json
 import re
 
@@ -22,9 +23,9 @@ Helpful functions used by views
 def debug():
     return settings.DEBUG
 
-def dataToJson():
+def dataToJsonAll():
     dataList = list()
-    for u in User.objects.all():
+    for u in User.objects.all().order_by('username'):
         dataList.append(
             {
                 "user": {
@@ -32,63 +33,35 @@ def dataToJson():
                 }
             }
         )
-    for g in Goal.objects.all():
-        dataList.append(
-            {
-                "goal": {
-                    "title": g.title,
-                    "description": g.description,
-                    "priority": g.priority,
-                    "user": g.user.username,
-                }
-            }
-        )
-    for p in Plan.objects.all():
-        dataList.append(
-            {
-                "plan": {
-                    "title": p.title,
-                    "description": p.description,
-                    "priority": p.default_priority,
-                    "goal": p.goal.title,
-                    "continuous": str(p.continuous),
-                    "limit": str(p.limit),
-                    "default_priority": p.default_priority,
-                    "add_period": str(p.add_period),
-                    "recurring_task_title": p.recurring_task_title,
-                    "recurring_task_description": p.recurring_task_description,
-                }
-            }
-        )
-    for t in Task.objects.all():
-        if t.minitodo:
-            minititle = t.minitodo.title
-        else:
-            minititle = ""
-        dataList.append(
-            {
-                "task": {
-                    "title": t.title,
-                    "description": t.description,
-                    "priority": t.priority,
-                    "plan": t.plan.title,
-                    "minitodo": minititle,
-                }
-            }
-        )
-
-    for m in MiniTodo.objects.all():
-        dataList.append(
-            {
-                "minitodo": {
-                    "title": m.title,
-                    "description": m.description,
-                    "priority": m.priority,
-                    "user": m.user.username,
-                }
-            }
-        )
+    dataList.append(json.loads(serializers.serialize("json", Goal.objects.all().order_by('title'))))
+    dataList.append(json.loads(serializers.serialize("json", Plan.objects.all().order_by('title'))))
+    dataList.append(json.loads(serializers.serialize("json", Task.objects.all().order_by('title'))))
+    dataList.append(json.loads(serializers.serialize("json", MiniTodo.objects.all().order_by('title'))))
     return json.dumps(dataList)
+
+def dataToJson(user_id = -1):
+    dataList = list()
+    if user_id == -1:
+        return dataToJsonAll()
+    
+    u = User.objects.get(id=user_id)
+    dataList.append(
+        {
+            "user": {
+                "username": u.username
+            }
+        }
+    )
+    goal_list = Goal.objects.filter(user=u).order_by('title')
+    plan_list = Plan.objects.filter(goal__in=goal_list).order_by('title')
+    task_list = Task.objects.filter(plan__in=plan_list).order_by('title')
+    mini_list = MiniTodo.objects.filter(user=u).order_by('title')
+    dataList.append(json.loads(serializers.serialize("json", goal_list)))
+    dataList.append(json.loads(serializers.serialize("json", plan_list)))
+    dataList.append(json.loads(serializers.serialize("json", task_list)))
+    dataList.append(json.loads(serializers.serialize("json", mini_list)))
+    return json.dumps(dataList)
+
 
 def jsonToData(data):
     try:
@@ -111,9 +84,18 @@ def get_context(request):
     return context
 
 def create_backup(request):
+    context = get_context(request)
     if request.user.is_superuser or request.user.is_staff:
-        context = get_context(request)
-        context["data"] = dataToJson()
+        if request.method == "POST":
+            form = BackupCreateForm(request.POST)
+            if form.is_valid():
+                cd = form.cleaned_data
+                user_id = cd.get('user')
+                context["data"] = dataToJson(user_id)
+        else:
+            form = BackupCreateForm()
+            context["form"] = form
+
         return render(request, "planapp/backup.html", context)
     else:
         return HttpResponseRedirect(reverse("home"))
@@ -123,7 +105,7 @@ def restore_backup(request):
     if request.user.is_superuser or request.user.is_staff:
         if request.method == "POST":
 
-            form = BackupForm(request.POST)
+            form = BackupRestoreForm(request.POST)
 
             if form.is_valid():
                 try:
@@ -139,7 +121,7 @@ def restore_backup(request):
 
             return HttpResponseRedirect(reverse("home"))
         else:
-            form = BackupForm()
+            form = BackupRestoreForm()
             context["form"] = form
             return render(request, "planapp/formedit.html", context)
     else:
