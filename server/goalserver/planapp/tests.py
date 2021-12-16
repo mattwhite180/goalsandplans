@@ -2,7 +2,7 @@ from django.test import RequestFactory, TestCase
 from django.core.management import call_command
 from .models import Goal, Plan, Task
 from django.contrib.auth.models import AnonymousUser, User
-from .views import run_jobs, jsonToData, dataToJson
+from .views import run_jobs, dataToJson
 from django.test import Client
 import datetime
 
