@@ -52,6 +52,7 @@ def mobile(request):
         return False
 
 def get_context(request):
+    call_command("crontask")
     context = {}
     context["is_mobile"] = mobile(request)
     context["debug"] = debug()
