@@ -263,6 +263,7 @@ def edit_goal(request, goal_id):
         form = GoalForm(instance=g)
 
     context["form"] = form
+    context["form_title"] = "edit goal (" + str(g.title) + ")"
     return render(request, "planapp/formedit.html", context)
     # return HttpResponseRedirect(reverse(home))
 
@@ -346,6 +347,7 @@ def edit_plan(request, plan_id):
         form = PlanForm(instance=p)
 
     context["form"] = form
+    context["form_title"] = "edit plan (" + str(p.title) + ")"
     return render(request, "planapp/formedit.html", context)
 
 
@@ -411,6 +413,7 @@ def edit_task(request, task_id):
         form.fields["minitodo"].queryset = MiniTodo.objects.filter(user=request.user)
 
     context["form"] = form
+    context["form_title"] = "edit task (" + str(t.title) + ")"
     return render(request, "planapp/formedit.html", context)
 
 
@@ -453,6 +456,7 @@ def quick_task(request):
         form.fields["minitodo"].queryset = MiniTodo.objects.filter(user=request.user)
 
     context["form"] = form
+    context["form_title"] = "create a task"
     return render(request, "planapp/formedit.html", context)
 
 
@@ -532,6 +536,7 @@ def edit_minitodo(request, mini_id):
         form = TaskForm(instance=m)
 
     context["form"] = form
+    context["form_title"] = "edit minitodo (" + str(m.title) + ")"
     return render(request, "planapp/formedit.html", context)
 
 
