@@ -20,25 +20,25 @@
           <a class="nav-link active" href="{% url 'task_todo' %}">
               <button type="button" class="btn btn-info">Todo</button>
           </a>
-          <a class="nav-link active" href="{% url 'run_jobs' %}">
-              <button type="button" class="btn btn-dark">Cron</button>
-          </a>
           {% if user.is_superuser %}
-              <a class="nav-link active" href="/admin/">
-                  <button type="button" class="btn btn-secondary">Admin</button>
-              </a>
-              <a class="nav-link active" href="{% url 'create_backup' %}">
-                  <button type="button" class="btn btn-secondary">Create Backup</button>
-              </a>
+            <a class="nav-link active" href="{% url 'run_jobs' %}">
+                <button type="button" class="btn btn-dark">Cron</button>
+            </a>
+            <a class="nav-link active" href="/admin/">
+                <button type="button" class="btn btn-secondary">Admin</button>
+            </a>
+            <a class="nav-link active" href="{% url 'create_backup' %}">
+                <button type="button" class="btn btn-secondary">Create Backup</button>
+            </a>
           {% endif %}
-          {% else %}
-          <a class="nav-link active" href="{% url 'login' %}">
-              <button type="button" class="btn btn-primary">Login</button>
-          </a>
-          <a class="nav-link active" href="{% url 'create' %}">
-              <button type="button" class="btn btn-success">Create Account</button>
-          </a>
-          {% endif %}
+        {% else %}
+            <a class="nav-link active" href="{% url 'login' %}">
+                <button type="button" class="btn btn-primary">Login</button>
+            </a>
+            <a class="nav-link active" href="{% url 'create' %}">
+                <button type="button" class="btn btn-success">Create Account</button>
+            </a>
+        {% endif %}
     </div>
   </div>
   <nav class="navbar navbar-dark bg-dark">

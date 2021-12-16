@@ -30,37 +30,37 @@
             <span class="badge badge-pill badge-info">Todo</span>
         </a>
       </li>
-      <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'run_jobs' %}">
-            <span class="badge badge-pill badge-dark">Cron</span>
-        </a>
-      </li>
       <!-- <li class="nav-item">
           {#<a class="nav-link" href="{% url 'change_password' %}">Change password?</a>#}
       </li> -->
           {% if user.is_superuser %}
-          <li class="nav-item navbar-brand">
-            <a class="nav-link active" href="/admin/">
-                <span class="badge badge-pill badge-secondary">Admin</span>
-            </a>
-          </li>
-          <li class="nav-item navbar-brand">
-            <a class="nav-link active" href="{% url 'create_backup' %}">
-                <span class="badge badge-pill badge-secondary">Create Backup</span>
-            </a>
-          </li>
+            <li class="nav-item navbar-brand">
+              <a class="nav-link active" href="{% url 'run_jobs' %}">
+                  <span class="badge badge-pill badge-dark">Cron</span>
+              </a>
+            </li>
+            <li class="nav-item navbar-brand">
+              <a class="nav-link active" href="/admin/">
+                  <span class="badge badge-pill badge-secondary">Admin</span>
+              </a>
+            </li>
+            <li class="nav-item navbar-brand">
+              <a class="nav-link active" href="{% url 'create_backup' %}">
+                  <span class="badge badge-pill badge-secondary">Create Backup</span>
+              </a>
+            </li>
           {% endif %}
       {% else %}
-      <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'login' %}">
-            <span class="badge badge-pill badge-primary">Login</span>
-        </a>
-      </li>
-      <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'create' %}">
-            <span class="badge badge-pill badge-success">Create Account</span>
-        </a>
-      </li>
+        <li class="nav-item navbar-brand">
+          <a class="nav-link active" href="{% url 'login' %}">
+              <span class="badge badge-pill badge-primary">Login</span>
+          </a>
+        </li>
+        <li class="nav-item navbar-brand">
+          <a class="nav-link active" href="{% url 'create' %}">
+              <span class="badge badge-pill badge-success">Create Account</span>
+          </a>
+        </li>
       {% endif %}
   </ul>
 </div>
