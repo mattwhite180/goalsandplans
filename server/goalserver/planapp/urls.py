@@ -34,5 +34,4 @@ urlpatterns = [
     path("task_todo/", views.task_todo, name="task_todo"),
     path("run_jobs/", views.run_jobs, name="run_jobs"),
     path("create_backup/", views.create_backup, name="create_backup"),
-    path("restore_backup/", views.restore_backup, name="restore_backup"),
 ]

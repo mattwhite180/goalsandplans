@@ -7,10 +7,11 @@ from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Goal, Plan, Task, MiniTodo
 from django.contrib.auth import authenticate, login
-from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, MiniTodoForm, BackupForm
+from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, MiniTodoForm, BackupRestoreForm, BackupCreateForm
 from django.core.management import call_command
 from django.contrib import messages
 from django.conf import settings
+from django.core import serializers
 import json
 import re
 
@@ -22,79 +23,25 @@ Helpful functions used by views
 def debug():
     return settings.DEBUG
 
-def dataToJson():
+def dataToJson(user_id = -1):
     dataList = list()
-    for u in User.objects.all():
-        dataList.append(
-            {
-                "user": {
-                    "username": u.username
-                }
-            }
-        )
-    for g in Goal.objects.all():
-        dataList.append(
-            {
-                "goal": {
-                    "title": g.title,
-                    "description": g.description,
-                    "priority": g.priority,
-                    "user": g.user.username,
-                }
-            }
-        )
-    for p in Plan.objects.all():
-        dataList.append(
-            {
-                "plan": {
-                    "title": p.title,
-                    "description": p.description,
-                    "priority": p.default_priority,
-                    "goal": p.goal.title,
-                    "continuous": str(p.continuous),
-                    "limit": str(p.limit),
-                    "default_priority": p.default_priority,
-                    "add_period": str(p.add_period),
-                    "recurring_task_title": p.recurring_task_title,
-                    "recurring_task_description": p.recurring_task_description,
-                }
-            }
-        )
-    for t in Task.objects.all():
-        if t.minitodo:
-            minititle = t.minitodo.title
-        else:
-            minititle = ""
-        dataList.append(
-            {
-                "task": {
-                    "title": t.title,
-                    "description": t.description,
-                    "priority": t.priority,
-                    "plan": t.plan.title,
-                    "minitodo": minititle,
-                }
-            }
-        )
+    if user_id == -1:
+        return dataToJsonAll()
 
-    for m in MiniTodo.objects.all():
-        dataList.append(
-            {
-                "minitodo": {
-                    "title": m.title,
-                    "description": m.description,
-                    "priority": m.priority,
-                    "user": m.user.username,
-                }
+    u = User.objects.get(id=user_id)
+    dataList.insert(len(dataList),
+        {
+            "user": {
+                "username": u.username
             }
-        )
+        }
+    )
+    goal_list = Goal.objects.filter(user=u).order_by('title')
+    plan_list = Plan.objects.filter(goal__in=goal_list).order_by('title')
+    dataList.insert(len(dataList),json.loads(serializers.serialize("json", goal_list)))
+    dataList.insert(len(dataList),json.loads(serializers.serialize("json", plan_list)))
     return json.dumps(dataList)
 
-def jsonToData(data):
-    try:
-        pass
-    except Exception as e:
-        raise e
 
 def mobile(request):
     # Return True if the request comes from a mobile device.
@@ -111,59 +58,21 @@ def get_context(request):
     return context
 
 def create_backup(request):
-    if request.user.is_superuser or request.user.is_staff:
-        context = get_context(request)
-        context["data"] = dataToJson()
-        return render(request, "planapp/backup.html", context)
-    else:
-        return HttpResponseRedirect(reverse("home"))
-
-def restore_backup(request):
     context = get_context(request)
     if request.user.is_superuser or request.user.is_staff:
         if request.method == "POST":
-
-            form = BackupForm(request.POST)
-
+            form = BackupCreateForm(request.POST)
             if form.is_valid():
-                try:
-                    cd = form.cleaned_data
-                    data = cd.get('copypasta')
-                    j = json.loads(data)
-                    jsonToData(j)
-                    messages.success(request, "restored backup")
-                except Exception as e:
-                    messages.error(request, str(e))
-            else:
-                messages.error(request, "an error has occured with the backup request")
-
-            return HttpResponseRedirect(reverse("home"))
+                cd = form.cleaned_data
+                user_id = cd.get('user')
+                context["data"] = dataToJson(user_id)
         else:
-            form = BackupForm()
+            form = BackupCreateForm()
             context["form"] = form
-            return render(request, "planapp/formedit.html", context)
+
+        return render(request, "planapp/backup.html", context)
     else:
-        return render(request, "planapp/home.html", context)
-
-    if request.method == "POST":
-
-        form = UserCreationForm(request.POST)
-
-        if form.is_valid():
-            u = form.save()
-            u.save()
-            login(request, u)
-            messages.success(request, message_generator("created", u))
-            return redirect("home")
-
-        else:
-            context["error_list"] = get_errors(form)
-
-    else:
-        form = UserCreationForm()
-
-    context["form"] = form
-    return render(request, "planapp/createaccount.html", context)
+        return HttpResponseRedirect(reverse("home"))
 
 
 def message_generator(verb, obj):

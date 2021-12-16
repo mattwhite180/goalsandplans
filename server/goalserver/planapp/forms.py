@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import ModelForm  # , Textarea, DateTimeField, MultipleChoiceField
 from .models import Goal, Plan, Task, MiniTodo
+from django.contrib.auth.models import AnonymousUser, User
+
 
 
 class GoalForm(forms.ModelForm):
@@ -65,5 +67,12 @@ class MiniTodoForm(forms.ModelForm):
             "priority": forms.RadioSelect(choices=Goal.PriorityLevels),
         }
 
-class BackupForm(forms.Form):
+class BackupRestoreForm(forms.Form):
     copypasta = forms.CharField(widget=forms.Textarea(attrs={"cols": 100, "rows": 30}))
+
+class BackupCreateForm(forms.Form):
+    user = forms.IntegerField(
+        widget=forms.Select(
+            choices=User.objects.all().values_list('id', 'username')
+        )
+    )

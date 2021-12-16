@@ -6,11 +6,20 @@
   <div class="card-header">
     Backup JSON
   </div>
-  <div class="card-body">
-    <a onclick="copyToClipboard('data')" class="btn btn-primary">Copy</a>
-    <a href="{% url 'home' %}" class="btn btn-primary" style="background-color: orange; border-color: orange;">Home</a>
-    <p id="data">{{ data }}</p>
-  </div>
+  {% if form %}
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input class="btn btn-primary" type="submit" value="Submit" />
+    </form>
+  {% endif %}
+  {% if data %}
+    <div class="card-body">
+      <a onclick="copyToClipboard('data')" class="btn btn-primary">Copy</a>
+      <a href="{% url 'home' %}" class="btn btn-primary" style="background-color: orange; border-color: orange;">Home</a>
+      <p id="data">{{ data }}</p>
+    </div>
+  {% endif %}
 </div>
 
 {% endblock %}
