@@ -23,29 +23,13 @@ Helpful functions used by views
 def debug():
     return settings.DEBUG
 
-def dataToJsonAll():
-    dataList = list()
-    for u in User.objects.all().order_by('username'):
-        dataList.append(
-            {
-                "user": {
-                    "username": u.username
-                }
-            }
-        )
-    dataList.append(json.loads(serializers.serialize("json", Goal.objects.all().order_by('title'))))
-    dataList.append(json.loads(serializers.serialize("json", Plan.objects.all().order_by('title'))))
-    dataList.append(json.loads(serializers.serialize("json", Task.objects.all().order_by('title'))))
-    dataList.append(json.loads(serializers.serialize("json", MiniTodo.objects.all().order_by('title'))))
-    return json.dumps(dataList)
-
 def dataToJson(user_id = -1):
     dataList = list()
     if user_id == -1:
         return dataToJsonAll()
-    
+
     u = User.objects.get(id=user_id)
-    dataList.append(
+    dataList.insert(len(dataList),
         {
             "user": {
                 "username": u.username
@@ -54,20 +38,10 @@ def dataToJson(user_id = -1):
     )
     goal_list = Goal.objects.filter(user=u).order_by('title')
     plan_list = Plan.objects.filter(goal__in=goal_list).order_by('title')
-    task_list = Task.objects.filter(plan__in=plan_list).order_by('title')
-    mini_list = MiniTodo.objects.filter(user=u).order_by('title')
-    dataList.append(json.loads(serializers.serialize("json", goal_list)))
-    dataList.append(json.loads(serializers.serialize("json", plan_list)))
-    dataList.append(json.loads(serializers.serialize("json", task_list)))
-    dataList.append(json.loads(serializers.serialize("json", mini_list)))
+    dataList.insert(len(dataList),json.loads(serializers.serialize("json", goal_list)))
+    dataList.insert(len(dataList),json.loads(serializers.serialize("json", plan_list)))
     return json.dumps(dataList)
 
-
-def jsonToData(data):
-    try:
-        pass
-    except Exception as e:
-        raise e
 
 def mobile(request):
     # Return True if the request comes from a mobile device.
@@ -99,53 +73,6 @@ def create_backup(request):
         return render(request, "planapp/backup.html", context)
     else:
         return HttpResponseRedirect(reverse("home"))
-
-def restore_backup(request):
-    context = get_context(request)
-    if request.user.is_superuser or request.user.is_staff:
-        if request.method == "POST":
-
-            form = BackupRestoreForm(request.POST)
-
-            if form.is_valid():
-                try:
-                    cd = form.cleaned_data
-                    data = cd.get('copypasta')
-                    j = json.loads(data)
-                    jsonToData(j)
-                    messages.success(request, "restored backup")
-                except Exception as e:
-                    messages.error(request, str(e))
-            else:
-                messages.error(request, "an error has occured with the backup request")
-
-            return HttpResponseRedirect(reverse("home"))
-        else:
-            form = BackupRestoreForm()
-            context["form"] = form
-            return render(request, "planapp/formedit.html", context)
-    else:
-        return render(request, "planapp/home.html", context)
-
-    if request.method == "POST":
-
-        form = UserCreationForm(request.POST)
-
-        if form.is_valid():
-            u = form.save()
-            u.save()
-            login(request, u)
-            messages.success(request, message_generator("created", u))
-            return redirect("home")
-
-        else:
-            context["error_list"] = get_errors(form)
-
-    else:
-        form = UserCreationForm()
-
-    context["form"] = form
-    return render(request, "planapp/createaccount.html", context)
 
 
 def message_generator(verb, obj):
