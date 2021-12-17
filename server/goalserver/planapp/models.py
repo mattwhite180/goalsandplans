@@ -64,7 +64,7 @@ class Plan(models.Model):
         return self.title
 
 
-class MiniTodo(models.Model):
+class TodoList(models.Model):
     class PriorityLevels(models.TextChoices):
         BACKLOG = "0 BK", _("Backlog")
         LOW = "1 LW", _("Low")
@@ -97,7 +97,7 @@ class Task(models.Model):
         max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
-    minitodo = models.ForeignKey(MiniTodo, models.SET_NULL, blank=True, null=True)
+    todolist = models.ForeignKey(TodoList, models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title

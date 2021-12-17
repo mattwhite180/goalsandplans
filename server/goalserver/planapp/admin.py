@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Goal, Plan, Task, MiniTodo
+from .models import Goal, Plan, Task, TodoList
 
 admin.site.site_url = "/planapp"
 
@@ -14,14 +14,14 @@ class PlanAdmin(admin.ModelAdmin):
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ("title", "id", "description", "priority", "minitodo", "plan")
+    list_display = ("title", "id", "description", "priority", "todolist", "plan")
 
 
-class MiniTodoAdmin(admin.ModelAdmin):
+class TodoListAdmin(admin.ModelAdmin):
     list_display = ("title", "id", "user", "description", "priority")
 
 
 admin.site.register(Goal, GoalAdmin)
 admin.site.register(Plan, PlanAdmin)
 admin.site.register(Task, TaskAdmin)
-admin.site.register(MiniTodo, MiniTodoAdmin)
+admin.site.register(TodoList, TodoListAdmin)

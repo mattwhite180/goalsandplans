@@ -5,9 +5,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import logout
 from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Goal, Plan, Task, MiniTodo
+from .models import Goal, Plan, Task, TodoList
 from django.contrib.auth import authenticate, login
-from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, MiniTodoForm, BackupRestoreForm, BackupCreateForm
+from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, TodoListForm, BackupRestoreForm, BackupCreateForm
 from django.core.management import call_command
 from django.contrib import messages
 from django.conf import settings
@@ -313,7 +313,7 @@ def plan(request, plan_id):
 
     else:
         form = TaskForm()
-        form.fields["minitodo"].queryset = MiniTodo.objects.filter(user=request.user)
+        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user)
 
     task_list = Task.objects.filter(plan=p).order_by("-priority")
     context["plan"] = p
@@ -411,7 +411,7 @@ def edit_task(request, task_id):
 
     else:
         form = TaskForm(instance=t)
-        form.fields["minitodo"].queryset = MiniTodo.objects.filter(user=request.user)
+        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user)
 
     context["form"] = form
     context["form_title"] = "edit task (" + str(t.title) + ")"
@@ -454,7 +454,7 @@ def quick_task(request):
         form = QuickTaskForm()
         goal_list = Goal.objects.filter(user=request.user)
         form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list)
-        form.fields["minitodo"].queryset = MiniTodo.objects.filter(user=request.user)
+        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user)
 
     context["form"] = form
     context["form_title"] = "create a task"
@@ -463,7 +463,7 @@ def quick_task(request):
 
 """
 #####
-MiniTodo Views
+TodoList Views
 """
 
 @login_required
@@ -472,7 +472,7 @@ def task_todo(request):
 
     if request.method == "POST":
 
-        form = MiniTodoForm(request.POST, use_required_attribute=False)
+        form = TodoListForm(request.POST, use_required_attribute=False)
 
         if form.is_valid():
             m = form.save(commit=False)
@@ -481,7 +481,7 @@ def task_todo(request):
             messages.success(request, message_generator("created", m))
 
     else:
-        form = MiniTodoForm()
+        form = TodoListForm()
 
     goal_list = Goal.objects.filter(user=request.user)
     plan_list = Plan.objects.filter(goal__in=goal_list)
@@ -489,7 +489,7 @@ def task_todo(request):
 
     context["task_list"] = task_list
     context["form"] = form
-    context["minitodo_list"] = MiniTodo.objects.filter(user=request.user).order_by(
+    context["todolist_list"] = TodoList.objects.filter(user=request.user).order_by(
         "-priority"
     )
 
@@ -497,39 +497,39 @@ def task_todo(request):
 
 
 @login_required
-def minitodo(request, mini_id):
+def todolist(request, todo_id):
     context = get_context(request)
 
-    m = get_object_or_404(MiniTodo, pk=mini_id)
+    m = get_object_or_404(TodoList, pk=todo_id)
 
     if m.user.id != request.user.id:
         return HttpResponseRedirect(reverse("home"))
 
-    task_list = Task.objects.filter(minitodo=m).order_by("-priority")
-    context["minitodo"] = m
+    task_list = Task.objects.filter(todolist=m).order_by("-priority")
+    context["todolist"] = m
     context["task_list"] = task_list
-    return render(request, "planapp/minitodo.html", context)
+    return render(request, "planapp/todolist.html", context)
 
 
 @login_required
-def edit_minitodo(request, mini_id):
+def edit_todolist(request, todo_id):
     context = get_context(request)
 
-    m = get_object_or_404(MiniTodo, pk=mini_id)
+    m = get_object_or_404(TodoList, pk=todo_id)
 
     if request.user.id != m.user.id:
         return HttpResponseRedirect(reverse("home"))
 
     if request.method == "POST":
         # form = GoalForm(request.POST or None, request.FILES or None)
-        form = MiniTodoForm(request.POST, instance=m)
+        form = TodoListForm(request.POST, instance=m)
 
         if form.is_valid():
             m = form.save(commit=False)
             m.user = request.user
             m.save()
             messages.info(request, message_generator("edited", m))
-            return HttpResponseRedirect(reverse("minitodo", args=(mini_id,)))
+            return HttpResponseRedirect(reverse("todolist", args=(todo_id,)))
         else:
             context["error_list"] = get_errors(form)
 
@@ -537,16 +537,16 @@ def edit_minitodo(request, mini_id):
         form = TaskForm(instance=m)
 
     context["form"] = form
-    context["form_title"] = "edit minitodo (" + str(m.title) + ")"
+    context["form_title"] = "edit todolist (" + str(m.title) + ")"
     return render(request, "planapp/formedit.html", context)
 
 
 @login_required
-def delete_minitodo(request, mini_id):
+def delete_todolist(request, todo_id):
 
     context = get_context(request)
 
-    m = get_object_or_404(MiniTodo, pk=mini_id)
+    m = get_object_or_404(TodoList, pk=todo_id)
 
     if request.user.id == m.user.id:
         messages.warning(request, message_generator("deleted", m))

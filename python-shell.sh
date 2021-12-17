@@ -1,5 +1,5 @@
 echo from django.contrib.auth.models import AnonymousUser, User
-echo from planapp.models import Goal, Plan, Task, MiniTodo
+echo from planapp.models import Goal, Plan, Task, TodoList
 echo from django.core import serializers
 echo from planapp.views import testJsonToData
 echo import datetime

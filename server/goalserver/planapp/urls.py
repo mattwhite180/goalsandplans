@@ -26,10 +26,10 @@ urlpatterns = [
     path("task/<int:task_id>/edit/", views.edit_task, name="edit_task"),
     path("task/<int:task_id>/delete/", views.delete_task, name="delete_task"),
     path("quick_task/", views.quick_task, name="quick_task"),
-    path("minitodo/<int:mini_id>/", views.minitodo, name="minitodo"),
-    path("minitodo/<int:mini_id>/edit/", views.edit_minitodo, name="edit_minitodo"),
+    path("todolist/<int:todo_id>/", views.todolist, name="todolist"),
+    path("todolist/<int:todo_id>/edit/", views.edit_todolist, name="edit_todolist"),
     path(
-        "minitodo/<int:mini_id>/delete/", views.delete_minitodo, name="delete_minitodo"
+        "todolist/<int:todo_id>/delete/", views.delete_todolist, name="delete_todolist"
     ),
     path("task_todo/", views.task_todo, name="task_todo"),
     path("run_jobs/", views.run_jobs, name="run_jobs"),

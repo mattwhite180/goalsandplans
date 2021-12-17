@@ -1,22 +1,22 @@
 {% extends "planapp/bootstrap.html" %}
 
 {% block leftcontent %}
-    {% if minitodo %}
+    {% if todolist %}
     <div class="card text-center">
         <div class="card-header">
-            <h1>{{ minitodo.title }}</h1>
+            <h1>{{ todolist.title }}</h1>
         </div>
         <div class="card-body">
-        <h4 class="card-title">{{ minitodo.description }}</h5>
-        <a href="{% url 'edit_minitodo' minitodo.id %}" class="btn btn-primary">Edit MiniTodo</a>
-        <a href="{% url 'delete_minitodo' minitodo.id %}"
-            class="btn btn-primary" style="background-color: red; border-color: red;">Delete MiniTodo</a>
+        <h4 class="card-title">{{ todolist.description }}</h5>
+        <a href="{% url 'edit_todolist' todolist.id %}" class="btn btn-primary">Edit TodoList</a>
+        <a href="{% url 'delete_todolist' todolist.id %}"
+            class="btn btn-primary" style="background-color: red; border-color: red;">Delete TodoList</a>
         </div>
         <div class="card-footer text-muted">
         </div>
     </div>
     {% else %}
-        <p>MiniTodo isnt available.</p>
+        <p>TodoList isnt available.</p>
     {% endif %}
 {% endblock %}
 

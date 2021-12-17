@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm  # , Textarea, DateTimeField, MultipleChoiceField
-from .models import Goal, Plan, Task, MiniTodo
+from .models import Goal, Plan, Task, TodoList
 from django.contrib.auth.models import AnonymousUser, User
 
 
@@ -41,7 +41,7 @@ class PlanForm(forms.ModelForm):
 class QuickTaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ("title", "description", "priority", "minitodo", "plan")
+        fields = ("title", "description", "priority", "todolist", "plan")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.RadioSelect(choices=Task.PriorityLevels),
@@ -51,16 +51,16 @@ class QuickTaskForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ("title", "description", "priority", "minitodo")
+        fields = ("title", "description", "priority", "todolist")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.RadioSelect(choices=Task.PriorityLevels),
         }
 
 
-class MiniTodoForm(forms.ModelForm):
+class TodoListForm(forms.ModelForm):
     class Meta:
-        model = MiniTodo
+        model = TodoList
         fields = ("title", "description", "priority")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
