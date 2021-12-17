@@ -31,6 +31,7 @@
         <div class="card">
             <h5 class="card-header"><a href="{% url 'minitodo' mini.id %}">{{ mini.title }}</a></h5>
             <div class="card-body">
+            <div><span class="badge badge-pill badge-danger">minitodo</span></div>
             <h5 class="card-title">{{ mini.description }}</h5>
             <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ mini.priority|slice:"2:" }}</span></div>
             <a href="{% url 'edit_minitodo' mini.id %}" class="btn btn-primary">Edit MiniTodo</a>
@@ -52,6 +53,7 @@
         <div class="card">
             <h5 class="card-header"><a href="{% url 'task' task.id %}">{{ task.title }}</a></h5>
             <div class="card-body">
+                <div><span class="badge badge-pill badge-primary">task</span></div>
                 <h5 class="card-title">{{ task.description }}</h5>
                 <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ task.priority|slice:"2:" }}</span></div>
                 <div class="card-text">Goal: <span class="badge badge-pill badge-success">{{ task.plan.goal }}</span></div>

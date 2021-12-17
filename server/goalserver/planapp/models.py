@@ -54,10 +54,10 @@ class Plan(models.Model):
     )
     add_period = models.IntegerField(default=1)
     recurring_task_title = models.CharField(
-        max_length=200, default="recurring task title"
+        max_length=200, default=""
     )
     recurring_task_description = models.CharField(
-        max_length=2000, default="recurring task description"
+        max_length=2000, default=""
     )
 
     def __str__(self):
