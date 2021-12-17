@@ -3,7 +3,7 @@
 {% block leftcontent %}
     <div class="card text-center">
         <div class="card-header">
-            Create a new goal
+            <h1>Create a new goal</h1>
         </div>
         <div class="card-body">
             <form method="post" enctype="multipart/form-data">
@@ -21,11 +21,11 @@
 {% block rightcontent %}
     {% if goals_list %}
     {% for goal in goals_list %}
-    <div class="card text-center">
+    <div class="card text-left">
         <div class="card-header">
             <h2><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></h2>
         </div>
-        <div class="card-body">
+        <div class="card-body text-left">
             <h5 class="card-title">{{ goal.description }}</h5>
             <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ goal.priority|slice:"2:" }}</span></div>
             <a href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>

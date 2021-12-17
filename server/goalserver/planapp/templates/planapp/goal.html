@@ -42,7 +42,7 @@
   {% if plan_list %}
       {% for plan in plan_list %}
           <div class="card">
-              <h5 class="card-header"><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></h5>
+              <h1 class="card-header"><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></h1>
               <div class="card-body">
               <h5 class="card-title">{{ plan.description }}</h5>
               {% if plan.continuous %}
