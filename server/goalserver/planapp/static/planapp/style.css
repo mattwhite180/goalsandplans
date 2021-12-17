@@ -13,3 +13,8 @@ ul.errorlist {
     padding: 5px;
     border: 2px solid #fff;
 }
+
+.one-line {
+    display: flex;
+    justify-content: space-between;
+}

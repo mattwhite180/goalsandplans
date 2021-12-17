@@ -7,7 +7,7 @@ from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Goal, Plan, Task, TodoList
 from django.contrib.auth import authenticate, login
-from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, TodoListForm, BackupRestoreForm, BackupCreateForm
+from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, TodoListForm, BackupCreateForm
 from django.core.management import call_command
 from django.contrib import messages
 from django.conf import settings
@@ -200,6 +200,25 @@ def home(request):
     return render(request, "planapp/home.html", context)
 
 
+def search_list(request):
+    context = get_context(request)
+
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("index"))
+
+    goal_list = Goal.objects.filter(user=request.user.id).order_by('-priority', 'title')
+    plan_list = Plan.objects.filter(goal__in=goal_list).order_by('-default_priority', 'title')
+    task_list = Task.objects.filter(plan__in=plan_list).order_by('-priority', 'title')
+    todo_list = TodoList.objects.filter(user=request.user.id).order_by('-priority', 'title')
+
+    context["goal_list"] = goal_list
+    context["plan_list"] = plan_list
+    context["task_list"] = task_list
+    context["todo_list"] = todo_list
+
+    return render(request, "planapp/search-list.html", context)
+
+
 """
 #####
 Goal Views
@@ -230,7 +249,7 @@ def goal(request, goal_id):
     else:
         form = PlanForm()
 
-    plan_list = Plan.objects.filter(goal=g).order_by("-default_priority")
+    plan_list = Plan.objects.filter(goal=g).order_by("-default_priority", "title")
     context["goal"] = g
     context["plan_list"] = plan_list
     context["todo"] = g.pull_report()
@@ -485,12 +504,12 @@ def task_todo(request):
 
     goal_list = Goal.objects.filter(user=request.user)
     plan_list = Plan.objects.filter(goal__in=goal_list)
-    task_list = Task.objects.filter(plan__in=plan_list).order_by("-priority")
+    task_list = Task.objects.filter(plan__in=plan_list).order_by("-priority", "title")
 
     context["task_list"] = task_list
     context["form"] = form
     context["todolist_list"] = TodoList.objects.filter(user=request.user).order_by(
-        "-priority"
+        "-priority", "title"
     )
 
     return render(request, "planapp/todo.html", context)
@@ -505,7 +524,7 @@ def todolist(request, todo_id):
     if m.user.id != request.user.id:
         return HttpResponseRedirect(reverse("home"))
 
-    task_list = Task.objects.filter(todolist=m).order_by("-priority")
+    task_list = Task.objects.filter(todolist=m).order_by("-priority", "title")
     context["todolist"] = m
     context["task_list"] = task_list
     return render(request, "planapp/todolist.html", context)

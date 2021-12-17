@@ -67,9 +67,6 @@ class TodoListForm(forms.ModelForm):
             "priority": forms.RadioSelect(choices=Goal.PriorityLevels),
         }
 
-class BackupRestoreForm(forms.Form):
-    copypasta = forms.CharField(widget=forms.Textarea(attrs={"cols": 100, "rows": 30}))
-
 class BackupCreateForm(forms.Form):
     user = forms.IntegerField(
         widget=forms.Select(
