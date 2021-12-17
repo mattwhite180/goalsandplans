@@ -49,7 +49,7 @@ class CronTestCase(TestCase):
             limit=1,
             add_count=1,
             add_period=2,
-            last_updated = datetime.date.today() - datetime.timedelta(days=1)
+            last_updated=datetime.date.today() - datetime.timedelta(days=1),
         )
 
     def test_sanity_check(self):

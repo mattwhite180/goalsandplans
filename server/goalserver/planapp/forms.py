@@ -4,7 +4,6 @@ from .models import Goal, Plan, Task, TodoList
 from django.contrib.auth.models import AnonymousUser, User
 
 
-
 class GoalForm(forms.ModelForm):
     class Meta:
         model = Goal
@@ -67,9 +66,8 @@ class TodoListForm(forms.ModelForm):
             "priority": forms.RadioSelect(choices=Goal.PriorityLevels),
         }
 
+
 class BackupCreateForm(forms.Form):
     user = forms.IntegerField(
-        widget=forms.Select(
-            choices=User.objects.all().values_list('id', 'username')
-        )
+        widget=forms.Select(choices=User.objects.all().values_list("id", "username"))
     )

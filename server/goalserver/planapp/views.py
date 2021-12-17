@@ -7,7 +7,14 @@ from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Goal, Plan, Task, TodoList
 from django.contrib.auth import authenticate, login
-from .forms import GoalForm, PlanForm, TaskForm, QuickTaskForm, TodoListForm, BackupCreateForm
+from .forms import (
+    GoalForm,
+    PlanForm,
+    TaskForm,
+    QuickTaskForm,
+    TodoListForm,
+    BackupCreateForm,
+)
 from django.core.management import call_command
 from django.contrib import messages
 from django.conf import settings
@@ -20,26 +27,22 @@ import re
 Helpful functions used by views
 """
 
+
 def debug():
     return settings.DEBUG
 
-def dataToJson(user_id = -1):
+
+def dataToJson(user_id=-1):
     dataList = list()
     if user_id == -1:
         return dataToJsonAll()
 
     u = User.objects.get(id=user_id)
-    dataList.insert(len(dataList),
-        {
-            "user": {
-                "username": u.username
-            }
-        }
-    )
-    goal_list = Goal.objects.filter(user=u).order_by('title')
-    plan_list = Plan.objects.filter(goal__in=goal_list).order_by('title')
-    dataList.insert(len(dataList),json.loads(serializers.serialize("json", goal_list)))
-    dataList.insert(len(dataList),json.loads(serializers.serialize("json", plan_list)))
+    dataList.insert(len(dataList), {"user": {"username": u.username}})
+    goal_list = Goal.objects.filter(user=u).order_by("title")
+    plan_list = Plan.objects.filter(goal__in=goal_list).order_by("title")
+    dataList.insert(len(dataList), json.loads(serializers.serialize("json", goal_list)))
+    dataList.insert(len(dataList), json.loads(serializers.serialize("json", plan_list)))
     return json.dumps(dataList)
 
 
@@ -51,12 +54,14 @@ def mobile(request):
     else:
         return False
 
+
 def get_context(request):
     call_command("crontask")
     context = {}
     context["is_mobile"] = mobile(request)
     context["debug"] = debug()
     return context
+
 
 def create_backup(request):
     context = get_context(request)
@@ -65,7 +70,7 @@ def create_backup(request):
             form = BackupCreateForm(request.POST)
             if form.is_valid():
                 cd = form.cleaned_data
-                user_id = cd.get('user')
+                user_id = cd.get("user")
                 context["data"] = dataToJson(user_id)
         else:
             form = BackupCreateForm()
@@ -206,10 +211,14 @@ def search_list(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("index"))
 
-    goal_list = Goal.objects.filter(user=request.user.id).order_by('-priority', 'title')
-    plan_list = Plan.objects.filter(goal__in=goal_list).order_by('-default_priority', 'title')
-    task_list = Task.objects.filter(plan__in=plan_list).order_by('-priority', 'title')
-    todo_list = TodoList.objects.filter(user=request.user.id).order_by('-priority', 'title')
+    goal_list = Goal.objects.filter(user=request.user.id).order_by("-priority", "title")
+    plan_list = Plan.objects.filter(goal__in=goal_list).order_by(
+        "-default_priority", "title"
+    )
+    task_list = Task.objects.filter(plan__in=plan_list).order_by("-priority", "title")
+    todo_list = TodoList.objects.filter(user=request.user.id).order_by(
+        "-priority", "title"
+    )
 
     context["goal_list"] = goal_list
     context["plan_list"] = plan_list
@@ -484,6 +493,7 @@ def quick_task(request):
 #####
 TodoList Views
 """
+
 
 @login_required
 def task_todo(request):
