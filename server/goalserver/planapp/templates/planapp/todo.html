@@ -12,7 +12,9 @@
     </div>
 
     <div class="card text-center">
-    <div class="card-header">Mini Todo List</div>
+    <div class="card-header">
+        <h1>Mini Todo List</h1>
+    </div>
     <div class="card-body">
         <h5 class="card-title">Create a todo list to organize your tasks</h5>
         <form method="post" enctype="multipart/form-data">
@@ -29,7 +31,7 @@
     {% for todo in todolist_list %}
         <br>
         <div class="card">
-            <h5 class="card-header"><a href="{% url 'todolist' todo.id %}">{{ todo.title }}</a></h5>
+            <h1 class="card-header"><a href="{% url 'todolist' todo.id %}">{{ todo.title }}</a></h1>
             <div class="card-body">
             <div><span class="badge badge-pill badge-danger">todolist</span></div>
             <h5 class="card-title">{{ todo.description }}</h5>
@@ -51,7 +53,7 @@
     <ul>
         {% for task in task_list %}
         <div class="card">
-            <h5 class="card-header"><a href="{% url 'task' task.id %}">{{ task.title }}</a></h5>
+            <h1 class="card-header"><a href="{% url 'task' task.id %}">{{ task.title }}</a></h1>
             <div class="card-body">
                 <div><span class="badge badge-pill badge-primary">task</span></div>
                 <h5 class="card-title">{{ task.description }}</h5>

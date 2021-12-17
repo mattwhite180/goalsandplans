@@ -8,7 +8,7 @@
         <h1>{{ goal.title }}</h1>
     </div>
     <div class="card-body">
-      <h5 class="card-title">{{ goal.description }}</h5>
+      <h4 class="card-title">{{ goal.description }}</h4>
       <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ goal.priority|slice:"2:" }}</span></div>
       <a href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>
       <a href="{% url 'delete_goal' goal.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Goal</a>
