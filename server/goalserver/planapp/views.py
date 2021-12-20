@@ -411,7 +411,7 @@ def task(request, task_id):
     if not userOwnsTask(request.user, t):
         return HttpResponseRedirect(reverse("home"))
 
-    context = {"task": t}
+    context["task"] = t
     return render(request, "planapp/task.html", context)
 
 
