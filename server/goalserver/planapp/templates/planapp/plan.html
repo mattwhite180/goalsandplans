@@ -9,13 +9,13 @@
         <div class="card-body">
         <h4 class="card-title">{{ plan.description }}</h4>
         {% if plan.continuous %}
-            <div class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
+            <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">{{ plan.default_priority|slice:"2:" }}</span></div>
+	    <div class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
+            <div class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
+            <div class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
+            <div class="card-text">Add Period: <span class="badge badge-pill badge-primary">{{ plan.add_period }}</span></div>
         {% endif %}
-        <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">{{ plan.default_priority|slice:"2:" }}</span></div>
         <div class="card-text">Goal: <span class="badge badge-pill badge-success">{{ plan.goal }}</span></div>
-        <div class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
-        <div class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
-        <div class="card-text">Add Period: <span class="badge badge-pill badge-primary">{{ plan.add_period }}</span></div>
         <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
         <a href="{% url 'delete_plan' plan.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Plan</a>
         <a href="{% url 'goal' plan.goal.id %}" class="btn btn-primary" style="background-color: orange; border-color: orange;">Goal</a>
