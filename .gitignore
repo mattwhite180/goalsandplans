@@ -3,6 +3,9 @@ djangosecret.txt
 .postgres_test
 migrations
 
+*#*
+*.#*
+
 *.env
 *.zip
 *.hide
