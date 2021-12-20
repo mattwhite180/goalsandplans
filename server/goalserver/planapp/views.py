@@ -445,6 +445,21 @@ def edit_task(request, task_id):
     context["form_title"] = "edit task (" + str(t.title) + ")"
     return render(request, "planapp/formedit.html", context)
 
+@login_required
+def task_remove_todo(request, task_id):
+    context = get_context(request)
+
+    t = get_object_or_404(Task, pk=task_id)
+
+    if not userOwnsTask(request.user, t):
+        return HttpResponseRedirect(reverse("home"))
+
+    t.todolist = None
+    t.save()
+
+    context["task"] = t
+    return render(request, "planapp/task.html", context)
+
 
 @login_required
 def delete_task(request, task_id):
