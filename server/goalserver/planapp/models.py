@@ -53,8 +53,8 @@ class Plan(models.Model):
         "last_updated", default=datetime.date.today() - datetime.timedelta(days=366)
     )
     add_period = models.IntegerField(default=1)
-    recurring_task_title = models.CharField(max_length=200, default="!")
-    recurring_task_description = models.CharField(max_length=2000, default="!")
+    recurring_task_title = models.CharField(max_length=200, default="?")
+    recurring_task_description = models.CharField(max_length=2000, default="?")
 
     def __str__(self):
         return self.title
@@ -88,7 +88,7 @@ class Task(models.Model):
         UG = "4 UG", _("Urgent")
 
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=2000, default="task description")
+    description = models.CharField(max_length=2000, default="?")
     priority = models.CharField(
         max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
