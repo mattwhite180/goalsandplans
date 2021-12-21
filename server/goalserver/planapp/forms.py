@@ -10,7 +10,7 @@ class GoalForm(forms.ModelForm):
         fields = ("title", "description", "priority")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
-            "priority": forms.RadioSelect(choices=Goal.PriorityLevels),
+            "priority": forms.Select(choices=Goal.PriorityLevels),
         }
 
 
@@ -33,7 +33,7 @@ class PlanForm(forms.ModelForm):
             "recurring_task_description": forms.Textarea(
                 attrs={"cols": 20, "rows": 10}
             ),
-            "default_priority": forms.RadioSelect(choices=Plan.PriorityLevels),
+            "default_priority": forms.Select(choices=Plan.PriorityLevels),
         }
 
 
@@ -43,7 +43,7 @@ class QuickTaskForm(forms.ModelForm):
         fields = ("title", "description", "priority", "todolist", "plan")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
-            "priority": forms.RadioSelect(choices=Task.PriorityLevels),
+            "priority": forms.Select(choices=Task.PriorityLevels),
         }
 
 
@@ -53,7 +53,7 @@ class TaskForm(forms.ModelForm):
         fields = ("title", "description", "priority", "todolist")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
-            "priority": forms.RadioSelect(choices=Task.PriorityLevels),
+            "priority": forms.Select(choices=Task.PriorityLevels),
         }
 
 
@@ -63,7 +63,7 @@ class TodoListForm(forms.ModelForm):
         fields = ("title", "description", "priority")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
-            "priority": forms.RadioSelect(choices=Goal.PriorityLevels),
+            "priority": forms.Select(choices=Goal.PriorityLevels),
         }
 
 
