@@ -68,4 +68,4 @@ class TodoListForm(forms.ModelForm):
 
 
 class BackupCreateForm(forms.Form):
-    user = forms.ModelChoiceField(queryset=User.objects.all().values_list("id", "username"))
+    user = forms.ModelChoiceField(queryset=User.objects.all())

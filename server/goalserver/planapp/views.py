@@ -70,7 +70,7 @@ def create_backup(request):
             form = BackupCreateForm(request.POST)
             if form.is_valid():
                 cd = form.cleaned_data
-                user_id = cd.get("user")
+                user_id = cd.get("user").id
                 context["data"] = dataToJson(user_id)
         else:
             form = BackupCreateForm()
