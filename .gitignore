@@ -2,6 +2,9 @@ djangosecret.txt
 .postgres_data
 .postgres_test
 
+migrations/
+!migrations/__init__.py
+
 *#*
 *.#*
 
