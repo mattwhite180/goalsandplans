@@ -104,6 +104,13 @@ def message_generator(verb, obj):
         + ")"
     )
 
+def unauthorized_message(request, obj):
+    val = "object"
+    try:
+        val = str(obj._meta.model_name)
+    except:
+        pass
+    messages.warning(request, "you are not the owner of this " + val)
 
 def userOwnsGoal(u, g):
     return g.user.id == u.id
@@ -241,6 +248,7 @@ def goal(request, goal_id):
     g = get_object_or_404(Goal, pk=goal_id)
 
     if not userOwnsGoal(request.user, g):
+        unauthorized_message(request, g)
         return HttpResponseRedirect(reverse("home"))
 
     if request.method == "POST":
@@ -273,6 +281,7 @@ def edit_goal(request, goal_id):
     g = get_object_or_404(Goal, pk=goal_id)
 
     if not userOwnsGoal(request.user, g):
+        unauthorized_message(request, g)
         return HttpResponseRedirect(reverse("home"))
 
     if request.method == "POST":
@@ -310,6 +319,8 @@ def delete_goal(request, goal_id):
                 messages.warning(request, message_generator("deleted", t))
         messages.warning(request, message_generator("deleted", g))
         g.delete()
+    else:
+        unauthorized_message(request, g)
 
     return HttpResponseRedirect(reverse("home"))
 
@@ -327,6 +338,7 @@ def plan(request, plan_id):
     p = get_object_or_404(Plan, pk=plan_id)
 
     if not userOwnsPlan(request.user, p):
+        unauthorized_message(request, p)
         return HttpResponseRedirect(reverse("home"))
 
     if request.method == "POST":
@@ -357,6 +369,7 @@ def edit_plan(request, plan_id):
     p = get_object_or_404(Plan, pk=plan_id)
 
     if not userOwnsPlan(request.user, p):
+        unauthorized_message(request, p)
         return HttpResponseRedirect(reverse("home"))
 
     if request.method == "POST":
@@ -392,6 +405,8 @@ def delete_plan(request, plan_id):
             messages.warning(request, message_generator("deleted", t))
         messages.warning(request, message_generator("deleted", p))
         p.delete()
+    else:
+        unauthorized_message(request, p)
 
     return HttpResponseRedirect(reverse("goal", args=(goal_id,)))
 
@@ -409,6 +424,7 @@ def task(request, task_id):
     t = get_object_or_404(Task, pk=task_id)
 
     if not userOwnsTask(request.user, t):
+        unauthorized_message(request, t)
         return HttpResponseRedirect(reverse("home"))
 
     context["task"] = t
@@ -422,6 +438,7 @@ def edit_task(request, task_id):
     t = get_object_or_404(Task, pk=task_id)
 
     if not userOwnsTask(request.user, t):
+        unauthorized_message(request, t)
         return HttpResponseRedirect(reverse("home"))
 
     if request.method == "POST":
@@ -452,6 +469,7 @@ def task_remove_todo(request, task_id):
     t = get_object_or_404(Task, pk=task_id)
 
     if not userOwnsTask(request.user, t):
+        unauthorized_message(request, t)
         return HttpResponseRedirect(reverse("home"))
 
     t.todolist = None
@@ -472,6 +490,8 @@ def delete_task(request, task_id):
     if userOwnsTask(request.user, t):
         messages.warning(request, message_generator("deleted", t))
         t.delete()
+    else:
+        unauthorized_message(request, t)
 
     return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
@@ -514,6 +534,9 @@ TodoList Views
 def task_todo(request):
     context = get_context(request)
 
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("index"))
+    
     if request.method == "POST":
 
         form = TodoListForm(request.POST, use_required_attribute=False)
@@ -547,6 +570,7 @@ def todolist(request, todo_id):
     m = get_object_or_404(TodoList, pk=todo_id)
 
     if m.user.id != request.user.id:
+        unauthorized_message(request, m)
         return HttpResponseRedirect(reverse("home"))
 
     task_list = Task.objects.filter(todolist=m).order_by("-priority", "title")
@@ -562,6 +586,7 @@ def edit_todolist(request, todo_id):
     m = get_object_or_404(TodoList, pk=todo_id)
 
     if request.user.id != m.user.id:
+        unauthorized_message(request, m)
         return HttpResponseRedirect(reverse("home"))
 
     if request.method == "POST":
@@ -595,5 +620,7 @@ def delete_todolist(request, todo_id):
     if request.user.id == m.user.id:
         messages.warning(request, message_generator("deleted", m))
         m.delete()
+    else:
+        unauthorized_message(request, m)
 
     return HttpResponseRedirect(reverse("task_todo"))
