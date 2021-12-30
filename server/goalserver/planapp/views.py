@@ -41,8 +41,11 @@ def dataToJson(user_id=-1):
     dataList.insert(len(dataList), {"user": {"username": u.username}})
     goal_list = Goal.objects.filter(user=u).order_by("title")
     plan_list = Plan.objects.filter(goal__in=goal_list).order_by("title")
+    plan_noncontinuous_list = plan_list.filter(continuous=False)
+    task_list = Task.objects.filter(plan__in=plan_noncontinuous_list)
     dataList.insert(len(dataList), json.loads(serializers.serialize("json", goal_list)))
     dataList.insert(len(dataList), json.loads(serializers.serialize("json", plan_list)))
+    dataList.insert(len(dataList), json.loads(serializers.serialize("json", task_list)))
     return json.dumps(dataList)
 
 
