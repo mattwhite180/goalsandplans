@@ -225,7 +225,8 @@ def search_list(request):
     plan_list = Plan.objects.filter(goal__in=goal_list).order_by(
         "-default_priority", "title"
     )
-    task_list = Task.objects.filter(plan__in=plan_list).order_by("-priority", "title")
+    plan_noncontinuous_list = plan_list.filter(continuous=False)
+    task_list = Task.objects.filter(plan__in=plan_noncontinuous_list).order_by("-priority", "title")
     todo_list = TodoList.objects.filter(user=request.user.id).order_by(
         "-priority", "title"
     )
