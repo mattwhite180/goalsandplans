@@ -187,6 +187,12 @@ def index(request):
     return render(request, "planapp/index.html", context)
 
 
+def about(request):
+    context = get_context(request)
+
+    return render(request, "planapp/about.html", context)
+
+
 def home(request):
     context = get_context(request)
 

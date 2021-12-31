@@ -14,6 +14,7 @@ urlpatterns = [
     path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
     # path('accounts/change_password/', auth_views.PasswordChangeView.as_view(), name='change_password'),
     path("", views.index, name="index"),
+    path("about/", views.about, name="about"),
     path("home/", views.home, name="home"),
     path("planapp/", views.home, name="home"),
     path("goal/<int:goal_id>/", views.goal, name="goal"),
