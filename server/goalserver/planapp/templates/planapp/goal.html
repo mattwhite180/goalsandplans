@@ -1,6 +1,22 @@
 {% extends "planapp/bootstrap.html" %}
 
 {% block leftcontent %}
+<p class="text-center">
+  <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    Help
+  </button>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+    Create specific and trackable plans associated with your goal, such as go on a walk once a day, or go to the gym twice a week.
+    <ul>
+      <li>Toggle the <b>continuous</b> check box to have tasks automatically created for this plan</li>
+      <li>The <b>limit</b> is the max amount of tasks that can be active at the same time for this plan</li>
+      <li>The <b>add period</b> is how frequently tasks will be created (if add period is 1, tasks will be created every day, if add period is 2, tasks will be created every other day, if add period is 7, tasks will be created once a week, etc.</li>
+      <li>The <b>add count</b> is how many tasks will be added for each add period</li>
+    </ul>
+  </div>
+</div>
 
 {% if goal %}
 <div class="card text-center">
