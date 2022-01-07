@@ -10,14 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-from pathlib import Path
-import os
-import boto3
 import base64
 import json
+import os
+from pathlib import Path
+
+import boto3
 from botocore.exceptions import ClientError
-from django.core.management.utils import get_random_secret_key
 from django.contrib.messages import constants as messages
+from django.core.management.utils import get_random_secret_key
 
 
 # get the AWS RDS login info from the AWS secrets manager

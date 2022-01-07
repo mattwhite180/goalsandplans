@@ -1,8 +1,6 @@
-from django.urls import path, include
-from django.contrib.auth import views as auth_views
 import django.contrib.auth.urls
-
-from . import views
+from django.contrib.auth import views as auth_views
+from django.urls import include, path
 
 urlpatterns = [
     path("accounts/create/", views.create_account, name="create"),

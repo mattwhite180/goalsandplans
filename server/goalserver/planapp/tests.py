@@ -1,10 +1,11 @@
-from django.test import RequestFactory, TestCase
-from django.core.management import call_command
-from .models import Goal, Plan, Task
-from django.contrib.auth.models import AnonymousUser, User
-from .views import run_jobs, dataToJson
-from django.test import Client
 import datetime
+
+from django.contrib.auth.models import AnonymousUser, User
+from django.core.management import call_command
+from django.test import Client, RequestFactory, TestCase
+
+from .models import Goal, Plan, Task
+from .views import dataToJson, run_jobs
 
 
 class CronTestCase(TestCase):

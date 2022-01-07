@@ -1,26 +1,22 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import logout
-from django.contrib.auth.models import AnonymousUser, User
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Goal, Plan, Task, TodoList
-from django.contrib.auth import authenticate, login
-from .forms import (
-    GoalForm,
-    PlanForm,
-    TaskForm,
-    QuickTaskForm,
-    TodoListForm,
-    BackupCreateForm,
-)
-from django.core.management import call_command
-from django.contrib import messages
-from django.conf import settings
-from django.core import serializers
 import json
 import re
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.models import AnonymousUser, User
+from django.core import serializers
+from django.core.management import call_command
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+
+from .forms import (BackupCreateForm, GoalForm, PlanForm, QuickTaskForm,
+                    TaskForm, TodoListForm)
+from .models import Goal, Plan, Task, TodoList
+
 
 """
 #####
