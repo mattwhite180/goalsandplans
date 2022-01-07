@@ -32,7 +32,7 @@ def debug():
     return settings.DEBUG
 
 
-def dataToJson(user_id=-1):
+def data_to_json(user_id=-1):
     dataList = list()
     if user_id == -1:
         return dataToJsonAll()
@@ -115,18 +115,18 @@ def unauthorized_message(request, obj):
         pass
     messages.warning(request, "you are not the owner of this " + val)
 
-def userOwnsGoal(u, g):
+def user_owns_goal(u, g):
     return g.user.id == u.id
 
 
-def userOwnsPlan(u, p):
+def user_owns_plan(u, p):
     g = p.goal
-    return userOwnsGoal(u, g)
+    return user_owns_goal(u, g)
 
 
-def userOwnsTask(u, t):
+def user_owns_task(u, t):
     p = t.plan
-    return userOwnsPlan(u, p)
+    return user_owns_plan(u, p)
 
 
 def get_errors(f):
@@ -257,7 +257,7 @@ def goal(request, goal_id):
 
     g = get_object_or_404(Goal, pk=goal_id)
 
-    if not userOwnsGoal(request.user, g):
+    if not user_owns_goal(request.user, g):
         unauthorized_message(request, g)
         return HttpResponseRedirect(reverse("home"))
 
@@ -290,7 +290,7 @@ def edit_goal(request, goal_id):
 
     g = get_object_or_404(Goal, pk=goal_id)
 
-    if not userOwnsGoal(request.user, g):
+    if not user_owns_goal(request.user, g):
         unauthorized_message(request, g)
         return HttpResponseRedirect(reverse("home"))
 
@@ -322,7 +322,7 @@ def delete_goal(request, goal_id):
 
     g = get_object_or_404(Goal, pk=goal_id)
 
-    if userOwnsGoal(request.user, g):
+    if user_owns_goal(request.user, g):
         for p in Plan.objects.filter(goal=g):
             messages.warning(request, message_generator("deleted", p))
             for t in Task.objects.filter(plan=p):
@@ -347,7 +347,7 @@ def plan(request, plan_id):
 
     p = get_object_or_404(Plan, pk=plan_id)
 
-    if not userOwnsPlan(request.user, p):
+    if not user_owns_plan(request.user, p):
         unauthorized_message(request, p)
         return HttpResponseRedirect(reverse("home"))
 
@@ -378,7 +378,7 @@ def edit_plan(request, plan_id):
 
     p = get_object_or_404(Plan, pk=plan_id)
 
-    if not userOwnsPlan(request.user, p):
+    if not user_owns_plan(request.user, p):
         unauthorized_message(request, p)
         return HttpResponseRedirect(reverse("home"))
 
@@ -410,7 +410,7 @@ def delete_plan(request, plan_id):
     p = get_object_or_404(Plan, pk=plan_id)
     goal_id = p.goal.id
 
-    if userOwnsPlan(request.user, p):
+    if user_owns_plan(request.user, p):
         for t in Task.objects.filter(plan=p):
             messages.warning(request, message_generator("deleted", t))
         messages.warning(request, message_generator("deleted", p))
@@ -433,7 +433,7 @@ def task(request, task_id):
 
     t = get_object_or_404(Task, pk=task_id)
 
-    if not userOwnsTask(request.user, t):
+    if not user_owns_task(request.user, t):
         unauthorized_message(request, t)
         return HttpResponseRedirect(reverse("home"))
 
@@ -447,7 +447,7 @@ def edit_task(request, task_id):
 
     t = get_object_or_404(Task, pk=task_id)
 
-    if not userOwnsTask(request.user, t):
+    if not user_owns_task(request.user, t):
         unauthorized_message(request, t)
         return HttpResponseRedirect(reverse("home"))
 
@@ -478,7 +478,7 @@ def task_remove_todo(request, task_id):
 
     t = get_object_or_404(Task, pk=task_id)
 
-    if not userOwnsTask(request.user, t):
+    if not user_owns_task(request.user, t):
         unauthorized_message(request, t)
         return HttpResponseRedirect(reverse("home"))
 
@@ -497,7 +497,7 @@ def delete_task(request, task_id):
     t = get_object_or_404(Task, pk=task_id)
     plan_id = t.plan.id
 
-    if userOwnsTask(request.user, t):
+    if user_owns_task(request.user, t):
         messages.warning(request, message_generator("deleted", t))
         t.delete()
     else:
