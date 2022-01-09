@@ -32,4 +32,4 @@ jobs:
         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/goalsandplans:latest
     - name: reset ebs
       run: |
-        aws elasticbeanstalk rebuild-environment --environment-name prod
+        aws elasticbeanstalk rebuild-environment --environment-name Goalsandplans-env
