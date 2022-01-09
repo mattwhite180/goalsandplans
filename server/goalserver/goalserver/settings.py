@@ -78,7 +78,7 @@ else:
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -146,7 +146,8 @@ DATABASES = {
 }
 
 # This is the prod AWS RDS database
-if ("SECRET" in os.environ) and (DEBUG == False):
+if "SECRET" in os.environ:
+    DEBUG = False
     secrets = get_secret()
     DATABASES = {
         "default": {
