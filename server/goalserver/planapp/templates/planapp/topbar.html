@@ -1,78 +1,75 @@
 <ul class="nav justify-content-center">
   <li class="nav-item navbar-brand">
     <a class="nav-link active" href="https://github.com/mattwhite180/goalsandplans/">
-        <span class="badge badge-pill badge-danger">Github</span>
+      <span class="badge badge-pill badge-danger">Github</span>
     </a>
   </li>
   {% if user.is_authenticated %}
-      <li class="nav-item navbar-brand disabled">
-        <a class="nav-link active" href="{% url 'home' %}">
-            <span class="badge badge-pill badge-primary">Welcome {{ user.username }}!</span>
+    <li class="nav-item navbar-brand disabled">
+      <a class="nav-link active" href="{% url 'home' %}">
+        <span class="badge badge-pill badge-primary">Welcome {{ user.username }}!</span>
+      </a>
+    </li>
+    <li class="nav-item navbar-brand">
+      <a class="nav-link active" href="{% url 'home' %}">
+        <span class="badge badge-pill badge-success">Home</span>
+      </a>
+    </li>
+    <li class="nav-item navbar-brand">
+      <a class="nav-link active" href="{% url 'logout' %}">
+        <span class="badge badge-pill badge-warning">Logout</span>
+      </a>
+    </li>
+    <li class="nav-item navbar-brand">
+      <a class="nav-link active" href="{% url 'quick_task' %}">
+        <span class="badge badge-pill badge-secondary">QuickTask</span>
+      </a>
+    </li>
+    <li class="nav-item navbar-brand">
+      <a class="nav-link active" href="{% url 'task_todo' %}">
+        <span class="badge badge-pill badge-info">Todo</span>
+      </a>
+    </li>
+    <li class="nav-item navbar-brand">
+      <a class="nav-link active" href="{% url 'search_list' %}">
+        <span class="badge badge-pill badge-danger">Search</span>
+      </a>
+    </li>
+    {% if user.is_superuser %}
+      <li class="nav-item navbar-brand">
+        <a class="nav-link active" href="{% url 'run_jobs' %}">
+          <span class="badge badge-pill badge-dark">Cron</span>
         </a>
       </li>
       <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'home' %}">
-            <span class="badge badge-pill badge-success">Home</span>
+        <a class="nav-link active" href="/admin/">
+          <span class="badge badge-pill badge-secondary">Admin</span>
         </a>
       </li>
       <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'logout' %}">
-            <span class="badge badge-pill badge-warning">Logout</span>
+        <a class="nav-link active" href="{% url 'create_backup' %}">
+          <span class="badge badge-pill badge-secondary">Create Backup</span>
         </a>
       </li>
-      <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'quick_task' %}">
-            <span class="badge badge-pill badge-secondary">QuickTask</span>
-        </a>
-      </li>
-      <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'task_todo' %}">
-            <span class="badge badge-pill badge-info">Todo</span>
-        </a>
-      </li>
-      <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'search_list' %}">
-            <span class="badge badge-pill badge-danger">Search</span>
-        </a>
-      </li>
-      <!-- <li class="nav-item">
-          {#<a class="nav-link" href="{% url 'change_password' %}">Change password?</a>#}
-      </li> -->
-          {% if user.is_superuser %}
-            <li class="nav-item navbar-brand">
-              <a class="nav-link active" href="{% url 'run_jobs' %}">
-                  <span class="badge badge-pill badge-dark">Cron</span>
-              </a>
-            </li>
-            <li class="nav-item navbar-brand">
-              <a class="nav-link active" href="/admin/">
-                  <span class="badge badge-pill badge-secondary">Admin</span>
-              </a>
-            </li>
-            <li class="nav-item navbar-brand">
-              <a class="nav-link active" href="{% url 'create_backup' %}">
-                  <span class="badge badge-pill badge-secondary">Create Backup</span>
-              </a>
-            </li>
-          {% endif %}
-      {% else %}
-        <li class="nav-item navbar-brand">
-          <a class="nav-link active" href="{% url 'login' %}">
-              <span class="badge badge-pill badge-primary">Login</span>
-          </a>
-        </li>
-        <li class="nav-item navbar-brand">
-          <a class="nav-link active" href="{% url 'create' %}">
-              <span class="badge badge-pill badge-success">Create Account</span>
-          </a>
-        </li>
-	{% endif %}
+    {% endif %}
+  {% else %}
+    <li class="nav-item navbar-brand">
+      <a class="nav-link active" href="{% url 'login' %}">
+        <span class="badge badge-pill badge-primary">Login</span>
+      </a>
+    </li>
+    <li class="nav-item navbar-brand">
+      <a class="nav-link active" href="{% url 'create' %}">
+        <span class="badge badge-pill badge-success">Create Account</span>
+      </a>
+    </li>
+  {% endif %}
   <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'about' %}">
-            <span class="badge badge-pill badge-warning">About</span>
-        </a>
-      </li>
+    <a class="nav-link active" href="{% url 'about' %}">
+      <span class="badge badge-pill badge-warning">About</span>
+    </a>
+  </li>
 
-  </ul>
+</ul>
 </div>
 <br>

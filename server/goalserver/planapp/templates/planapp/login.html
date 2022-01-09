@@ -1,32 +1,32 @@
 {% extends "planapp/bootstrap.html" %}
 
 {% block error %}
-  <div id=errorblock>
-    {% if form.errors %}
-      <div class="alert alert-warning" role="alert">
-          Either the username does not exist or the password is incorrect.
-      </div>
-    {% endif %}
-  </div>
+<div id=errorblock>
+  {% if form.errors %}
+    <div class="alert alert-warning" role="alert">
+      Either the username does not exist or the password is incorrect.
+    </div>
+  {% endif %}
+</div>
 {% endblock %}
 
 {% block content %}
 
 <div class="card text-center">
-    <div class="card-header">
-      GoalsAndPlans
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">Login</h5>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" class="btn btn-primary" value="Submit">
-        </form>
-    </div>
-    <div class="card-footer text-muted">
-      GoalsAndPlans
-    </div>
+  <div class="card-header">
+    GoalsAndPlans
   </div>
+  <div class="card-body">
+    <h5 class="card-title">Login</h5>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" class="btn btn-primary" value="Submit">
+    </form>
+  </div>
+  <div class="card-footer text-muted">
+    GoalsAndPlans
+  </div>
+</div>
 
 {% endblock %}

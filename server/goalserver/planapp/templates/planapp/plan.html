@@ -1,113 +1,121 @@
 {% extends "planapp/bootstrap.html" %}
 
 {% block leftcontent %}
-    {% if plan %}
-    <div class="card text-center">
-        <div class="card-header">
-            <h1>{{ plan.title }}</h1>
-        </div>
-        <div class="card-body">
-        <h4 class="card-title">{{ plan.description }}</h4>
-        {% if plan.continuous %}
-            <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">{{ plan.default_priority|slice:"2:" }}</span></div>
-	    <div class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
-            <div class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
-            <div class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
-            <div class="card-text">Add Period: <span class="badge badge-pill badge-primary">{{ plan.add_period }}</span></div>
-	    <div class="card-text">Current Count: <span class="badge badge-pill badge-danger">{{ plan.task_count }}</span></div>
-        {% endif %}
-        <div class="card-text">Goal: <span class="badge badge-pill badge-success">{{ plan.goal }}</span></div>
-        <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
-      <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;"
-	      data-toggle="modal" data-target="#exampleModalCenterPlan">Delete Plan</button>
+{% if plan %}
+  <div class="card text-center">
+    <div class="card-header">
+      <h1>{{ plan.title }}</h1>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">{{ plan.description }}</h4>
+      {% if plan.continuous %}
+        <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">{{
+            plan.default_priority|slice:"2:" }}</span></div>
+        <div class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
+        <div class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
+        <div class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
+        <div class="card-text">Add Period: <span class="badge badge-pill badge-primary">{{ plan.add_period }}</span></div>
+        <div class="card-text">Current Count: <span class="badge badge-pill badge-danger">{{ plan.task_count }}</span></div>
+      {% endif %}
+      <div class="card-text">Goal: <span class="badge badge-pill badge-success">{{ plan.goal }}</span></div>
+      <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
+      <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
+        data-target="#exampleModalCenterPlan">Delete Plan</button>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenterPlan" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Delete Plan</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModalCenterPlan" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Delete Plan</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete the '<b>{{ plan.title }}</b>' plan?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <a href="{% url 'delete_plan' plan.id %}" class="btn btn-primary"
+                style="background-color: red; border-color: red;">Delete Plan</a>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-        Are you sure you want to delete the '<b>{{ plan.title }}</b>' plan?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <a href="{% url 'delete_plan' plan.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Plan</a>
-      </div>
+      <a href="{% url 'goal' plan.goal.id %}" class="btn btn-primary"
+        style="background-color: orange; border-color: orange;">Goal</a>
+    </div>
+    <div class="card-footer text-muted">
     </div>
   </div>
+{% else %}
+  <p>Plan isnt available.</p>
+{% endif %}
+<br>
+<div class="card text-center">
+  <div class="card-header">
+    Create a new task
+  </div>
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+  </div>
+  <div class="card-footer text-muted">
+    Fill out form and click Submit
+  </div>
 </div>
-	<a href="{% url 'goal' plan.goal.id %}" class="btn btn-primary" style="background-color: orange; border-color: orange;">Goal</a>
-        </div>
-        <div class="card-footer text-muted">
-        </div>
-    </div>
-    {% else %}
-        <p>Plan isnt available.</p>
-    {% endif %}
-    <br>
-    <div class="card text-center">
-        <div class="card-header">
-        Create a new task
-        </div>
-        <div class="card-body">
-        <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input class="btn btn-primary" type="submit" value="Submit">
-            </form>
-        </div>
-        <div class="card-footer text-muted">
-        Fill out form and click Submit
-        </div>
-    </div>
 {% endblock %}
 
 {% block rightcontent %}
-    {% if task_list %}
-        {% for task in task_list %}
-            <div class="card">
-                <h1 class="card-header"><a href="{% url 'task' task.id %}">{{ task.title }}</a></h1>
-                <div class="card-body">
-                <h5 class="card-title">{{ task.description }}</h5>
-                <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ task.priority|slice:"2:" }}</span></div>
-                {% if task.todolist %}
-                    <div class="card-text">MiniTask: <span class="badge badge-pill badge-secondary">{{ task.todolist }}</span></div>
-		    <a href="{% url 'remove_todo' task.id %}" class="btn btn-primary" style="background-color: purple; border-color: purple;">Remove from TodoList</a>
-                {% endif %}
-                <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Edit Task</a>
-      <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;"
-	      data-toggle="modal" data-target="#exampleModalCenter{{ task.id }}">Delete Task</button>
+{% if task_list %}
+  {% for task in task_list %}
+    <div class="card">
+      <h1 class="card-header"><a href="{% url 'task' task.id %}">{{ task.title }}</a></h1>
+      <div class="card-body">
+        <h5 class="card-title">{{ task.description }}</h5>
+        <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ task.priority|slice:"2:" }}</span>
+        </div>
+        {% if task.todolist %}
+          <div class="card-text">MiniTask: <span class="badge badge-pill badge-secondary">{{ task.todolist }}</span></div>
+          <a href="{% url 'remove_todo' task.id %}" class="btn btn-primary"
+            style="background-color: purple; border-color: purple;">Remove from TodoList</a>
+        {% endif %}
+        <a href="{% url 'edit_task' task.id %}" class="btn btn-primary">Edit Task</a>
+        <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
+          data-target="#exampleModalCenter{{ task.id }}">Delete Task</button>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter{{ task.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Delete Task</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModalCenter{{ task.id }}" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Delete Task</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete the '<b>{{ task.title }}</b>' task?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <a href="{% url 'delete_task' task.id %}" class="btn btn-primary"
+                style="background-color: red; border-color: red;">Delete Task</a>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-        Are you sure you want to delete the '<b>{{ task.title }}</b>' task?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <a href="{% url 'delete_task' task.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete Task</a>
-      </div>
+
     </div>
-  </div>
-</div>
-
-		</div>
-            <br>
-        {% endfor %}
-    {% else %}
-    <p>No tasks associated with this plan are created yet.</p>
-    {% endif %}
+    <br>
+  {% endfor %}
+{% else %}
+  <p>No tasks associated with this plan are created yet.</p>
+{% endif %}
 {% endblock %}

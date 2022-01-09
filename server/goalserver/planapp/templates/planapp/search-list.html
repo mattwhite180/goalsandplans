@@ -2,77 +2,81 @@
 
 {% block content %}
 
-    {% if goal_list %}
-        <div class="card text-center">
-            <div class="card-header">
-                Goals
-            </div>
-            <ul class="list-group list-group-flush text-left one-line">
-                {% for g in goal_list %}
-                    <li class="list-group-item">
-                    <a class="nav-link active" href="{% url 'goal' g.id %}">
-                        {{ g.title }}
-                        &emsp; &emsp;
-                        ({{ g.description|slice:":60" }})
-                    </a></li>
-                {% endfor %}
-            </ul>
-        </div>
-        <br>
-    {% endif %}
-    {% if plan_list %}
-        <div class="card text-center">
-            <div class="card-header">
-                Plans
-            </div>
-            <ul class="list-group list-group-flush text-left one-line">
-                {% for p in plan_list %}
-                    <li class="list-group-item">
-                    <a class="nav-link active" href="{% url 'plan' p.id %}">
-                        {{ p.title }}
-                        &emsp; &emsp;
-                        ({{ p.description|slice:":60" }})
-                    </a></li>
-                {% endfor %}
-            </ul>
-        </div>
-        <br>
-    {% endif %}
-    {% if task_list %}
-        <div class="card text-center">
-            <div class="card-header">
-                Tasks
-            </div>
-            <ul class="list-group list-group-flush text-left one-line">
-                {% for t in task_list %}
-                    <li class="list-group-item">
-                    <a class="nav-link active" href="{% url 'task' t.id %}">
-                        {{ t.title }}
-                        &emsp; &emsp;
-                        ({{ t.description|slice:":60" }})
-                    </a></li>
-                {% endfor %}
-            </ul>
-        </div>
-        <br>
-    {% endif %}
-    {% if todo_list %}
-        <div class="card text-center">
-            <div class="card-header">
-                TodoLists
-            </div>
-            <ul class="list-group list-group-flush text-left one-line">
-                {% for t in todo_list %}
-                    <li class="list-group-item">
-                    <a class="nav-link active" href="{% url 'todolist' t.id %}">
-                        {{ t.title }}
-                        &emsp; &emsp;
-                        ({{ t.description|slice:":60" }})
-                    </a></li>
-                {% endfor %}
-            </ul>
-        </div>
-        <br>
-    {% endif %}
+{% if goal_list %}
+  <div class="card text-center">
+    <div class="card-header">
+      Goals
+    </div>
+    <ul class="list-group list-group-flush text-left one-line">
+      {% for g in goal_list %}
+      <li class="list-group-item">
+        <a class="nav-link active" href="{% url 'goal' g.id %}">
+        {{ g.title }}
+          &emsp; &emsp;
+          ({{ g.description|slice:":60" }})
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+<br>
+{% endif %}
+{% if plan_list %}
+<div class="card text-center">
+  <div class="card-header">
+    Plans
+  </div>
+  <ul class="list-group list-group-flush text-left one-line">
+    {% for p in plan_list %}
+    <li class="list-group-item">
+      <a class="nav-link active" href="{% url 'plan' p.id %}">
+        {{ p.title }}
+        &emsp; &emsp;
+        ({{ p.description|slice:":60" }})
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<br>
+{% endif %}
+{% if task_list %}
+<div class="card text-center">
+  <div class="card-header">
+    Tasks
+  </div>
+  <ul class="list-group list-group-flush text-left one-line">
+    {% for t in task_list %}
+    <li class="list-group-item">
+      <a class="nav-link active" href="{% url 'task' t.id %}">
+        {{ t.title }}
+        &emsp; &emsp;
+        ({{ t.description|slice:":60" }})
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<br>
+{% endif %}
+{% if todo_list %}
+  <div class="card text-center">
+    <div class="card-header">
+      TodoLists
+    </div>
+    <ul class="list-group list-group-flush text-left one-line">
+      {% for t in todo_list %}
+        <li class="list-group-item">
+          <a class="nav-link active" href="{% url 'todolist' t.id %}">
+            {{ t.title }}
+            &emsp; &emsp;
+            ({{ t.description|slice:":60" }})
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <br>
+{% endif %}
 
 {% endblock %}
