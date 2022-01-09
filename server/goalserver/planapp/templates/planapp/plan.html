@@ -47,8 +47,6 @@
       <a href="{% url 'goal' plan.goal.id %}" class="btn btn-primary"
         style="background-color: orange; border-color: orange;">Goal</a>
     </div>
-    <div class="card-footer text-muted">
-    </div>
   </div>
 {% else %}
   <p>Plan isnt available.</p>
@@ -64,9 +62,6 @@
       {{ form.as_p }}
       <input class="btn btn-primary" type="submit" value="Submit">
     </form>
-  </div>
-  <div class="card-footer text-muted">
-    Fill out form and click Submit
   </div>
 </div>
 {% endblock %}
@@ -90,28 +85,28 @@
           data-target="#exampleModalCenter{{ task.id }}">Delete Task</button>
 
       <!-- Modal -->
-      <div class="modal fade" id="exampleModalCenter{{ task.id }}" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Delete Task</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              Are you sure you want to delete the '<b>{{ task.title }}</b>' task?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <a href="{% url 'delete_task' task.id %}" class="btn btn-primary"
-                style="background-color: red; border-color: red;">Delete Task</a>
+        <div class="modal fade" id="exampleModalCenter{{ task.id }}" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Delete Task</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete the '<b>{{ task.title }}</b>' task?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="{% url 'delete_task' task.id %}" class="btn btn-primary"
+                  style="background-color: red; border-color: red;">Delete Task</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
     <br>
   {% endfor %}
