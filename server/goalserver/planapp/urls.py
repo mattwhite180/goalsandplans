@@ -1,6 +1,7 @@
 import django.contrib.auth.urls
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
+from . import views
 
 urlpatterns = [
     path("accounts/create/", views.create_account, name="create"),

@@ -9,8 +9,8 @@
     <div class="card-body">
       <h4 class="card-title">{{ plan.description }}</h4>
       {% if plan.continuous %}
-        <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">{{
-            plan.default_priority|slice:"2:" }}</span></div>
+        <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">
+          {{  plan.default_priority|slice:"2:" }}</span></div>
         <div class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
         <div class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
         <div class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>

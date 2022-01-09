@@ -99,8 +99,8 @@
           <div class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
           <div class="card-text">Add Period: <span class="badge badge-pill badge-primary">{{ plan.add_period }}</span></div>
           <div class="card-text">Current Count: <span class="badge badge-pill badge-danger">{{ plan.task_count }}</span></div>
-          <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">{{
-              plan.default_priority|slice:"2:" }}</span></div>
+          <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">
+            {{ plan.default_priority|slice:"2:" }}</span></div>
         {% endif %}
         <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
         <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
