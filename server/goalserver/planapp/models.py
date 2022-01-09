@@ -62,6 +62,9 @@ class Plan(models.Model):
     def task_count(self):
         return Task.objects.filter(plan=self).count()
     
+    def user(self):
+        return self.goal.user
+
 
 class TodoList(models.Model):
     class PriorityLevels(models.TextChoices):
@@ -106,3 +109,6 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
+    def user(self):
+        return self.plan.goal.user

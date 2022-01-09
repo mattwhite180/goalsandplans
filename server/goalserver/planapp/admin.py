@@ -6,15 +6,15 @@ admin.site.site_url = "/planapp"
 
 
 class GoalAdmin(admin.ModelAdmin):
-    list_display = ("title", "id", "description", "priority", "user")
+    list_display = ("title", "id", "user", "description", "priority")
 
 
 class PlanAdmin(admin.ModelAdmin):
-    list_display = ("title", "id", "description", "default_priority", "goal")
+    list_display = ("title", "id", "user", "description", "default_priority")
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ("title", "id", "description", "priority", "todolist", "plan")
+    list_display = ("title", "id", "user", "description", "priority", "todolist", "plan")
 
 
 class TodoListAdmin(admin.ModelAdmin):
