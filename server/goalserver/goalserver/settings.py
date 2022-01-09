@@ -146,7 +146,7 @@ DATABASES = {
 }
 
 # This is the prod AWS RDS database
-if "SECRET" in os.environ:
+if "SECRET" in os.environ and "REGION" in os.environ:
     DEBUG = False
     secrets = get_secret()
     DATABASES = {

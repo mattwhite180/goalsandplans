@@ -29,6 +29,7 @@ class PlanForm(forms.ModelForm):
             "recurring_task_title",
             "recurring_task_description",
             "default_priority",
+            "default_todolist",
         )
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),

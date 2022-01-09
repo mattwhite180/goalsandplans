@@ -1,6 +1,19 @@
 {% extends "planapp/bootstrap.html" %}
 
 {% block leftcontent %}
+
+<p class="text-center">
+  <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample"
+    aria-expanded="false" aria-controls="collapseExample">
+    Help
+  </button>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+    Delete the task when it is completed
+  </div>
+</div>
+
 {% if plan %}
   <div class="card text-center">
     <div class="card-header">

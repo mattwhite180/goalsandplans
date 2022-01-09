@@ -1,6 +1,23 @@
 {% extends "planapp/bootstrap.html" %}
 
 {% block leftcontent %}
+
+<p class="text-center">
+  <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample"
+    aria-expanded="false" aria-controls="collapseExample">
+    Help
+  </button>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+    TodoLists help you organize your tasks 
+    <br>
+    <br>
+    For example, you can create a todo list called "due this weekend" and
+    assign certain tasks to that todo list.
+  </div>
+</div>
+
 <div id="errorblock">
   {% if form.errors %}
     <h2>errors</h2>
@@ -35,8 +52,9 @@
       <div class="card-body">
         <div><span class="badge badge-pill badge-danger">todolist</span></div>
         <h5 class="card-title">{{ todo.description }}</h5>
-        <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ todo.priority|slice:"2:"
-            }}</span></div>
+        <div class="card-text">Priority: <span class="badge badge-pill badge-warning">
+          {{ todo.priority|slice:"2:" }}
+        </span></div>
         <a href="{% url 'edit_todolist' todo.id %}" class="btn btn-primary">Edit TodoList</a>
         <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;"
           data-toggle="modal" data-target="#exampleModalCenter{{ todo.id }}">Delete TodoList</button>
@@ -82,8 +100,8 @@
       <div class="card-body">
         <div><span class="badge badge-pill badge-primary">task</span></div>
         <h5 class="card-title">{{ task.description }}</h5>
-        <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ task.priority|slice:"2:"
-            }}</span></div>
+        <div class="card-text">Priority: <span class="badge badge-pill badge-warning">
+          {{ task.priority|slice:"2:" }}</span></div>
         <div class="card-text">Goal: <span class="badge badge-pill badge-success">{{ task.plan.goal }}</span></div>
         <div class="card-text">Plan: <span class="badge badge-pill badge-info">{{ task.plan }}</span></div>
         {% if task.todolist %}

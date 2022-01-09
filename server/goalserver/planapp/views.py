@@ -257,6 +257,7 @@ def goal(request, goal_id):
 
     else:
         form = PlanForm()
+        form.fields["default_todolist"].queryset = TodoList.objects.filter(user=request.user)
 
     plan_list = Plan.objects.filter(goal=g).order_by("-default_priority", "title")
     context["goal"] = g

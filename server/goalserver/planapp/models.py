@@ -32,6 +32,25 @@ class Goal(models.Model):
         return total
 
 
+class TodoList(models.Model):
+    class PriorityLevels(models.TextChoices):
+        BACKLOG = "0 BK", _("Backlog")
+        LOW = "1 LW", _("Low")
+        MEDIUM = "2 MD", _("Medium")
+        HIGH = "3 HI", _("High")
+        UG = "4 UG", _("Urgent")
+
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=20000)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    priority = models.CharField(
+        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
+    )
+
+    def __str__(self):
+        return self.title
+
+
 class Plan(models.Model):
     class PriorityLevels(models.TextChoices):
         BACKLOG = "0 BK", _("Backlog")
@@ -52,6 +71,7 @@ class Plan(models.Model):
     last_updated = models.DateField(
         "last_updated", default=datetime.date.today() - datetime.timedelta(days=366)
     )
+    default_todolist = models.ForeignKey(TodoList, models.SET_NULL, blank=True, null=True)
     add_period = models.IntegerField(default=1)
     recurring_task_title = models.CharField(max_length=200, default="?")
     recurring_task_description = models.CharField(max_length=2000, default="?")
@@ -64,25 +84,6 @@ class Plan(models.Model):
     
     def user(self):
         return self.goal.user
-
-
-class TodoList(models.Model):
-    class PriorityLevels(models.TextChoices):
-        BACKLOG = "0 BK", _("Backlog")
-        LOW = "1 LW", _("Low")
-        MEDIUM = "2 MD", _("Medium")
-        HIGH = "3 HI", _("High")
-        UG = "4 UG", _("Urgent")
-
-    title = models.CharField(max_length=200)
-    description = models.CharField(max_length=20000)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    priority = models.CharField(
-        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
-    )
-
-    def __str__(self):
-        return self.title
 
 
 class Task(models.Model):

@@ -28,6 +28,8 @@ class Command(BaseCommand):
                                 priority=plan.default_priority,
                                 plan=plan,
                             )
+                            if plan.default_todolist:
+                                newT.todolist = plan.default_todolist
                             newT.save()
                             created += 1
                 except:
