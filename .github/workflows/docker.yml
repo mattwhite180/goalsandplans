@@ -23,10 +23,10 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
-    - uses: actions/checkout@v2
     - name: Build and push image
+      uses: actions/checkout@v2
       run: |
-	      aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/z7r6z9m1
+        aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/z7r6z9m1
         docker build -t goalsandplans server/
 	      docker tag goalsandplans:latest public.ecr.aws/z7r6z9m1/goalsandplans:latest
 	      docker push public.ecr.aws/z7r6z9m1/goalsandplans:latest
