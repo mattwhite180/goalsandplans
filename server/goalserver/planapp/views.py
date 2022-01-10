@@ -197,7 +197,7 @@ def home(request):
         form = GoalForm()
 
     context["form"] = form
-    goals_list = Goal.objects.filter(user=request.user).order_by("-priority")
+    goals_list = Goal.objects.filter(user=request.user).order_by("-priority", "title")
     context["goals_list"] = goals_list
 
     return render(request, "planapp/home.html", context)
@@ -257,7 +257,7 @@ def goal(request, goal_id):
 
     else:
         form = PlanForm()
-        form.fields["default_todolist"].queryset = TodoList.objects.filter(user=request.user)
+        form.fields["default_todolist"].queryset = TodoList.objects.filter(user=request.user).order_by("title")
 
     plan_list = Plan.objects.filter(goal=g).order_by("-default_priority", "title")
     context["goal"] = g
@@ -346,9 +346,9 @@ def plan(request, plan_id):
 
     else:
         form = TaskForm()
-        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user)
+        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user).order_by("title")
 
-    task_list = Task.objects.filter(plan=p).order_by("-priority")
+    task_list = Task.objects.filter(plan=p).order_by("-priority", "title")
     context["plan"] = p
     context["task_list"] = task_list
     context["form"] = form
@@ -449,7 +449,7 @@ def edit_task(request, task_id):
 
     else:
         form = TaskForm(instance=t)
-        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user)
+        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user).order_by("title")
 
     context["form"] = form
     context["form_title"] = "edit task (" + str(t.title) + ")"
@@ -509,8 +509,8 @@ def quick_task(request):
     else:
         form = QuickTaskForm()
         goal_list = Goal.objects.filter(user=request.user)
-        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list)
-        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user)
+        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by("title")
+        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user).order_by("title")
 
     context["form"] = form
     context["form_title"] = "create a task"

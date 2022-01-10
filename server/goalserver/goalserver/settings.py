@@ -78,6 +78,8 @@ else:
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# if "SECRET" and "REGION" are in os.environ, DEBUG will be False
+# (see where database is defined below)
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
