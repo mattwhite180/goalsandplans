@@ -71,7 +71,9 @@ class Plan(models.Model):
     last_updated = models.DateField(
         "last_updated", default=datetime.date.today() - datetime.timedelta(days=366)
     )
-    default_todolist = models.ForeignKey(TodoList, models.SET_NULL, blank=True, null=True)
+    default_todolist = models.ForeignKey(
+        TodoList, models.SET_NULL, blank=True, null=True
+    )
     add_period = models.IntegerField(default=1)
     recurring_task_title = models.CharField(max_length=200, default="?")
     recurring_task_description = models.CharField(max_length=2000, default="?")
@@ -81,7 +83,7 @@ class Plan(models.Model):
 
     def task_count(self):
         return Task.objects.filter(plan=self).count()
-    
+
     def user(self):
         return self.goal.user
 

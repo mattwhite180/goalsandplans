@@ -103,6 +103,7 @@ def message_generator(verb, obj):
         + ")"
     )
 
+
 def unauthorized_message(request, obj):
     val = "object"
     try:
@@ -110,6 +111,7 @@ def unauthorized_message(request, obj):
     except:
         pass
     messages.warning(request, "you are not the owner of this " + val)
+
 
 def get_errors(f):
     errorList = list()
@@ -214,7 +216,9 @@ def search_list(request):
         "-default_priority", "title"
     )
     plan_noncontinuous_list = plan_list.filter(continuous=False)
-    task_list = Task.objects.filter(plan__in=plan_noncontinuous_list).order_by("-priority", "title")
+    task_list = Task.objects.filter(plan__in=plan_noncontinuous_list).order_by(
+        "-priority", "title"
+    )
     todo_list = TodoList.objects.filter(user=request.user.id).order_by(
         "-priority", "title"
     )
@@ -257,7 +261,9 @@ def goal(request, goal_id):
 
     else:
         form = PlanForm()
-        form.fields["default_todolist"].queryset = TodoList.objects.filter(user=request.user).order_by("title")
+        form.fields["default_todolist"].queryset = TodoList.objects.filter(
+            user=request.user
+        ).order_by("title")
 
     plan_list = Plan.objects.filter(goal=g).order_by("-default_priority", "title")
     context["goal"] = g
@@ -346,7 +352,9 @@ def plan(request, plan_id):
 
     else:
         form = TaskForm()
-        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user).order_by("title")
+        form.fields["todolist"].queryset = TodoList.objects.filter(
+            user=request.user
+        ).order_by("title")
 
     task_list = Task.objects.filter(plan=p).order_by("-priority", "title")
     context["plan"] = p
@@ -449,11 +457,14 @@ def edit_task(request, task_id):
 
     else:
         form = TaskForm(instance=t)
-        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user).order_by("title")
+        form.fields["todolist"].queryset = TodoList.objects.filter(
+            user=request.user
+        ).order_by("title")
 
     context["form"] = form
     context["form_title"] = "edit task (" + str(t.title) + ")"
     return render(request, "planapp/formedit.html", context)
+
 
 @login_required
 def task_remove_todo(request, task_id):
@@ -509,8 +520,12 @@ def quick_task(request):
     else:
         form = QuickTaskForm()
         goal_list = Goal.objects.filter(user=request.user)
-        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by("title")
-        form.fields["todolist"].queryset = TodoList.objects.filter(user=request.user).order_by("title")
+        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by(
+            "title"
+        )
+        form.fields["todolist"].queryset = TodoList.objects.filter(
+            user=request.user
+        ).order_by("title")
 
     context["form"] = form
     context["form_title"] = "create a task"
@@ -529,7 +544,7 @@ def task_todo(request):
 
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("index"))
-    
+
     if request.method == "POST":
 
         form = TodoListForm(request.POST, use_required_attribute=False)

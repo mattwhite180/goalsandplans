@@ -14,7 +14,15 @@ class PlanAdmin(admin.ModelAdmin):
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ("title", "id", "user", "description", "priority", "todolist", "plan")
+    list_display = (
+        "title",
+        "id",
+        "user",
+        "description",
+        "priority",
+        "todolist",
+        "plan",
+    )
 
 
 class TodoListAdmin(admin.ModelAdmin):
