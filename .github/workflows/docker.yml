@@ -26,11 +26,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build and push image
       run: |
-        aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-west-2.amazonaws.com
-	aws ecr-public get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin public.ecr.aws/z7r6z9m1
+	      aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/z7r6z9m1
         docker build -t goalsandplans server/
-	docker tag goalsandplans:latest public.ecr.aws/z7r6z9m1/goalsandplans:latest
-	docker push public.ecr.aws/z7r6z9m1/goalsandplans:latest
+	      docker tag goalsandplans:latest public.ecr.aws/z7r6z9m1/goalsandplans:latest
+	      docker push public.ecr.aws/z7r6z9m1/goalsandplans:latest
     - name: reset ebs
       run: |
         aws elasticbeanstalk rebuild-environment --environment-name Goalsandplans-env
