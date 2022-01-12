@@ -1,12 +1,17 @@
 import datetime
 
 from django.contrib.auth.models import AnonymousUser, User
+
 from django.core.management import call_command
 from django.test import Client, RequestFactory, TestCase
+from selenium.webdriver.chrome.options import Options
+from selenium import webdriver
+import unittest
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
 
 from .models import Goal, Plan, Task
 from .views import data_to_json, run_jobs
-
 
 class CronTestCase(TestCase):
     def setUp(self):
@@ -99,5 +104,40 @@ class CronTestCase(TestCase):
             + """
         if the number of tasks counted is over 100 then there might be an issue with the continuous flag
         if the number of tasks counted is over 1000 then the add period might not be working"""
+        )
+        self.assertEqual(val, expected, errmsg)
+
+class RemoteGoogleTestCase(unittest.TestCase):
+    #check if selenium is working
+    def setUp(self):
+        self.browser = webdriver.Remote(
+            command_executor='http://chrome:4444/wd/hub',
+            desired_capabilities=DesiredCapabilities.CHROME)
+        self.addCleanup(self.browser.quit)
+
+    def testPageTitle(self):
+        self.browser.get('http://www.google.com')
+        self.assertIn('Google', self.browser.title)
+
+
+class SeleniumTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.browser = webdriver.Remote(
+            command_executor='http://chrome:4444/wd/hub',
+            desired_capabilities=DesiredCapabilities.CHROME)
+        self.addCleanup(self.browser.quit)
+
+    def test_title_page(self):
+        self.browser.get('http://server:8000')
+        # driver = webdriver.Chrome(options=set_chrome_options())
+        val = self.browser.title
+        expected = "GoalsAndPlans"
+        errmsg = (
+            "expected "
+            + str(expected)
+            + " but got "
+            + str(val)
+            + " for the title of website"
         )
         self.assertEqual(val, expected, errmsg)

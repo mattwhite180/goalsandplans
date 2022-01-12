@@ -16,6 +16,18 @@ services:
       - POSTGRES_DB=myproject
       - POSTGRES_USER=myprojectuser
       - POSTGRES_PASSWORD=password
+  chrome:
+    image: selenium/standalone-chrome
+    expose:
+      - "4444"
+    ports:
+      - "4444:4444"
+    networks:
+      - testing_net
+    volumes:
+      - /dev/shm:/dev/shm
+    privileged: "true"
+    shm_size: 2g
   server:
     restart: always
     build: server/
@@ -36,8 +48,10 @@ services:
       - testing_net
     links:
       - db:db
+      - chrome:chrome
     depends_on:
       - db
+      - chrome
     environment:
       - PGHOST=db
       - PGDATABASE=myproject
@@ -57,6 +71,8 @@ services:
       - testing_net
     depends_on:
       - server
+    links:
+      - server:server
     environment:
       - DOCKER_HOST=tcp://docker:2376
       # - DOCKER_CERT_PATH=/certs/client
@@ -65,7 +81,7 @@ services:
       - .jenkins-data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
       - .jenkins-docker-certs:/certs/client
-  frontman:
+  proxy-server:
     image: nginx:latest
     volumes:
       - ./nginx-frontman.conf:/etc/nginx/nginx.conf:ro

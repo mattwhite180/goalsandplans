@@ -35,7 +35,7 @@ class Command(BaseCommand):
                 except:
                     raise CommandError("error running crontask.py")
 
-        self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
-        self.stdout.write(
-            self.style.SUCCESS('Successfully created "%s" tasks\n----' % created)
-        )
+        # self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
+        # self.stdout.write(
+        #     self.style.SUCCESS('Successfully created "%s" tasks\n----' % created)
+        # )
