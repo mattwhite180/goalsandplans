@@ -1,0 +1,3 @@
+docker-commons:latest
+docker-workflow:latest
+python:latest

@@ -9,6 +9,10 @@ migrations/
 *.#*
 *~
 
+.jenkins-data
+.jenkins-docker-certs
+
+
 *.env.*
 *.env
 *.zip

@@ -5,7 +5,7 @@ from django.core.management import call_command
 from django.test import Client, RequestFactory, TestCase
 
 from .models import Goal, Plan, Task
-from .views import dataToJson, run_jobs
+from .views import data_to_json, run_jobs
 
 
 class CronTestCase(TestCase):

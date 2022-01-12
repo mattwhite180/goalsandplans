@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building.. (gp test!)'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing.. (gp test!)'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying.... (gp test!)'
+            }
+        }
+    }
+}
