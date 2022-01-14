@@ -1,17 +1,17 @@
 import datetime
-
-from django.contrib.auth.models import AnonymousUser, User
-
-from django.core.management import call_command
-from django.test import Client, RequestFactory, TestCase
-from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
 import unittest
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+from django.contrib.auth.models import AnonymousUser, User
+from django.core.management import call_command
+from django.test import Client, RequestFactory, TestCase
 
 from .models import Goal, Plan, Task
 from .views import data_to_json, run_jobs
+
 
 class CronTestCase(TestCase):
     def setUp(self):
