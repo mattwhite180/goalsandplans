@@ -10,7 +10,9 @@ migrations/
 *~
 
 .jenkins-data
+!.jenkins-data/placeholder.txt
 .jenkins-docker-certs
+!jenkins-docker-certs/placeholder.txt
 
 
 *.env.*
