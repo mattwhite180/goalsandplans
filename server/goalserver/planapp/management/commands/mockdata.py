@@ -3,7 +3,7 @@ import datetime
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser, User
 from django.core.management.base import BaseCommand, CommandError
-from planapp.models import Goal, Plan, Task
+from planapp.models import Goal, Plan, Task, TodoList
 
 
 class Command(BaseCommand):
@@ -152,6 +152,25 @@ class Command(BaseCommand):
             recurring_task_description="task description goes here",
         )
         mp2.save()
+        todo = TodoList.objects.create(
+            title="TodoList test",
+            description="this is a test todolist",
+            user=mattw
+        )
+        todo.save()
+        mpc = Plan.objects.create(
+            title="continuous plan of the first goal with todolist",
+            description="tasks from this plan shoul have a todo list assigned to them",
+            goal=mg1,
+            default_todolist=todo,
+            continuous=True,
+            limit=10,
+            add_count=6,
+            add_period=1,
+            recurring_task_title="task todo",
+            recurring_task_description="task todo description",
+        )
+        mpc.save()
         mt1 = Task.objects.create(
             title="task2",
             description="test task 2",
