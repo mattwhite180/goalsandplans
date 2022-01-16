@@ -21,14 +21,17 @@
     </div>
     <div class="card-body">
       <h4  id="plan-description" class="card-title">{{ plan.description }}</h4>
+      {% if plan.default_todolist %}
+        <div id="plan-{{ plan.id }}-todolist" class="card-text">TodoList: <span class="badge badge-pill badge-warning">{{ plan.default_todolist }}</span></div>
+      {% endif %}
       {% if plan.continuous %}
-        <div id="plan-priority" class="card-text">Default Priority: <span class="badge badge-pill badge-warning">
-          {{  plan.default_priority|slice:"2:" }}</span></div>
         <div id="plan-continuous" class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
         <div id="plan-add-limit" class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
         <div id="plan-add-count" class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
         <div id="plan-add-period" class="card-text">Add Period: <span class="badge badge-pill badge-primary">{{ plan.add_period }}</span></div>
         <div id="plan-count" class="card-text">Current Count: <span class="badge badge-pill badge-danger">{{ plan.task_count }}</span></div>
+        <div id="plan-priority" class="card-text">Default Priority: <span class="badge badge-pill badge-warning">
+          {{ plan.default_priority|slice:"2:" }}</span></div>
       {% endif %}
       <div id="plan-goal" class="card-text">Goal: <span class="badge badge-pill badge-success">{{ plan.goal }}</span></div>
       <a id="edit-plan" href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>

@@ -88,6 +88,9 @@
       <h1 id="plan-{{ plan.id }}-title"  class="card-header"><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></h1>
       <div class="card-body">
         <h5 id="plan-{{ plan.id }}-description" class="card-title">{{ plan.description }}</h5>
+        {% if plan.default_todolist %}
+          <div id="plan-{{ plan.id }}-todolist" class="card-text">TodoList: <span class="badge badge-pill badge-warning">{{ plan.default_todolist }}</span></div>
+        {% endif %}
         {% if plan.continuous %}
           <div id="plan-{{ plan.id }}-continuous" class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
           <div id="plan-{{ plan.id }}-limit" class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
@@ -98,7 +101,7 @@
             {{ plan.default_priority|slice:"2:" }}</span></div>
         {% endif %}
         <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
-        <button  id="delete-plan-{{ plan.id }}-warning" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
+        <button id="delete-plan-{{ plan.id }}-warning" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
           data-target="#exampleModalCenter{{ plan.id }}">Delete Plan</button>
 
         <!-- Modal -->
