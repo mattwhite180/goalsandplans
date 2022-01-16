@@ -472,7 +472,7 @@ def task_remove_todo(request, task_id):
 
     t = get_object_or_404(Task, pk=task_id)
 
-    if request.user.id is t.user().id:
+    if request.user.id is not t.user().id:
         unauthorized_message(request, t)
         return HttpResponseRedirect(reverse("home"))
 
