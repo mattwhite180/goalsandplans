@@ -502,7 +502,7 @@ def delete_task(request, task_id):
 
 
 @login_required
-def delete_task_todo(request, task_id):
+def delete_task_todolist(request, task_id):
 
     context = get_context(request)
 
@@ -519,6 +519,21 @@ def delete_task_todo(request, task_id):
         unauthorized_message(request, t)
 
     return HttpResponseRedirect(reverse("todolist", args=(todolist_id,)))
+
+@login_required
+def delete_task_todo(request, task_id):
+
+    context = get_context(request)
+
+    t = get_object_or_404(Task, pk=task_id)
+
+    if request.user.id is t.user().id:
+        messages.warning(request, message_generator("deleted", t))
+        t.delete()
+    else:
+        unauthorized_message(request, t)
+
+    return HttpResponseRedirect(reverse("task_todo"))
 
 
 @login_required
