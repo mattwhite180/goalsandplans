@@ -632,7 +632,7 @@ def edit_todolist(request, todo_id):
             context["error_list"] = get_errors(form)
 
     else:
-        form = TaskForm(instance=m)
+        form = TodoListForm(instance=m)
 
     context["form"] = form
     context["form_title"] = "edit todolist (" + str(m.title) + ")"

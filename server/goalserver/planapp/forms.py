@@ -1,8 +1,6 @@
 from django import forms
 from django.contrib.auth.models import AnonymousUser, User
-from django.forms import \
-    ModelForm  # , Textarea, DateTimeField, MultipleChoiceField
-
+from django.forms import ModelForm
 from .models import Goal, Plan, Task, TodoList
 
 
