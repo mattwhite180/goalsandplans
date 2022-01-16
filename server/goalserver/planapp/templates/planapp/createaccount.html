@@ -6,10 +6,10 @@
   <div class="card-header">GoalsAndPlans</div>
   <div class="card-body">
     <h5 class="card-title">Create your account</h5>
-    <form method="post" enctype="multipart/form-data">
+    <form id="create-account" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
-      <input type="submit" class="btn btn-primary" value="Submit" />
+      <input id="submit" type="submit" class="btn btn-primary" value="Submit" />
     </form>
   </div>
   <div class="card-footer text-muted">GoalsAndPlans</div>

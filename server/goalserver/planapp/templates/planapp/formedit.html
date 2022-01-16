@@ -6,14 +6,14 @@
   <div class="card-header">GoalsAndPlans</div>
   <div class="card-body">
     {% if form_title %}
-      <h5 class="card-title">{{ form_title }}</h5>
+      <h5 id="title" class="card-title">{{ form_title }}</h5>
     {% else %}
       <h5 class="card-title">Fill out form</h5>
     {% endif %}
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
-      <input class="btn btn-primary" type="submit" value="Submit" />
+      <input id="submit" class="btn btn-primary" type="submit" value="Submit" />
     </form>
   </div>
   <div class="card-footer text-muted">GoalsAndPlans</div>

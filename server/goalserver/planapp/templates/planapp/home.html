@@ -3,13 +3,13 @@
 {% block leftcontent %}
 
 <p class="text-center">
-  <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample"
+  <button id="help" class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample"
     aria-expanded="false" aria-controls="collapseExample">
     Help
   </button>
 </p>
 <div class="collapse" id="collapseExample">
-  <div class="card card-body">
+  <div id="help-body" class="card card-body">
     Create a goal, such as be more healthy or do well in school. Then click on the goal to create specific and trackable
     plans, such as go on a walk once a day, or go to the gym twice a week.
   </div>
@@ -22,7 +22,7 @@
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
-      <input class="btn btn-primary" type="submit" value="Submit">
+      <input id="submit" class="btn btn-primary" type="submit" value="Submit">
     </form>
   </div>
 </div>
@@ -34,14 +34,14 @@
     {% for goal in goals_list %}
       <div class="card text-left">
         <div class="card-header">
-          <h2><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></h2>
+          <h2 id="goal-{{ goal.id }}-title"><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></h2>
         </div>
         <div class="card-body text-left">
-          <h5 class="card-title">{{ goal.description }}</h5>
-          <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ goal.priority|slice:"2:" }}</span>
+          <h5 id="goal-{{ goal.id }}-description class="card-title">{{ goal.description }}</h5>
+          <div id="goal-{{ goal.id }}-priority class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ goal.priority|slice:"2:" }}</span>
           </div>
-          <a href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>
-          <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
+          <a id="edit-goal-{{ goal.id }}" href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>
+          <button id="delete-goal-{{ goal.id }}-warning" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
             data-target="#exampleModalCenter{{ goal.id }}">Delete Goal</button>
 
           <!-- Modal -->
@@ -59,8 +59,8 @@
                   Are you sure you want to delete the '<b>{{ goal.title }}</b>' goal?
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <a href="{% url 'delete_goal' goal.id %}" class="btn btn-primary"
+                  <button id="delete-goal-{{ goal.id }}-warning-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <a id="delete-goal-{{ goal.id }}" href="{% url 'delete_goal' goal.id %}" class="btn btn-primary"
                     style="background-color: red; border-color: red;">Delete Goal</a>
                 </div>
               </div>
@@ -71,6 +71,6 @@
       <br>
     {% endfor %}
   {% else %}
-    <p>No goals are created yet.</p>
+    <p id="no-goal">No goals are created yet.</p>
   {% endif %}
 {% endblock %}

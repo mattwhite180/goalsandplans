@@ -22,7 +22,7 @@
     {% include "planapp/topbar.html" %}
   {% endif %}
   {% if debug %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div id="debug" class="alert alert-success alert-dismissible fade show" role="alert">
       <strong>DEBUG IS ENABLED. USING LOCAL DATABASE</strong>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -45,7 +45,7 @@
   {% endblock %}
   {% block message %}
     {% if messages %}
-      <ul class="messages">
+      <ul id="messages" class="messages">
         {% for message in messages %}
           <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
             <strong>{{ message }}</strong>

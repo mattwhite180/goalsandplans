@@ -3,13 +3,13 @@
 {% block leftcontent %}
 
 <p class="text-center">
-  <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample"
+  <button id="help" class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample"
     aria-expanded="false" aria-controls="collapseExample">
     Help
   </button>
 </p>
 <div class="collapse" id="collapseExample">
-  <div class="card card-body">
+  <div id="help-body" class="card card-body">
     Create specific and trackable plans associated with your goal, such as go on a walk once a day, or go to the gym
     twice a week.
     <ul>
@@ -28,14 +28,14 @@
 {% if goal %}
   <div class="card text-center">
     <div class="card-header">
-      <h1>{{ goal.title }}</h1>
+      <h1 id="goal-title">{{ goal.title }}</h1>
     </div>
     <div class="card-body">
-      <h4 class="card-title">{{ goal.description }}</h4>
+      <h4 id="goal-description" class="card-title">{{ goal.description }}</h4>
       <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ goal.priority|slice:"2:" }}</span>
       </div>
       <a href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>
-      <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
+      <button id="delete-goal-warning" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
         data-target="#exampleModalCenterGoal">Delete Goal</button>
 
       <!-- Modal -->
@@ -49,12 +49,12 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div id="delete-goal-warning-text" class="modal-body">
               Are you sure you want to delete the '<b>{{ goal.title }}</b>' goal?
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <a href="{% url 'delete_goal' goal.id %}" class="btn btn-primary"
+              <button id="delete-goal-warning-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <a href="{% url 'delete_goal' goal.id %}" id="delete-goal" class="btn btn-primary"
                 style="background-color: red; border-color: red;">Delete Goal</a>
             </div>
           </div>
@@ -63,7 +63,7 @@
     </div>
   </div>
 {% else %}
-  <p>goal isnt available.</p>
+  <p id="no-goal" >goal isnt available.</p>
 {% endif %}
 <br>
 <div class="card text-center">
@@ -71,10 +71,10 @@
     Create a new Plan
   </div>
   <div class="card-body">
-    <form method="post" enctype="multipart/form-data">
+    <form id="plan-form" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
-      <input class="btn btn-primary" type="submit" value="Submit">
+      <input id="submit" class="btn btn-primary" type="submit" value="Submit">
     </form>
   </div>
 </div>
@@ -85,20 +85,20 @@
 {% if plan_list %}
   {% for plan in plan_list %}
     <div class="card">
-      <h1 class="card-header"><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></h1>
+      <h1 id="plan-{{ plan.id }}-title"  class="card-header"><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></h1>
       <div class="card-body">
-        <h5 class="card-title">{{ plan.description }}</h5>
+        <h5 id="plan-{{ plan.id }}-description" class="card-title">{{ plan.description }}</h5>
         {% if plan.continuous %}
-          <div class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
-          <div class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
-          <div class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
-          <div class="card-text">Add Period: <span class="badge badge-pill badge-primary">{{ plan.add_period }}</span></div>
-          <div class="card-text">Current Count: <span class="badge badge-pill badge-danger">{{ plan.task_count }}</span></div>
-          <div class="card-text">Default Priority: <span class="badge badge-pill badge-warning">
+          <div id="plan-{{ plan.id }}-continuous" class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
+          <div id="plan-{{ plan.id }}-limit" class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
+          <div id="plan-{{ plan.id }}-addcount" class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
+          <div id="plan-{{ plan.id }}-addperiod" class="card-text">Add Period: <span class="badge badge-pill badge-primary">{{ plan.add_period }}</span></div>
+          <div id="plan-{{ plan.id }}-currentcount" class="card-text">Current Count: <span class="badge badge-pill badge-danger">{{ plan.task_count }}</span></div>
+          <div id="plan-{{ plan.id }}-priority" class="card-text">Default Priority: <span class="badge badge-pill badge-warning">
             {{ plan.default_priority|slice:"2:" }}</span></div>
         {% endif %}
         <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
-        <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
+        <button  id="delete-plan-{{ plan.id }}-warning" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
           data-target="#exampleModalCenter{{ plan.id }}">Delete Plan</button>
 
         <!-- Modal -->
@@ -116,8 +116,8 @@
                 Are you sure you want to delete the '<b>{{ plan.title }}</b>' plan?
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a href="{% url 'delete_plan' plan.id %}" class="btn btn-primary"
+                <button  id="delete-plan-{{ plan.id }}-warning-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a id="delete-plan" href="{% url 'delete_plan' plan.id %}" class="btn btn-primary"
                   style="background-color: red; border-color: red;">Delete Plan</a>
               </div>
             </div>
@@ -128,7 +128,7 @@
     <br>
   {% endfor %}
 {% else %}
-  <p>No plans associated with this goal are created yet.</p>
+  <p id="no-plans">No plans associated with this goal are created yet.</p>
 {% endif %}
 
 {% endblock %}
