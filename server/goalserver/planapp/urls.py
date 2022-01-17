@@ -20,6 +20,7 @@ urlpatterns = [
     path("goal/<int:goal_id>/edit/", views.edit_goal, name="edit_goal"),
     path("goal/<int:goal_id>/delete/", views.delete_goal, name="delete_goal"),
     path("plan/<int:plan_id>/", views.plan, name="plan"),
+    path("plan/<int:plan_id>/newtask", views.plan_create_task, name="plan_create_task"),
     path("plan/<int:plan_id>/edit/", views.edit_plan, name="edit_plan"),
     path("plan/<int:plan_id>/delete/", views.delete_plan, name="delete_plan"),
     path("task/<int:task_id>/", views.task, name="task"),
@@ -42,4 +43,5 @@ urlpatterns = [
     path("run_jobs/", views.run_jobs, name="run_jobs"),
     path("create_backup/", views.create_backup, name="create_backup"),
     path("search_list/", views.search_list, name="search_list"),
+    path("pointify/", views.pointify, name="pointify"),
 ]

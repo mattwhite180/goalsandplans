@@ -105,7 +105,7 @@ class Plan(models.Model):
     add_period = models.IntegerField(default=1)
     recurring_task_title = models.CharField(max_length=200, default="?")
     recurring_task_description = models.CharField(max_length=2000, default="?")
-    default_points = models.IntegerField(default=0)
+    default_points = models.IntegerField(default=1)
 
     def __str__(self):
         return self.title
@@ -132,7 +132,7 @@ class Task(models.Model):
     )
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     todolist = models.ForeignKey(TodoList, models.SET_NULL, blank=True, null=True)
-    points = models.IntegerField(default=0)
+    points = models.IntegerField(default=1)
 
     def __str__(self):
         return self.title
@@ -149,7 +149,7 @@ class Task(models.Model):
 class Prize(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=2000, default="?")
-    points = models.IntegerField(default=0)
+    points = models.IntegerField(default=1)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

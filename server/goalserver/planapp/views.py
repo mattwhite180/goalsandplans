@@ -13,9 +13,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import (BackupCreateForm, GoalForm, PlanForm, QuickTaskForm,
-                    TaskForm, TodoListForm, PrizeForm, RedeemPrizeForm)
-from .models import Goal, Plan, Task, TodoList, UserData, Prize
+from .forms import (BackupCreateForm, GoalForm, PlanForm, PrizeForm,
+                    QuickTaskForm, RedeemPrizeForm, TaskForm, TodoListForm)
+from .models import Goal, Plan, Prize, Task, TodoList, UserData
 
 
 """
@@ -66,6 +66,13 @@ def get_context(request):
             ud = UserData.objects.create(user=request.user)
         context["user_data"] = ud.pull_report()
     return context
+
+def pointify(request):
+    context = get_context(request)
+    if request.user.is_superuser or request.user.is_staff:
+        call_command("pointify")
+        messages.success(request, "pointify command ran")
+    return HttpResponseRedirect(reverse("home"))
 
 
 def create_backup(request):
@@ -374,6 +381,24 @@ def plan(request, plan_id):
     context["form"] = form
     return render(request, "planapp/plan.html", context)
 
+@login_required
+def plan_create_task(request, plan_id):
+    
+    p = get_object_or_404(Plan, pk=plan_id)
+
+    if request.user.id is not p.user().id:
+        unauthorized_message(request, p)
+        return HttpResponseRedirect(reverse("home"))
+
+    newT = Task.objects.create(
+        title=p.recurring_task_title,
+        description=p.recurring_task_description,
+        priority=p.default_priority,
+        plan=p,
+    )
+    newT.save()
+    change_points(request, 1)
+    return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
 @login_required
 def edit_plan(request, plan_id):
@@ -767,7 +792,7 @@ def edit_prize(request, prize_id):
             context["error_list"] = get_errors(form)
 
     else:
-        form = TodoListForm(instance=p)
+        form = PrizeForm(instance=p)
 
     context["form"] = form
     context["form_title"] = "edit prize (" + str(p.title) + ")"
@@ -780,7 +805,7 @@ def delete_prize(request, prize_id):
 
     p = get_object_or_404(Prize, pk=prize_id)
 
-    if request.user.id == m.user.id:
+    if request.user.id == p.user.id:
         messages.warning(request, message_generator("deleted", p))
         p.delete()
     else:
