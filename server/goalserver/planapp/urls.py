@@ -34,6 +34,10 @@ urlpatterns = [
     path(
         "todolist/<int:todo_id>/delete/", views.delete_todolist, name="delete_todolist"
     ),
+    path("prize", views.prize, name="prize"),
+    path("prize/<int:prize_id>/", views.redeem_prize, name="redeem_prize"),
+    path("prize/<int:prize_id>/edit", views.edit_prize, name="edit_prize"),
+    path("prize/<int:prize_id>/delete", views.delete_prize, name="delete_prize"),
     path("task_todo/", views.task_todo, name="task_todo"),
     path("run_jobs/", views.run_jobs, name="run_jobs"),
     path("create_backup/", views.create_backup, name="create_backup"),

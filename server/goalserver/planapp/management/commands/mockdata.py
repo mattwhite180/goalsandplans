@@ -1,9 +1,9 @@
 import datetime
 
 from django.conf import settings
-from django.contrib.auth.models import AnonymousUser, User
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
-from planapp.models import Goal, Plan, Task, TodoList
+from planapp.models import Goal, Plan, Task, TodoList, UserData, Prize
 
 
 class Command(BaseCommand):
@@ -26,16 +26,22 @@ class Command(BaseCommand):
                 username="root", password="asdf", is_superuser=True, is_staff=True
             )
             root_user.save()
+            root_data = UserData.objects.create(user=root_user)
+            root_data.save()
         if "test" in usernameList:
             test_user = User.objects.get(username="test")
         else:
             test_user = User.objects.create_user(username="test", password="1234")
             test_user.save()
+            test_data = UserData.objects.create(user=test_user)
+            test_data.save()
         if "mattw" in usernameList:
             mattw = User.objects.get(username="mattw")
         else:
             mattw = User.objects.create_user(username="mattw", password="mw")
             mattw.save()
+            mattw_data = UserData.objects.create(user=mattw)
+            mattw_data.save()
         g = Goal.objects.create(
             title="test goal", description="test goal description", user=test_user
         )
@@ -48,6 +54,7 @@ class Command(BaseCommand):
             limit=5,
             add_count=5,
             add_period=1,
+            default_points=1,
             recurring_task_title="task title goes here",
             recurring_task_description="task description goes here",
         )
@@ -121,6 +128,7 @@ class Command(BaseCommand):
             limit=10,
             add_count=3,
             add_period=1,
+            default_points=2,
             default_priority=Goal.priority.field.choices[2][0],
             recurring_task_title="task title goes here",
             recurring_task_description="task description goes here",
@@ -134,6 +142,7 @@ class Command(BaseCommand):
             limit=10,
             add_count=3,
             add_period=1,
+            default_points=3,
             default_priority=Goal.priority.field.choices[3][0],
             recurring_task_title="task title goes here",
             recurring_task_description="task description goes here",

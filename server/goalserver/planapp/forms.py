@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import AnonymousUser, User
 from django.forms import ModelForm
 
-from .models import Goal, Plan, Task, TodoList
+from .models import Goal, Plan, Task, TodoList, Prize
 
 
 class GoalForm(forms.ModelForm):
@@ -27,6 +27,7 @@ class PlanForm(forms.ModelForm):
             "add_period",
             "recurring_task_title",
             "recurring_task_description",
+            "default_points",
             "default_priority",
             "default_todolist",
         )
@@ -42,7 +43,7 @@ class PlanForm(forms.ModelForm):
 class QuickTaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ("title", "description", "priority", "todolist", "plan")
+        fields = ("title", "description", "points", "priority", "todolist", "plan")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Task.PriorityLevels),
@@ -52,7 +53,7 @@ class QuickTaskForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ("title", "description", "priority", "todolist")
+        fields = ("title", "description", "points", "priority", "todolist")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Task.PriorityLevels),
@@ -68,6 +69,18 @@ class TodoListForm(forms.ModelForm):
             "priority": forms.Select(choices=Goal.PriorityLevels),
         }
 
+
+class PrizeForm(forms.ModelForm):
+    class Meta:
+        model = Prize
+        fields = ("title", "description", "points")
+        widgets = {
+            "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
+        }
+
+
+class RedeemPrizeForm(forms.Form):
+    count = forms.IntegerField()
 
 class BackupCreateForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
