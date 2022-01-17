@@ -43,4 +43,5 @@ urlpatterns = [
     path("run_jobs/", views.run_jobs, name="run_jobs"),
     path("create_backup/", views.create_backup, name="create_backup"),
     path("search_list/", views.search_list, name="search_list"),
+    path("pointify/", views.pointify, name="pointify"),
 ]
