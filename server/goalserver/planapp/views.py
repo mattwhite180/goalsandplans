@@ -767,7 +767,7 @@ def edit_prize(request, prize_id):
             context["error_list"] = get_errors(form)
 
     else:
-        form = TodoListForm(instance=p)
+        form = PrizeForm(instance=p)
 
     context["form"] = form
     context["form_title"] = "edit prize (" + str(p.title) + ")"
