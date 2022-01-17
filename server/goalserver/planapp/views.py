@@ -780,7 +780,7 @@ def delete_prize(request, prize_id):
 
     p = get_object_or_404(Prize, pk=prize_id)
 
-    if request.user.id == m.user.id:
+    if request.user.id == p.user.id:
         messages.warning(request, message_generator("deleted", p))
         p.delete()
     else:
