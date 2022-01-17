@@ -35,6 +35,9 @@
           {{ plan.default_priority|slice:"2:" }}</span></div>
       {% endif %}
       <div id="plan-goal" class="card-text">Goal: <span class="badge badge-pill badge-success">{{ plan.goal }}</span></div>
+      {% if plan.continuous %}
+        <a id="newtask-plan" href="{% url 'plan_create_task' plan.id %}" class="btn btn-success">Create new task</a>
+      {% endif %}
       <a id="edit-plan" href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
       <button id="delete-plan-warning" id="delete-plan" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
         data-target="#exampleModalCenterPlan">Delete Plan</button>

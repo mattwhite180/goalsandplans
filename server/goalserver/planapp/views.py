@@ -374,6 +374,24 @@ def plan(request, plan_id):
     context["form"] = form
     return render(request, "planapp/plan.html", context)
 
+@login_required
+def plan_create_task(request, plan_id):
+    
+    p = get_object_or_404(Plan, pk=plan_id)
+
+    if request.user.id is not p.user().id:
+        unauthorized_message(request, p)
+        return HttpResponseRedirect(reverse("home"))
+
+    newT = Task.objects.create(
+        title=p.recurring_task_title,
+        description=p.recurring_task_description,
+        priority=p.default_priority,
+        plan=p,
+    )
+    newT.save()
+    change_points(request, 1)
+    return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
 @login_required
 def edit_plan(request, plan_id):
