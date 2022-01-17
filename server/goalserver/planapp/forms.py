@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import AnonymousUser, User
 from django.forms import ModelForm
 
-from .models import Goal, Plan, Task, TodoList, Prize
+from .models import Goal, Plan, Prize, Task, TodoList
 
 
 class GoalForm(forms.ModelForm):
