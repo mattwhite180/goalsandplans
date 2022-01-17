@@ -27,6 +27,7 @@ class Command(BaseCommand):
                                 description=plan.recurring_task_description,
                                 priority=plan.default_priority,
                                 plan=plan,
+                                points=plan.default_points,
                             )
                             if plan.default_todolist:
                                 newT.todolist = plan.default_todolist
