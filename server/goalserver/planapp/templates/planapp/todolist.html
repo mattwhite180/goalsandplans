@@ -68,6 +68,7 @@
         <h5 class="card-title">{{ task.description }}</h5>
         <div class="card-text">Priority: <span class="badge badge-pill badge-warning">
           {{ task.priority|slice:"2:" }}</span></div>
+        <div id="task-{{ task.id }}-points" class="card-text">Points: <span class="badge badge-pill badge-primary">{{ task.points }}</span></div> 
         <div class="card-text">Goal: <span class="badge badge-pill badge-success">{{ task.plan.goal }}</span></div>
         <div class="card-text">Plan: <span class="badge badge-pill badge-info">{{ task.plan }}</span></div>
         {% if task.todolist %}

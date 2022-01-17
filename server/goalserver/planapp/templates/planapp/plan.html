@@ -29,6 +29,7 @@
         <div id="plan-add-limit" class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
         <div id="plan-add-count" class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
         <div id="plan-add-period" class="card-text">Add Period: <span class="badge badge-pill badge-primary">{{ plan.add_period }}</span></div>
+        <div id="plan-{{ plan.id }}-points" class="card-text">Default points: <span class="badge badge-pill badge-primary">{{ plan.default_points }}</span></div>
         <div id="plan-count" class="card-text">Current Count: <span class="badge badge-pill badge-danger">{{ plan.task_count }}</span></div>
         <div id="plan-priority" class="card-text">Default Priority: <span class="badge badge-pill badge-warning">
           {{ plan.default_priority|slice:"2:" }}</span></div>
@@ -91,6 +92,7 @@
         <h5 class="card-title">{{ task.description }}</h5>
         <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ task.priority|slice:"2:" }}</span>
         </div>
+        <div id="task-{{ task.id }}-points" class="card-text">Points: <span class="badge badge-pill badge-primary">{{ task.points }}</span></div>
         {% if task.todolist %}
           <div class="card-text">MiniTask: <span class="badge badge-pill badge-secondary">{{ task.todolist }}</span></div>
           <a href="{% url 'remove_todo' task.id %}" class="btn btn-primary"

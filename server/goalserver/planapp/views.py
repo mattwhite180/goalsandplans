@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.models import AnonymousUser, User
+from django.contrib.auth.models import User
 from django.core import serializers
 from django.core.management import call_command
 from django.http import HttpResponse, HttpResponseRedirect
@@ -14,8 +14,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .forms import (BackupCreateForm, GoalForm, PlanForm, QuickTaskForm,
-                    TaskForm, TodoListForm)
-from .models import Goal, Plan, Task, TodoList
+                    TaskForm, TodoListForm, PrizeForm, RedeemPrizeForm)
+from .models import Goal, Plan, Task, TodoList, UserData, Prize
 
 
 """
@@ -59,6 +59,12 @@ def get_context(request):
     context = {}
     context["is_mobile"] = mobile(request)
     context["debug"] = debug()
+    if request.user.is_authenticated:
+        if UserData.objects.filter(user=request.user).count() > 0:
+            ud = UserData.objects.get(user=request.user)
+        else:
+            ud = UserData.objects.create(user=request.user)
+        context["user_data"] = ud.pull_report()
     return context
 
 
@@ -123,6 +129,10 @@ def get_errors(f):
     errorList.sort()
     return errorList
 
+def change_points(request, points):
+    ud = UserData.objects.get(user = request.user)
+    ud.points += points
+    ud.save()
 
 """
 #####
@@ -140,6 +150,8 @@ def create_account(request):
         if form.is_valid():
             u = form.save()
             u.save()
+            user_data = UserData.objects.create(user=u)
+            user_data.save()
             login(request, u)
             messages.success(request, message_generator("created", u))
             return redirect("home")
@@ -493,6 +505,7 @@ def delete_task(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
+        change_points(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -514,6 +527,7 @@ def delete_task_todolist(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
+        change_points(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -529,6 +543,7 @@ def delete_task_todo(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
+        change_points(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -668,3 +683,107 @@ def delete_todolist(request, todo_id):
         unauthorized_message(request, m)
 
     return HttpResponseRedirect(reverse("task_todo"))
+
+"""
+#####
+TodoList Views
+"""
+
+
+@login_required
+def prize(request):
+    context = get_context(request)
+
+    if request.method == "POST":
+
+        form = PrizeForm(request.POST)
+
+        if form.is_valid():
+            p = form.save(commit=False)
+            p.user = request.user
+            p.save()
+            messages.success(request, message_generator("created", p))
+        else:
+            context["error_list"] = get_errors(form)
+
+    else:
+        form = PrizeForm()
+
+    prize_list = Prize.objects.filter(user=request.user).order_by("title")
+    context["prize_list"] = prize_list
+    context["form"] = form
+    return render(request, "planapp/prize.html", context)
+
+@login_required
+def redeem_prize(request, prize_id):
+    context = get_context(request)
+
+    p = get_object_or_404(Prize, pk=prize_id)
+
+    if request.user.id != p.user.id:
+        unauthorized_message(request, p)
+        return HttpResponseRedirect(reverse("home"))
+
+    if request.method == "POST":
+
+        form = RedeemPrizeForm(request.POST)
+
+        if form.is_valid():
+            cd = form.cleaned_data
+            count = cd.get("count")
+            points_count = -1 * abs(count * p.points)
+            change_points(request, points_count)
+            messages.success(request, "Redeemed " + str(abs(points_count)) + " points")
+        else:
+            context["error_list"] = get_errors(form)
+
+    else:
+        form = RedeemPrizeForm()
+
+    context["form"] = form
+    context["prize"] = p
+    return render(request, "planapp/redeem_prize.html", context)
+
+@login_required
+def edit_prize(request, prize_id):
+    context = get_context(request)
+
+    p = get_object_or_404(Prize, pk=prize_id)
+
+    if request.user.id != p.user.id:
+        unauthorized_message(request, p)
+        return HttpResponseRedirect(reverse("home"))
+
+    if request.method == "POST":
+        # form = GoalForm(request.POST or None, request.FILES or None)
+        form = PrizeForm(request.POST, instance=p)
+
+        if form.is_valid():
+            p = form.save(commit=False)
+            p.save()
+            messages.info(request, message_generator("edited", p))
+            return HttpResponseRedirect(reverse("prize"))
+        else:
+            context["error_list"] = get_errors(form)
+
+    else:
+        form = TodoListForm(instance=p)
+
+    context["form"] = form
+    context["form_title"] = "edit prize (" + str(p.title) + ")"
+    return render(request, "planapp/formedit.html", context)
+
+@login_required
+def delete_prize(request, prize_id):
+
+    context = get_context(request)
+
+    p = get_object_or_404(Prize, pk=prize_id)
+
+    if request.user.id == m.user.id:
+        messages.warning(request, message_generator("deleted", p))
+        p.delete()
+    else:
+        unauthorized_message(request, p)
+
+    return HttpResponseRedirect(reverse("prize"))

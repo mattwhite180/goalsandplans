@@ -1,5 +1,19 @@
 {% extends "planapp/bootstrap.html" %}
 
+{% block content %}
+<div class="card text-center">
+  <div class="card-header">
+    {{ user.username }}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title"><u>{{ user.username }}'s stats</u></h5>
+    {% for key, value in user_data.items %}
+      <p class="card-text"><b>{{ key }}</b>: <i>{{ value }}</i></p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
 {% block leftcontent %}
 
 <p class="text-center">

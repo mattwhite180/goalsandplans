@@ -57,6 +57,9 @@
       </ul>
     {% endif %}
   {% endblock %}
+  {% if user.is_authenticated %}
+
+  {% endif %}
   <div id="content" class="float-container">
     {% block content %}{% endblock %}
     <div {% if not is_mobile %} class="float-child" {% endif %}>
