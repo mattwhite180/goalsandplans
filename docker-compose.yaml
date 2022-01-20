@@ -57,30 +57,30 @@ services:
       - PGDATABASE=myproject
       - PGUSER=myprojectuser
       - PGPASSWORD=password
-  jenkinsci:
-    #command: #jenkins-plugin-cli --plugins "blueocean:1.25.2 docker-workflow:1.26"
-    build: jenkins/
-    privileged: "true"
-    expose:
-      - "8080"
-      - "50000"
-    ports:
-      - "8080:8080"
-      - "50000:50000"
-    networks:
-      - testing_net
-    depends_on:
-      - server
-    links:
-      - server:server
-    environment:
-      - DOCKER_HOST=tcp://docker:2376
-      # - DOCKER_CERT_PATH=/certs/client
-      - DOCKER_TLS_VERIFY=1
-    volumes:
-      - .jenkins-data:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-      - .jenkins-docker-certs:/certs/client
+  # jenkinsci:
+  #   #command: #jenkins-plugin-cli --plugins "blueocean:1.25.2 docker-workflow:1.26"
+  #   build: jenkins/
+  #   privileged: "true"
+  #   expose:
+  #     - "8080"
+  #     - "50000"
+  #   ports:
+  #     - "8080:8080"
+  #     - "50000:50000"
+  #   networks:
+  #     - testing_net
+  #   depends_on:
+  #     - server
+  #   links:
+  #     - server:server
+  #   environment:
+  #     - DOCKER_HOST=tcp://docker:2376
+  #     - DOCKER_CERT_PATH=/certs/client
+  #     - DOCKER_TLS_VERIFY=1
+  #   volumes:
+  #     - .jenkins-data:/var/jenkins_home
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - .jenkins-docker-certs:/certs/client
   proxy-server:
     image: nginx:latest
     volumes:
@@ -96,8 +96,10 @@ services:
 
 volumes:
   postgres_data:
-  jenkins-data:
-  jenkins-docker-certs:
+  # jenkins-data:
+  # jenkins-docker-certs:
+  # /var/run/docker.sock:
+
 
 networks:
   testing_net:
