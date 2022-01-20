@@ -18,7 +18,8 @@ class UserData(models.Model):
         for p in Plan.objects.filter(
             goal__in=Goal.objects.filter(user=self.user)
         ).filter(continuous=True):
-            daily_task_count += (p.add_count / p.add_period)
+            if p.add_period != 0:
+                daily_task_count += (p.add_count / p.add_period)
         report["daily_task_count"] = str(round(daily_task_count, 3))
         report["task_count"] = str(
             Task.objects.filter(
