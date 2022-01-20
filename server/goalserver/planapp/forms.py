@@ -80,7 +80,7 @@ class PrizeForm(forms.ModelForm):
 
 
 class RedeemPrizeForm(forms.Form):
-    count = forms.IntegerField()
+    count = forms.IntegerField(initial=1)
 
 class BackupCreateForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
