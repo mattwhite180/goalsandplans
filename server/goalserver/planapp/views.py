@@ -13,8 +13,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import (BackupCreateForm, GoalForm, PlanForm, PrizeForm,
-                    QuickTaskForm, RedeemPrizeForm, TaskForm, TodoListForm, ChangePointsForm)
+from .forms import (BackupCreateForm, ChangePointsForm, GoalForm, PlanForm,
+                    PrizeForm, QuickTaskForm, RedeemPrizeForm, TaskForm,
+                    TodoListForm)
 from .models import Goal, Plan, Prize, Task, TodoList, UserData
 
 
