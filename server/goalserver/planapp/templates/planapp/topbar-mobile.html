@@ -14,8 +14,11 @@
         <a class="nav-link active" href="{% url 'task_todo' %}">
           <button type="button" class="btn btn-info">TodoList</button>
         </a>
+        <a class="nav-link active" href="{% url 'change_points' %}">
+          <button type="button" class="btn btn-danger">Edit Points</button>
+        </a>
         <a class="nav-link active" href="{% url 'prize' %}">
-          <button type="button" class="btn btn-danger">Prizes</button>
+          <button type="button" class="btn btn-success">Prizes</button>
         </a>
         {% if user.is_superuser %}
           <a class="nav-link active" href="{% url 'run_jobs' %}">

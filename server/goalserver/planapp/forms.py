@@ -78,6 +78,8 @@ class PrizeForm(forms.ModelForm):
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
         }
 
+class ChangePointsForm(forms.Form):
+    amount = forms.IntegerField(initial=1)
 
 class RedeemPrizeForm(forms.Form):
     count = forms.IntegerField(initial=1)

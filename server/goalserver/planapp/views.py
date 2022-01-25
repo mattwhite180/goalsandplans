@@ -14,7 +14,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .forms import (BackupCreateForm, GoalForm, PlanForm, PrizeForm,
-                    QuickTaskForm, RedeemPrizeForm, TaskForm, TodoListForm)
+                    QuickTaskForm, RedeemPrizeForm, TaskForm, TodoListForm, ChangePointsForm)
 from .models import Goal, Plan, Prize, Task, TodoList, UserData
 
 
@@ -136,7 +136,7 @@ def get_errors(f):
     errorList.sort()
     return errorList
 
-def change_points(request, points):
+def point_changer(request, points):
     ud = UserData.objects.get(user = request.user)
     ud.points += points
     ud.save()
@@ -222,6 +222,37 @@ def home(request):
     context["goals_list"] = goals_list
 
     return render(request, "planapp/home.html", context)
+
+def change_points(request):
+    context = get_context(request)
+
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("index"))
+
+    if request.method == "POST":
+        # form = GoalForm(request.POST or None, request.FILES or None)
+        form = ChangePointsForm(request.POST)
+
+        if form.is_valid():
+            cd = form.cleaned_data
+            amount = cd.get("amount")
+            ud = UserData.objects.get(user = request.user)
+            before = ud.points
+            ud.points = amount
+            ud.save()
+            messages.success(request, str("user's points counts changed from " + str(before) + " to " + str(amount)))
+            return HttpResponseRedirect(reverse("home"))
+        else:
+            context["error_list"] = get_errors(form)
+
+    else:
+        form = ChangePointsForm()
+
+    context["form"] = form
+    goals_list = Goal.objects.filter(user=request.user).order_by("-priority", "title")
+    context["goals_list"] = goals_list
+
+    return render(request, "planapp/changepoints.html", context)
 
 
 def search_list(request):
@@ -397,7 +428,7 @@ def plan_create_task(request, plan_id):
         plan=p,
     )
     newT.save()
-    change_points(request, 1)
+    point_changer(request, 1)
     return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
 @login_required
@@ -530,7 +561,7 @@ def delete_task(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
-        change_points(request, t.points)
+        point_changer(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -552,7 +583,7 @@ def delete_task_todolist(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
-        change_points(request, t.points)
+        point_changer(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -568,7 +599,7 @@ def delete_task_todo(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
-        change_points(request, t.points)
+        point_changer(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -757,7 +788,7 @@ def redeem_prize(request, prize_id):
             cd = form.cleaned_data
             count = cd.get("count")
             points_count = -1 * abs(count * p.points)
-            change_points(request, points_count)
+            point_changer(request, points_count)
             messages.success(request, "Redeemed " + str(abs(points_count)) + " points")
         else:
             context["error_list"] = get_errors(form)

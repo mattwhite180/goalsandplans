@@ -1,0 +1,29 @@
+{% extends "planapp/bootstrap.html" %}
+
+{% block content %}
+<div class="card text-center">
+  <div class="card-header">
+    {{ user.username }}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title"><u>{{ user.username }}'s stats</u></h5>
+    {% for key, value in user_data.items %}
+      <p class="card-text"><b>{{ key }}</b>: <i>{{ value }}</i></p>
+    {% endfor %}
+  </div>
+</div>
+<br>
+<div class="card text-center">
+    <div class="card-header">
+      <h1>Create a new goal</h1>
+    </div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input id="submit" class="btn btn-primary" type="submit" value="Submit">
+      </form>
+    </div>
+  </div>
+
+{% endblock %}
