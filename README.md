@@ -1,6 +1,6 @@
 # goalsandplans
 
-## See it live on http://goalsandplans101.com
+## See it live on https://goalsandplans101.com
 
 ## Use public docker repo
 Here is a `docker-compose.yaml` example:
