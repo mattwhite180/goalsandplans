@@ -32,4 +32,4 @@ jobs:
         docker push public.ecr.aws/z7r6z9m1/goalsandplans:latest
     - name: reset ebs
       run: |
-        aws elasticbeanstalk rebuild-environment --environment-name Goalsandplans-env
+        aws elasticbeanstalk rebuild-environment --environment-name Gp-env
