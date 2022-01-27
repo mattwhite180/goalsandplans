@@ -15,14 +15,10 @@ class Command(BaseCommand):
         try:
             for p in Plan.objects.filter(continuous=True):
                 for t in Task.objects.filter(plan=p).filter(title=p.recurring_task_title):
+                    t.description = p.recurring_task_description
                     t.points = p.default_points
                     t.todolist = p.default_todolist
                     t.priority = p.default_priority
                     t.save()
         except:
             raise CommandError("error running planify.py")
-
-        # self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
-        # self.stdout.write(
-        #     self.style.SUCCESS('Successfully created "%s" tasks\n----' % created)
-        # )
