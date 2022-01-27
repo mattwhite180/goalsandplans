@@ -68,11 +68,11 @@ def get_context(request):
         context["user_data"] = ud.pull_report()
     return context
 
-def pointify(request):
+def planify(request):
     context = get_context(request)
     if request.user.is_superuser or request.user.is_staff:
-        call_command("pointify")
-        messages.success(request, "pointify command ran")
+        call_command("planify")
+        messages.success(request, "planify command ran")
     return HttpResponseRedirect(reverse("home"))
 
 

@@ -6,7 +6,7 @@ from planapp.models import Goal, Plan, Task
 
 
 class Command(BaseCommand):
-    help = "creates tasks from plans"
+    help = "changes existing tasks to match plan"
 
     def add_arguments(self, parser):
         pass
@@ -14,11 +14,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             for p in Plan.objects.filter(continuous=True):
-                for t in Task.objects.filter(plan=p):
+                for t in Task.objects.filter(plan=p).filter(title=p.recurring_task_title):
                     t.points = p.default_points
+                    t.todolist = p.default_todolist
+                    t.priority = p.default_priority
                     t.save()
         except:
-            raise CommandError("error running pointify.py")
+            raise CommandError("error running planify.py")
 
         # self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
         # self.stdout.write(
