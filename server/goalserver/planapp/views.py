@@ -604,8 +604,7 @@ def delete_task(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
-        if context["points_enabled"]:
-            point_changer(request, t.points)
+        point_changer(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -627,8 +626,7 @@ def delete_task_todolist(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
-        if context["points_enabled"] == False:
-            point_changer(request, t.points)
+        point_changer(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -644,8 +642,7 @@ def delete_task_todo(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
-        if context["points_enabled"] == False:
-            point_changer(request, t.points)
+        point_changer(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
