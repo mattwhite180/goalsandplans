@@ -14,12 +14,14 @@
         <a class="nav-link active" href="{% url 'task_todo' %}">
           <button type="button" class="btn btn-info">TodoList</button>
         </a>
-        <a class="nav-link active" href="{% url 'change_points' %}">
-          <button type="button" class="btn btn-danger">Edit Points</button>
-        </a>
-        <a class="nav-link active" href="{% url 'prize' %}">
-          <button type="button" class="btn btn-success">Prizes</button>
-        </a>
+        {% if points_enabled %}
+          <a class="nav-link active" href="{% url 'change_points' %}">
+            <button type="button" class="btn btn-danger">Edit Points</button>
+          </a>
+          <a class="nav-link active" href="{% url 'prize' %}">
+            <button type="button" class="btn btn-success">Prizes</button>
+          </a>
+        {% endif %}
         {% if user.is_superuser %}
           <a class="nav-link active" href="{% url 'run_jobs' %}">
             <button type="button" class="btn btn-dark">Cron</button>
@@ -32,6 +34,9 @@
           </a>
           <a class="nav-link active" href="{% url 'create_backup' %}">
             <button type="button" class="btn btn-secondary">Create Backup</button>
+          </a>
+          <a class="nav-link active" href="{% url 'enable_prizes' %}">
+            <button type="button" class="btn btn-secondary">Enable Prizes</button>
           </a>
         {% endif %}
       {% else %}

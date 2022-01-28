@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 class UserData(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
+    points_enabled = models.BooleanField(default=False)
 
     def pull_report(self, *args, **kwargs):
         report = dict()
@@ -30,7 +31,8 @@ class UserData(models.Model):
                 )
             ).count()
         )
-        report["points_count"] = self.points
+        if self.points_enabled:
+            report["points_count"] = self.points
         return report
 
 
@@ -48,7 +50,6 @@ class Goal(models.Model):
         max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    points = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -106,7 +107,7 @@ class Plan(models.Model):
     add_period = models.IntegerField(default=1)
     recurring_task_title = models.CharField(max_length=200, default="?")
     recurring_task_description = models.CharField(max_length=2000, default="?")
-    default_points = models.IntegerField(default=1)
+    default_points = models.IntegerField(default=1, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -150,7 +151,7 @@ class Task(models.Model):
 class Prize(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=2000, default="?")
-    points = models.IntegerField(default=1)
+    points = models.IntegerField(default=1, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

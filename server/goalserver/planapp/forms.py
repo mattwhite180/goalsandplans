@@ -86,3 +86,7 @@ class RedeemPrizeForm(forms.Form):
 
 class BackupCreateForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
+
+class EnablePrizeForm(forms.Form):
+    user = forms.ModelChoiceField(queryset=User.objects.all())
+    choice = forms.BooleanField()
