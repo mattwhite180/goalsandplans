@@ -44,47 +44,7 @@
 {% endblock %}
 
 {% block rightcontent %}
-  {% if goals_list %}
-    {% for goal in goals_list %}
-      <div class="card text-left">
-        <div class="card-header">
-          <h2 id="goal-{{ goal.id }}-title"><a href="{% url 'goal' goal.id %}">{{ goal.title }}</a></h2>
-        </div>
-        <div class="card-body text-left">
-          <h5 id="goal-{{ goal.id }}-description class="card-title">{{ goal.description }}</h5>
-          <div id="goal-{{ goal.id }}-priority class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ goal.priority|slice:"2:" }}</span>
-          </div>
-          <a id="edit-goal-{{ goal.id }}" href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>
-          <button id="delete-goal-{{ goal.id }}-warning" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
-            data-target="#exampleModalCenter{{ goal.id }}">Delete Goal</button>
 
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModalCenter{{ goal.id }}" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Delete Goal</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  Are you sure you want to delete the '<b>{{ goal.title }}</b>' goal?
-                </div>
-                <div class="modal-footer">
-                  <button id="delete-goal-{{ goal.id }}-warning-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <a id="delete-goal-{{ goal.id }}" href="{% url 'delete_goal' goal.id %}" class="btn btn-primary"
-                    style="background-color: red; border-color: red;">Delete Goal</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <br>
-    {% endfor %}
-  {% else %}
-    <p id="no-goal">No goals are created yet.</p>
-  {% endif %}
+  {% include "planapp/goal_viewmodel.html" %}
+
 {% endblock %}

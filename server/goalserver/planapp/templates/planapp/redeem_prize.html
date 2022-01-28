@@ -30,42 +30,10 @@
 {% endblock %}
 
 {% block rightcontent %}
-{% if prize %}
-    <div class="card">
-      <h1 class="card-header">{{ prize.title }}</h1>
-      <div class="card-body">
-        <h5 class="card-title">{{ prize.description }}</h5>
-        <div id="prize-points-{{ prize.id }}" class="card-text">Points: <span class="badge badge-pill badge-warning">
-            {{ prize.points }}</span></div>
-        <a href="{% url 'edit_prize' prize.id %}" class="btn btn-primary">Edit prize</a>
-        <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;"
-          data-toggle="modal" data-target="#exampleModalCenter{{ prize.id }}">Delete prize</button>
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter{{ prize.id }}" tabindex="-1" role="dialog"
-          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Delete prize</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                Are you sure you want to delete the '<b>{{ prize.title }}</b>' prize?
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a href="{% url 'delete_prize' prize.id %}" class="btn btn-primary"
-                  style="background-color: red; border-color: red;">Delete prize</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <br>
-{% else %}
-  <p>Prize not available</p>
-{% endif %}
+
+  {% include "planapp/prize_viewmodel.html" %}
+  <script>
+    w3.hide('.redeem-prize');
+  </script>
+
 {% endblock %}

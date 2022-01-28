@@ -12,10 +12,12 @@ from django.core.management import call_command
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django import forms
+
 
 from .forms import (BackupCreateForm, ChangePointsForm, GoalForm, PlanForm,
                     PrizeForm, QuickTaskForm, RedeemPrizeForm, TaskForm,
-                    TodoListForm)
+                    TodoListForm, EnablePrizeForm)
 from .models import Goal, Plan, Prize, Task, TodoList, UserData
 
 
@@ -66,6 +68,7 @@ def get_context(request):
         else:
             ud = UserData.objects.create(user=request.user)
         context["user_data"] = ud.pull_report()
+        context["points_enabled"] = ud.points_enabled
     return context
 
 def planify(request):
@@ -75,10 +78,32 @@ def planify(request):
         messages.success(request, "planify command ran")
     return HttpResponseRedirect(reverse("home"))
 
+def enable_prizes(request):
+    context = get_context(request)
+    if request.user.is_authenticated and (request.user.is_superuser or request.user.is_staff):
+        if request.method == "POST":
+            form = EnablePrizeForm(request.POST)
+            if form.is_valid():
+                cd = form.cleaned_data
+                user_id = cd.get("user").id
+                choice = cd.get("choice")
+                if UserData.objects.filter(user=user_id).count() > 0:
+                    ud = UserData.objects.get(user=user_id)
+                else:
+                    ud = UserData.objects.create(user=user_id)
+                ud.points_enabled = choice
+                ud.save()
+                messages.success(request, "enabled/disabled the user " + str(ud.user.username) + "'s point")
+                return HttpResponseRedirect(reverse("home"))
+        form = EnablePrizeForm()
+        context["form"] = form
+        return render(request, "planapp/formedit.html", context)
+    return HttpResponseRedirect(reverse("home"))
+
 
 def create_backup(request):
     context = get_context(request)
-    if request.user.is_superuser or request.user.is_staff:
+    if request.user.is_authenticated and (request.user.is_superuser or request.user.is_staff):
         if request.method == "POST":
             form = BackupCreateForm(request.POST)
             if form.is_valid():
@@ -138,9 +163,13 @@ def get_errors(f):
     return errorList
 
 def point_changer(request, points):
-    ud = UserData.objects.get(user = request.user)
-    ud.points += points
-    ud.save()
+    if request.user.is_authenticated:
+        ud = UserData.objects.get(user = request.user)
+        ud.points += points
+        ud.save()
+        return True
+    else:
+        return False
 
 """
 #####
@@ -219,8 +248,8 @@ def home(request):
         form = GoalForm()
 
     context["form"] = form
-    goals_list = Goal.objects.filter(user=request.user).order_by("-priority", "title")
-    context["goals_list"] = goals_list
+    goal_list = Goal.objects.filter(user=request.user).order_by("-priority", "title")
+    context["goal_list"] = goal_list
 
     return render(request, "planapp/home.html", context)
 
@@ -292,7 +321,8 @@ Goal Views
 def goal(request, goal_id):
     context = get_context(request)
 
-    g = get_object_or_404(Goal, pk=goal_id)
+    goal_list = Goal.objects.filter(id=goal_id)
+    g = goal_list[0]
 
     if request.user.id is not g.user.id:
         unauthorized_message(request, g)
@@ -315,9 +345,11 @@ def goal(request, goal_id):
         form.fields["default_todolist"].queryset = TodoList.objects.filter(
             user=request.user
         ).order_by("title")
+        if context["points_enabled"] == False:
+            form.fields["default_points"].widget = forms.HiddenInput()
 
     plan_list = Plan.objects.filter(goal=g).order_by("-default_priority", "title")
-    context["goal"] = g
+    context["goal_list"] = goal_list
     context["plan_list"] = plan_list
     context["todo"] = g.pull_report()
     context["form"] = form
@@ -385,7 +417,8 @@ Plan Views
 def plan(request, plan_id):
     context = get_context(request)
 
-    p = get_object_or_404(Plan, pk=plan_id)
+    plan_list = Plan.objects.filter(id=plan_id)
+    p = plan_list[0]
 
     if request.user.id is not p.user().id:
         unauthorized_message(request, p)
@@ -406,16 +439,19 @@ def plan(request, plan_id):
         form.fields["todolist"].queryset = TodoList.objects.filter(
             user=request.user
         ).order_by("title")
+        if context["points_enabled"] == False:
+            form.fields["points"].widget = forms.HiddenInput()
 
     task_list = Task.objects.filter(plan=p).order_by("-priority", "title")
-    context["plan"] = p
+    context["plan_list"] = plan_list
     context["task_list"] = task_list
     context["form"] = form
     return render(request, "planapp/plan.html", context)
 
 @login_required
 def plan_create_task(request, plan_id):
-    
+    context = get_context(request)
+
     p = get_object_or_404(Plan, pk=plan_id)
 
     if request.user.id is not p.user().id:
@@ -429,7 +465,8 @@ def plan_create_task(request, plan_id):
         plan=p,
     )
     newT.save()
-    point_changer(request, 1)
+    if context["points_enabled"]:
+        point_changer(request, 1)
     return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
 @login_required
@@ -457,6 +494,8 @@ def edit_plan(request, plan_id):
 
     else:
         form = PlanForm(instance=p)
+        if context["points_enabled"] == False:
+            form.fields["default_points"].widget = forms.HiddenInput()
 
     context["form"] = form
     context["form_title"] = "edit plan (" + str(p.title) + ")"
@@ -491,13 +530,14 @@ Task Views
 def task(request, task_id):
     context = get_context(request)
 
-    t = get_object_or_404(Task, pk=task_id)
+    task_list = Task.objects.filter(id=task_id)
+    t = task_list[0]
 
     if request.user.id is not t.user().id:
         unauthorized_message(request, t)
         return HttpResponseRedirect(reverse("home"))
 
-    context["task"] = t
+    context["task_list"] = task_list
     return render(request, "planapp/task.html", context)
 
 
@@ -529,6 +569,8 @@ def edit_task(request, task_id):
         form.fields["todolist"].queryset = TodoList.objects.filter(
             user=request.user
         ).order_by("title")
+        if context["points_enabled"] == False:
+            form.fields["points"].widget = forms.HiddenInput()
 
     context["form"] = form
     context["form_title"] = "edit task (" + str(t.title) + ")"
@@ -562,7 +604,8 @@ def delete_task(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
-        point_changer(request, t.points)
+        if context["points_enabled"]:
+            point_changer(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -584,7 +627,8 @@ def delete_task_todolist(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
-        point_changer(request, t.points)
+        if context["points_enabled"] == False:
+            point_changer(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -600,7 +644,8 @@ def delete_task_todo(request, task_id):
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
-        point_changer(request, t.points)
+        if context["points_enabled"] == False:
+            point_changer(request, t.points)
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -634,6 +679,8 @@ def quick_task(request):
         form.fields["todolist"].queryset = TodoList.objects.filter(
             user=request.user
         ).order_by("title")
+        if context["points_enabled"] == False:
+            form.fields["points"].widget = forms.HiddenInput()
 
     context["form"] = form
     context["form_title"] = "create a task"
@@ -683,14 +730,15 @@ def task_todo(request):
 def todolist(request, todo_id):
     context = get_context(request)
 
-    m = get_object_or_404(TodoList, pk=todo_id)
+    todolist_list = TodoList.objects.filter(id=todo_id)
+    m = todolist_list[0]
 
     if m.user.id != request.user.id:
         unauthorized_message(request, m)
         return HttpResponseRedirect(reverse("home"))
 
     task_list = Task.objects.filter(todolist=m).order_by("-priority", "title")
-    context["todolist"] = m
+    context["todolist_list"] = todolist_list
     context["task_list"] = task_list
     return render(request, "planapp/todolist.html", context)
 
@@ -766,7 +814,7 @@ def prize(request):
     else:
         form = PrizeForm()
 
-    prize_list = Prize.objects.filter(user=request.user).order_by("title")
+    prize_list = Prize.objects.filter(user=request.user).order_by("-points")
     context["prize_list"] = prize_list
     context["form"] = form
     return render(request, "planapp/prize.html", context)
@@ -775,7 +823,8 @@ def prize(request):
 def redeem_prize(request, prize_id):
     context = get_context(request)
 
-    p = get_object_or_404(Prize, pk=prize_id)
+    prize_list = Prize.objects.filter(id=prize_id)
+    p = prize_list[0]
 
     if request.user.id != p.user.id:
         unauthorized_message(request, p)
@@ -798,7 +847,7 @@ def redeem_prize(request, prize_id):
         form = RedeemPrizeForm()
 
     context["form"] = form
-    context["prize"] = p
+    context["prize_list"] = prize_list
     return render(request, "planapp/redeem_prize.html", context)
 
 @login_required

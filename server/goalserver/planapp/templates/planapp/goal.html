@@ -25,46 +25,8 @@
   </div>
 </div>
 
-{% if goal %}
-  <div class="card text-center">
-    <div class="card-header">
-      <h1 id="goal-title">{{ goal.title }}</h1>
-    </div>
-    <div class="card-body">
-      <h4 id="goal-description" class="card-title">{{ goal.description }}</h4>
-      <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ goal.priority|slice:"2:" }}</span>
-      </div>
-      <a href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>
-      <button id="delete-goal-warning" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
-        data-target="#exampleModalCenterGoal">Delete Goal</button>
+{% include "planapp/goal_viewmodel.html" %}
 
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModalCenterGoal" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Delete Goal</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div id="delete-goal-warning-text" class="modal-body">
-              Are you sure you want to delete the '<b>{{ goal.title }}</b>' goal?
-            </div>
-            <div class="modal-footer">
-              <button id="delete-goal-warning-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <a href="{% url 'delete_goal' goal.id %}" id="delete-goal" class="btn btn-primary"
-                style="background-color: red; border-color: red;">Delete Goal</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-{% else %}
-  <p id="no-goal" >goal isnt available.</p>
-{% endif %}
 <br>
 <div class="card text-center">
   <div class="card-header">
@@ -82,57 +44,8 @@
 {% endblock %}
 
 {% block rightcontent %}
-{% if plan_list %}
-  {% for plan in plan_list %}
-    <div class="card">
-      <h1 id="plan-{{ plan.id }}-title"  class="card-header"><a href="{% url 'plan' plan.id %}">{{ plan.title }}</a></h1>
-      <div class="card-body">
-        <h5 id="plan-{{ plan.id }}-description" class="card-title">{{ plan.description }}</h5>
-        {% if plan.default_todolist %}
-          <div id="plan-{{ plan.id }}-todolist" class="card-text">TodoList: <span class="badge badge-pill badge-warning">{{ plan.default_todolist }}</span></div>
-        {% endif %}
-        {% if plan.continuous %}
-          <div id="plan-{{ plan.id }}-continuous" class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
-          <div id="plan-{{ plan.id }}-limit" class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
-          <div id="plan-{{ plan.id }}-addcount" class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
-          <div id="plan-{{ plan.id }}-addperiod" class="card-text">Add Period: <span class="badge badge-pill badge-primary">{{ plan.add_period }}</span></div>
-          <div id="plan-{{ plan.id }}-points" class="card-text">Default points: <span class="badge badge-pill badge-primary">{{ plan.default_points }}</span></div>
-          <div id="plan-{{ plan.id }}-currentcount" class="card-text">Current Count: <span class="badge badge-pill badge-danger">{{ plan.task_count }}</span></div>
-          <div id="plan-{{ plan.id }}-priority" class="card-text">Default Priority: <span class="badge badge-pill badge-warning">
-            {{ plan.default_priority|slice:"2:" }}</span></div>
-        {% endif %}
-        <a href="{% url 'edit_plan' plan.id %}" class="btn btn-primary">Edit Plan</a>
-        <button id="delete-plan-{{ plan.id }}-warning" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
-          data-target="#exampleModalCenter{{ plan.id }}">Delete Plan</button>
-
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter{{ plan.id }}" tabindex="-1" role="dialog"
-          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Delete Plan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                Are you sure you want to delete the '<b>{{ plan.title }}</b>' plan?
-              </div>
-              <div class="modal-footer">
-                <button  id="delete-plan-{{ plan.id }}-warning-close" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a id="delete-plan" href="{% url 'delete_plan' plan.id %}" class="btn btn-primary"
-                  style="background-color: red; border-color: red;">Delete Plan</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <br>
-  {% endfor %}
-{% else %}
-  <p id="no-plans">No plans associated with this goal are created yet.</p>
-{% endif %}
-
+  {% include "planapp/plan_viewmodel.html" %}
+  <script>
+    w3.hide('.plan-goal');
+  </script>
 {% endblock %}

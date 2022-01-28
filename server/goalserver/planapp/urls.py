@@ -45,4 +45,5 @@ urlpatterns = [
     path("create_backup/", views.create_backup, name="create_backup"),
     path("search_list/", views.search_list, name="search_list"),
     path("planify/", views.planify, name="planify"),
+    path("enable_prizes/", views.enable_prizes, name="enable_prizes"),
 ]
