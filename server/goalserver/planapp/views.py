@@ -823,7 +823,7 @@ def prize(request):
 def redeem_prize(request, prize_id):
     context = get_context(request)
 
-    prize_list = Prize.objects.filter(user=request.user).order_by("-points")
+    prize_list = Prize.objects.filter(id=prize_id)
     p = prize_list[0]
 
     if request.user.id != p.user.id:

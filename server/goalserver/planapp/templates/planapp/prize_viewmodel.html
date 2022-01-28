@@ -6,7 +6,7 @@
         <h5 class="card-title">{{ prize.description }}</h5>
         <div id="prize-points-{{ prize.id }}" class="card-text">Points: <span class="badge badge-pill badge-warning">
           {{ prize.points }}</span></div>
-        <a href="{% url 'redeem_prize' prize.id %}" class="btn btn-success">Redeem prize</a>
+        <a href="{% url 'redeem_prize' prize.id %}" class="btn btn-success redeem-prize">Redeem prize</a>
         <a href="{% url 'edit_prize' prize.id %}" class="btn btn-primary">Edit prize</a>
         <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;"
           data-toggle="modal" data-target="#exampleModalCenter{{ prize.id }}">Delete prize</button>
