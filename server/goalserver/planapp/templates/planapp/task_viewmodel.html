@@ -22,10 +22,12 @@
           <div id="task-{{ task.id }}-points" class="card-text">Points: <span class="badge badge-pill badge-primary">{{ task.points }}</span></div>
         {% endif %}
         {% if task.todolist %}
-          <div class="card-text">MiniTask: <span class="badge badge-pill badge-secondary">{{ task.todolist }}</span></div>
+          <div class="card-text task-todo">TodoList: <span class="badge badge-pill badge-secondary">{{ task.todolist }}</span></div>
           <a href="{% url 'remove_todo' task.id %}" class="btn btn-primary"
             style="background-color: purple; border-color: purple;">Remove from TodoList</a>
-        {% endif %}
+          <a href="{% url 'todolist' task.todolist.id %}" class="btn btn-primary task-todo-button"
+          style="background-color: grey; border-color: grey;">Go to TodoList</a>
+          {% endif %}
         <a id="task-{{ task.id }}-goal" href="{% url 'goal' task.plan.goal.id %}" class="btn btn-primary task-goal"
         style="background-color: green; border-color: green;">Goal</a>
         <a id="task-{{ task.id }}-goal" href="{% url 'plan' task.plan.id %}" class="btn btn-primary task-plan"

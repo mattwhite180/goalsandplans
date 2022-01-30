@@ -1,14 +1,13 @@
 {% extends "planapp/bootstrap.html" %}
 
 {% block leftcontent %}
-
-{% include "planapp/todolist_viewmodel.html" %}
-
-
+  {% include "planapp/todolist_viewmodel.html" %}
 {% endblock %}
 
 {% block rightcontent %}
-
   {% include "planapp/task_viewmodel.html" %}
-
+  <script>
+    w3.hide('.task-todo-button');
+    w3.hide('.task-todo');
+  </script>
 {% endblock %}
