@@ -811,7 +811,7 @@ def prize(request):
     else:
         form = PrizeForm()
 
-    prize_list = Prize.objects.filter(user=request.user).order_by("-points")
+    prize_list = Prize.objects.filter(user=request.user).order_by("title")
     context["prize_list"] = prize_list
     context["form"] = form
     return render(request, "planapp/prize.html", context)
