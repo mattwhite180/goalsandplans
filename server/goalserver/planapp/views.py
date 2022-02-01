@@ -322,6 +322,10 @@ def goal(request, goal_id):
     context = get_context(request)
 
     goal_list = Goal.objects.filter(id=goal_id)
+    if len(goal_list) == 0:
+        messages.error(request, f"could not find goal of id: { goal_id }")
+        return HttpResponseRedirect(reverse("home"))
+
     g = goal_list[0]
 
     if request.user.id is not g.user.id:
@@ -418,6 +422,9 @@ def plan(request, plan_id):
     context = get_context(request)
 
     plan_list = Plan.objects.filter(id=plan_id)
+    if len(plan_list) == 0:
+        messages.error(request, f"could not find plan of id: { plan_id }")
+        return HttpResponseRedirect(reverse("home"))
     p = plan_list[0]
 
     if request.user.id is not p.user().id:
@@ -525,12 +532,14 @@ def delete_plan(request, plan_id):
 Task Views
 """
 
-
 @login_required
 def task(request, task_id):
     context = get_context(request)
 
     task_list = Task.objects.filter(id=task_id)
+    if len(task_list) == 0:
+        messages.error(request, f"could not find task of id: { task_id }")
+        return HttpResponseRedirect(reverse("home"))
     t = task_list[0]
 
     if request.user.id is not t.user().id:
@@ -601,6 +610,9 @@ def delete_task(request, task_id):
 
     t = get_object_or_404(Task, pk=task_id)
     plan_id = t.plan.id
+    todolist_id = None
+    if t.todolist:
+        todolist_id = t.todolist.id
 
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
@@ -609,46 +621,22 @@ def delete_task(request, task_id):
     else:
         unauthorized_message(request, t)
 
-    return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
-
-
-
-@login_required
-def delete_task_todolist(request, task_id):
-
-    context = get_context(request)
-
-    t = get_object_or_404(Task, pk=task_id)
-    if not t.todolist:
-        return HttpResponseRedirect(reverse("delete_task", args=(task_id,)))
-
-    todolist_id = t.todolist.id
-
-    if request.user.id is t.user().id:
-        messages.warning(request, message_generator("deleted", t))
-        point_changer(request, t.points)
-        t.delete()
+    url = request.META.get('HTTP_REFERER')
+    if url == None:
+      return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
+    source = 'https://goalsandplans101.com/'
+    if debug():
+      source = 'http://localhost/'
+    cut_url = url.replace(source, '')
+    if cut_url[:9] == 'task_todo':
+        return HttpResponseRedirect(reverse("task_todo"))
+    elif cut_url[:4] == 'plan':
+        return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
+    elif cut_url[:8] == 'todolist' and todolist_id:
+        return HttpResponseRedirect(reverse("todolist", args=(todolist_id,)))
     else:
-        unauthorized_message(request, t)
-
-    return HttpResponseRedirect(reverse("todolist", args=(todolist_id,)))
-
-@login_required
-def delete_task_todo(request, task_id):
-
-    context = get_context(request)
-
-    t = get_object_or_404(Task, pk=task_id)
-
-    if request.user.id is t.user().id:
-        messages.warning(request, message_generator("deleted", t))
-        point_changer(request, t.points)
-        t.delete()
-    else:
-        unauthorized_message(request, t)
-
-    return HttpResponseRedirect(reverse("task_todo"))
-
+        messages.warning(f"task redirect could not find a good match for the url: { url }")
+        return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
 @login_required
 def quick_task(request):
@@ -728,6 +716,9 @@ def todolist(request, todo_id):
     context = get_context(request)
 
     todolist_list = TodoList.objects.filter(id=todo_id)
+    if len(todolist_list) == 0:
+        messages.error(request, f"could not find todolist of id: { todolist_list }")
+        return HttpResponseRedirect(reverse("home"))
     m = todolist_list[0]
 
     if m.user.id != request.user.id:
