@@ -630,12 +630,12 @@ def delete_task(request, task_id):
     cut_url = url.replace(source, '')
     if cut_url[:9] == 'task_todo':
         return HttpResponseRedirect(reverse("task_todo"))
-    elif cut_url[:4] == 'plan':
+    elif cut_url[:4] in ['plan', 'task']:
         return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
     elif cut_url[:8] == 'todolist' and todolist_id:
         return HttpResponseRedirect(reverse("todolist", args=(todolist_id,)))
     else:
-        messages.warning(f"task redirect could not find a good match for the url: { url }")
+        messages.warning(request, f"task redirect could not find a good match for the url: { url }")
         return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
 @login_required
