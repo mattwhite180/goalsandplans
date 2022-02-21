@@ -32,11 +32,11 @@
         {% endif %}
         {% if plan.continuous %}
           <div id="plan-{{ plan.id }}-continuous" class="card-text"><span class="badge badge-pill badge-danger">continuous</span></div>
+          {% if plan.keep_at_limit %}
+            <div id="plan-{{ plan.id }}-keep_at_limit" class="card-text"><span class="badge badge-pill badge-warning">Keep at Limit</span></div>
+          {% endif %}
           <div id="plan-{{ plan.id }}-limit" class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
           <div id="plan-{{ plan.id }}-addcount" class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
-          {% if plan.keep_at_limit %}
-            <div id="plan-{{ plan.id }}-keep_at_limit" class="card-text">Keep at Limit: <span class="badge badge-pill badge-primary">{{ plan.keep_at_limit }}</span></div>
-          {% endif %}
           {% if points_enabled %}  
             <div id="plan-{{ plan.id }}-points" class="card-text">Default points: <span class="badge badge-pill badge-primary">{{ plan.default_points }}</span></div>
           {% endif %}

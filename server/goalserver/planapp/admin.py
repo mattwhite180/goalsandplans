@@ -10,7 +10,21 @@ class GoalAdmin(admin.ModelAdmin):
 
 
 class PlanAdmin(admin.ModelAdmin):
-    list_display = ("title", "id", "user", "description", "default_priority", "default_points")
+    list_display = (
+        "title",
+        "id",
+        "user",
+        "description",
+        "default_priority",
+        "default_points",
+        "keep_at_limit",
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",)
 
 
 class TaskAdmin(admin.ModelAdmin):
