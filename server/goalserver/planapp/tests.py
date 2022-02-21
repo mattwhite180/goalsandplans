@@ -27,7 +27,6 @@ class CronTestCase(TestCase):
             continuous=True,
             limit=1,
             add_count=1,
-            add_period=1,
         )
         Plan.objects.create(
             title="test plan (continuous)",
@@ -36,7 +35,6 @@ class CronTestCase(TestCase):
             continuous=False,
             limit=10,
             add_count=1,
-            add_period=1,
         )
         Plan.objects.create(
             title="test plan (continuous - limit)",
@@ -45,7 +43,6 @@ class CronTestCase(TestCase):
             continuous=True,
             limit=3,
             add_count=5,
-            add_period=1,
         )
         Plan.objects.create(
             title="test plan (continuous - not yet time)",
@@ -54,7 +51,6 @@ class CronTestCase(TestCase):
             continuous=True,
             limit=1,
             add_count=1,
-            add_period=2,
             last_updated=datetime.date.today() - datetime.timedelta(days=1),
         )
 

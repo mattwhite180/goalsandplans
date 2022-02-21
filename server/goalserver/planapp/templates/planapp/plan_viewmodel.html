@@ -31,10 +31,12 @@
           <div id="plan-{{ plan.id }}-todolist" class="card-text">TodoList: <span class="badge badge-pill badge-warning">{{ plan.default_todolist }}</span></div>
         {% endif %}
         {% if plan.continuous %}
-          <div id="plan-{{ plan.id }}-continuous" class="card-text"><span class="badge badge-pill badge-secondary">continuous</span></div>
+          <div id="plan-{{ plan.id }}-continuous" class="card-text"><span class="badge badge-pill badge-danger">continuous</span></div>
           <div id="plan-{{ plan.id }}-limit" class="card-text">Limit: <span class="badge badge-pill badge-primary">{{ plan.limit }}</span></div>
           <div id="plan-{{ plan.id }}-addcount" class="card-text">Add Count: <span class="badge badge-pill badge-primary">{{ plan.add_count }}</span></div>
-          <div id="plan-{{ plan.id }}-addperiod" class="card-text">Add Period: <span class="badge badge-pill badge-primary">{{ plan.add_period }}</span></div>
+          {% if plan.keep_at_limit %}
+            <div id="plan-{{ plan.id }}-keep_at_limit" class="card-text">Keep at Limit: <span class="badge badge-pill badge-primary">{{ plan.keep_at_limit }}</span></div>
+          {% endif %}
           {% if points_enabled %}  
             <div id="plan-{{ plan.id }}-points" class="card-text">Default points: <span class="badge badge-pill badge-primary">{{ plan.default_points }}</span></div>
           {% endif %}
@@ -42,6 +44,43 @@
           <div id="plan-{{ plan.id }}-priority" class="card-text">Default Priority: <span class="badge badge-pill badge-warning">
             {{ plan.default_priority|slice:"2:" }}</span></div>
           <a id="newtask-plan-{{ plan.id }}" href="{% url 'plan_create_task' plan.id %}" class="btn btn-success newtask-plan">Create recurring task</a>
+        {% endif %}
+        {% if plan.continuous and not plan.keep_at_limit %}
+          {% if plan.sunday %}
+            <div id="plan-{{ plan.id }}-sunday" class="card-text">
+              <span class="badge badge-pill badge-secondary">Sunday</span>
+            </div>
+          {% endif %}
+          {% if plan.monday %}
+            <div id="plan-{{ plan.id }}-monday" class="card-text">
+              <span class="badge badge-pill badge-secondary">Monday</span>
+            </div>
+          {% endif %}
+          {% if plan.tuesday %}
+            <div id="plan-{{ plan.id }}-tuesday" class="card-text">
+              <span class="badge badge-pill badge-secondary">Tuesday</span>
+            </div>
+          {% endif %}
+          {% if plan.wednesday %}
+            <div id="plan-{{ plan.id }}-wednesday" class="card-text">
+              <span class="badge badge-pill badge-secondary">Wednesday</span>
+            </div>
+          {% endif %}
+          {% if plan.thursday %}
+            <div id="plan-{{ plan.id }}-thursday" class="card-text">
+              <span class="badge badge-pill badge-secondary">Thursday</span>
+            </div>
+          {% endif %}
+          {% if plan.friday %}
+            <div id="plan-{{ plan.id }}-friday" class="card-text">
+              <span class="badge badge-pill badge-secondary">Friday</span>
+            </div>
+          {% endif %}
+          {% if plan.saturday %}
+            <div id="plan-{{ plan.id }}-saturday" class="card-text">
+              <span class="badge badge-pill badge-secondary">Saturday</span>
+            </div>
+          {% endif %}
         {% endif %}
         <a id="plan-goal-link" href="{% url 'goal' plan.goal.id %}" class="btn btn-primary plan-goal"
         style="background-color: orange; border-color: orange;">Goal</a>

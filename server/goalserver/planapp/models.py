@@ -19,8 +19,23 @@ class UserData(models.Model):
         for p in Plan.objects.filter(
             goal__in=Goal.objects.filter(user=self.user)
         ).filter(continuous=True):
-            if p.add_period != 0:
-                daily_task_count += (p.add_count / p.add_period)
+            if not p.keep_at_limit:
+                days_of_week = 0
+                if p.monday:
+                    days_of_week += 1
+                if p.tuesday:
+                    days_of_week += 1
+                if p.wednesday:
+                    days_of_week += 1
+                if p.thursday:
+                    days_of_week += 1
+                if p.friday:
+                    days_of_week += 1
+                if p.saturday:
+                    days_of_week += 1
+                if p.sunday:
+                    days_of_week += 1    
+                daily_task_count += (days_of_week / 7)
         report["daily_task_count"] = str(round(daily_task_count, 3))
         report["task_count"] = str(
             Task.objects.filter(
@@ -104,7 +119,14 @@ class Plan(models.Model):
     default_todolist = models.ForeignKey(
         TodoList, models.SET_NULL, blank=True, null=True
     )
-    add_period = models.IntegerField(default=1)
+    keep_at_limit = models.BooleanField(default=False)
+    sunday  = models.BooleanField(default=False)
+    monday = models.BooleanField(default=False)
+    tuesday = models.BooleanField(default=False)
+    wednesday = models.BooleanField(default=False)
+    thursday = models.BooleanField(default=False)
+    friday  = models.BooleanField(default=False)
+    saturday  = models.BooleanField(default=False)
     recurring_task_title = models.CharField(max_length=200, default="?")
     recurring_task_description = models.CharField(max_length=2000, default="?")
     default_points = models.IntegerField(default=1, blank=True, null=True)
@@ -117,7 +139,24 @@ class Plan(models.Model):
 
     def user(self):
         return self.goal.user
-
+    
+    def today(self):
+        today_number = datetime.date.today().weekday()
+        if (today_number == 0) and self.monday:
+            return True
+        if (today_number == 1) and self.tuesday:
+            return True
+        if (today_number == 2) and self.wednesday:
+            return True
+        if (today_number == 3) and self.thursday:
+            return True
+        if (today_number == 4) and self.friday:
+            return True
+        if (today_number == 5) and self.saturday:
+            return True
+        if (today_number == 6) and self.sunday:
+            return True
+        return False
 
 class Task(models.Model):
     class PriorityLevels(models.TextChoices):
