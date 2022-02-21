@@ -53,7 +53,6 @@ class Command(BaseCommand):
             continuous=True,
             limit=5,
             add_count=5,
-            add_period=1,
             default_points=1,
             recurring_task_title="task title goes here",
             recurring_task_description="task description goes here",
@@ -66,7 +65,6 @@ class Command(BaseCommand):
             continuous=False,
             limit=7,
             add_count=7,
-            add_period=1,
             recurring_task_title="task title goes here",
             recurring_task_description="task description goes here",
         )
@@ -78,7 +76,6 @@ class Command(BaseCommand):
             continuous=True,
             limit=2,
             add_count=2,
-            add_period=2,
             recurring_task_title="task title goes here",
             recurring_task_description="task description goes here",
         )
@@ -90,7 +87,6 @@ class Command(BaseCommand):
             continuous=True,
             limit=2,
             add_count=2,
-            add_period=1,
             recurring_task_title="task title goes here",
             recurring_task_description="task description goes here",
         )
@@ -127,7 +123,6 @@ class Command(BaseCommand):
             continuous=True,
             limit=10,
             add_count=3,
-            add_period=1,
             default_points=2,
             default_priority=Goal.priority.field.choices[2][0],
             recurring_task_title="task title goes here",
@@ -141,7 +136,6 @@ class Command(BaseCommand):
             continuous=True,
             limit=10,
             add_count=3,
-            add_period=1,
             default_points=3,
             default_priority=Goal.priority.field.choices[3][0],
             recurring_task_title="task title goes here",
@@ -155,7 +149,6 @@ class Command(BaseCommand):
             continuous=False,
             limit=10,
             add_count=3,
-            add_period=1,
             default_priority=Goal.priority.field.choices[2][0],
             recurring_task_title="task title goes here",
             recurring_task_description="task description goes here",
@@ -175,7 +168,6 @@ class Command(BaseCommand):
             continuous=True,
             limit=10,
             add_count=6,
-            add_period=1,
             recurring_task_title="task todo",
             recurring_task_description="task todo description",
         )

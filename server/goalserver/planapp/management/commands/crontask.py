@@ -15,7 +15,7 @@ class Command(BaseCommand):
         created = 0
         for plan in Plan.objects.filter(continuous=True):
             deltaDate = datetime.date.today() - plan.last_updated
-            if deltaDate.days >= plan.add_period:
+            if (deltaDate.days >= 1 and plan.today()) or plan.keep_at_limit:
                 plan.last_updated = datetime.date.today()
                 plan.save()
                 try:
