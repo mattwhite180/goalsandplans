@@ -43,7 +43,6 @@
           <div id="plan-{{ plan.id }}-currentcount" class="card-text">Current Count: <span class="badge badge-pill badge-danger">{{ plan.task_count }}</span></div>
           <div id="plan-{{ plan.id }}-priority" class="card-text">Default Priority: <span class="badge badge-pill badge-warning">
             {{ plan.default_priority|slice:"2:" }}</span></div>
-          <a id="newtask-plan-{{ plan.id }}" href="{% url 'plan_create_task' plan.id %}" class="btn btn-success newtask-plan">Create recurring task</a>
         {% endif %}
         {% if plan.continuous and not plan.keep_at_limit %}
           {% if plan.sunday %}
@@ -81,6 +80,7 @@
               <span class="badge badge-pill badge-secondary">Saturday</span>
             </div>
           {% endif %}
+          <a id="newtask-plan-{{ plan.id }}" href="{% url 'plan_create_task' plan.id %}" class="btn btn-success newtask-plan">Create recurring task</a>
         {% endif %}
         <a id="plan-goal-link" href="{% url 'goal' plan.goal.id %}" class="btn btn-primary plan-goal"
         style="background-color: orange; border-color: orange;">Goal</a>
