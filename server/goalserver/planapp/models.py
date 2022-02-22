@@ -139,7 +139,7 @@ class Plan(models.Model):
 
     def user(self):
         return self.goal.user
-    
+
     def today(self):
         today_number = datetime.date.today().weekday()
         if (today_number == 0) and self.monday:
