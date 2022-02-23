@@ -470,6 +470,7 @@ def plan_create_task(request, plan_id):
         description=p.recurring_task_description,
         priority=p.default_priority,
         plan=p,
+        points=p.default_points,
     )
     newT.save()
     if context["points_enabled"]:
