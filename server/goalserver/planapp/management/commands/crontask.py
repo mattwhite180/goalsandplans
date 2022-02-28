@@ -14,7 +14,7 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        WAIT_TIME = 1 * 60 * 60
+        WAIT_TIME = 1 * 60 * 15
         while True:
             call_command("taskify")
             time.sleep(WAIT_TIME)
