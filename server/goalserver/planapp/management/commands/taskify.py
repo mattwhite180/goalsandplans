@@ -15,8 +15,6 @@ class Command(BaseCommand):
         for plan in Plan.objects.filter(continuous=True):
             deltaDate = datetime.date.today() - plan.last_updated
             if (deltaDate.days >= 1 and plan.today()) or plan.keep_at_limit:
-                plan.last_updated = datetime.date.today()
-                plan.save()
                 try:
                     for i in range(plan.add_count):
                         currentCount = Task.objects.filter(plan=plan).count()
@@ -31,6 +29,8 @@ class Command(BaseCommand):
                             if plan.default_todolist:
                                 newT.todolist = plan.default_todolist
                             newT.save()
+                    plan.last_updated = datetime.date.today()
+                    plan.save()
                 except Exception as e:
                     i = Issue.objects.create(
                         obj_info = "Plan: " + str(plan.id),
