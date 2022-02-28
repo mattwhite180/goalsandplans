@@ -12,6 +12,7 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
+        created = 0
         for plan in Plan.objects.filter(continuous=True):
             deltaDate = datetime.date.today() - plan.last_updated
             if (deltaDate.days >= 1 and plan.today()) or plan.keep_at_limit:
@@ -29,6 +30,7 @@ class Command(BaseCommand):
                             if plan.default_todolist:
                                 newT.todolist = plan.default_todolist
                             newT.save()
+                            created += 1
                     plan.last_updated = datetime.date.today()
                     plan.save()
                 except Exception as e:
@@ -38,3 +40,7 @@ class Command(BaseCommand):
                         exception_string = str(e)
                     )
                     i.save()
+        self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
+        self.stdout.write(
+            self.style.SUCCESS('Successfully created "%s" tasks\n----' % created)
+        )
