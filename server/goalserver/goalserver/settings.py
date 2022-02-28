@@ -87,6 +87,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "goalsandplans101.com",
     "https://goalsandplans101.com",
+    "server:8000",
 ]
 
 
