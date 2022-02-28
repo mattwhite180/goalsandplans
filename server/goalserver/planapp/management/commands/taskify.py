@@ -31,7 +31,6 @@ class Command(BaseCommand):
                             if plan.default_todolist:
                                 newT.todolist = plan.default_todolist
                             newT.save()
-                            created += 1
                 except Exception as e:
                     i = Issue.objects.create(
                         obj_info = "Plan: " + str(plan.id),
