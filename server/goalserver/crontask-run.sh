@@ -1,5 +1,5 @@
 while [ true ]
 do
-    sleep 5
+    sleep 900
     python3 manage.py taskify
 done
