@@ -41,4 +41,4 @@ class Command(BaseCommand):
                             exception_string = str(e)
                         )
                         i.save()
-            sleep(WAIT_TIME)
+            time.sleep(WAIT_TIME)
