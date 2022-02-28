@@ -216,8 +216,8 @@ def create_account(request):
 
 
 def run_jobs(request):
-    call_command("crontask")
-    messages.success(request, "ran cron task")
+    call_command("taskify")
+    messages.success(request, "ran taskify")
     return redirect("home")
 
 

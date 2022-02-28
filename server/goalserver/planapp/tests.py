@@ -55,12 +55,12 @@ class CronTestCase(TestCase):
         )
 
     def test_sanity_check(self):
-        errmsg = "if this fails, there is a syntax error in crontask, or a fatal runtime error"
-        call_command("crontask")
+        errmsg = "if this fails, there is a syntax error in taskify, or a fatal runtime error"
+        call_command("taskify")
         self.assertEqual(0, 0, errmsg)
 
     def test_task_limit(self):
-        call_command("crontask")
+        call_command("taskify")
         val = Task.objects.count()
         expected = 4
         errmsg = (
