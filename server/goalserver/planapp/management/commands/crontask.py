@@ -2,7 +2,7 @@ import datetime
 
 from django.contrib.auth.models import AnonymousUser, User
 from django.core.management.base import BaseCommand, CommandError
-from planapp.models import Goal, Plan, Task
+from planapp.models import Goal, Plan, Task, Issue
 
 
 class Command(BaseCommand):
@@ -12,7 +12,7 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        created = 0
+        WAIT_TIME = 1 * 60 * 60
         for plan in Plan.objects.filter(continuous=True):
             deltaDate = datetime.date.today() - plan.last_updated
             if (deltaDate.days >= 1 and plan.today()) or plan.keep_at_limit:
@@ -33,10 +33,10 @@ class Command(BaseCommand):
                                 newT.todolist = plan.default_todolist
                             newT.save()
                             created += 1
-                except:
-                    raise CommandError("error running crontask.py")
-
-        # self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
-        # self.stdout.write(
-        #     self.style.SUCCESS('Successfully created "%s" tasks\n----' % created)
-        # )
+                except Exception as e:
+                    i = Issue.objects.create(
+                        obj_info = "Plan: " + str(plan.id),
+                        where = "cron task",
+                        exception_string = str(e)
+                    )
+                    i.save()

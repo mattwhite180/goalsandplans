@@ -201,3 +201,17 @@ class Prize(models.Model):
 
     def __str__(self):
         return self.title
+
+class Issue(models.Model):
+    obj_info = models.CharField(max_length=2000, default="?")
+    where = models.CharField(max_length=2000, default="?")
+    when = models.DateTimeField("when", default=datetime.datetime.now())
+    exception_string = models.CharField(max_length=2000, default="?")
+    ticket = models.BooleanField(default=False)
+    resolved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.exception_string[:10] + " (" + self.get_datetime() + ")"
+    
+    def get_datetime(self):
+        return str(self.when.date())

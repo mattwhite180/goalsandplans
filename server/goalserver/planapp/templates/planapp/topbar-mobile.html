@@ -38,6 +38,12 @@
           <a class="nav-link active" href="{% url 'enable_prizes' %}">
             <button type="button" class="btn btn-secondary">Enable Prizes</button>
           </a>
+          <a class="nav-link active" href="{% url 'issues' %}">
+            <button type="button" class="btn btn-danger">Issues</button>
+          </a>
+          <a class="nav-link active" href="{% url 'run_jobs' %}">
+            <button type="button" class="btn btn-success">Run jobs</button>
+          </a>
         {% endif %}
       {% else %}
         <a class="nav-link active" href="{% url 'login' %}">
