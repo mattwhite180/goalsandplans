@@ -18,7 +18,7 @@ from django import forms
 from .forms import (BackupCreateForm, ChangePointsForm, GoalForm, PlanForm,
                     PrizeForm, QuickTaskForm, RedeemPrizeForm, TaskForm,
                     TodoListForm, EnablePrizeForm)
-from .models import Goal, Plan, Prize, Task, TodoList, UserData
+from .models import Goal, Plan, Prize, Task, TodoList, UserData, Issue
 
 
 """
@@ -58,7 +58,6 @@ def mobile(request):
 
 
 def get_context(request):
-    call_command("crontask")
     context = {}
     context["is_mobile"] = mobile(request)
     context["debug"] = debug()
@@ -70,6 +69,19 @@ def get_context(request):
         context["user_data"] = ud.pull_report()
         context["points_enabled"] = ud.points_enabled
     return context
+
+def issues(request):
+    context = get_context(request)
+    context["issue_list"] = Issue.objects.all().order_by('-when')
+    return render(request, "planapp/issues.html", context)
+
+def delete_issue(request, issue_id):
+    context = get_context(request)
+    i = get_object_or_404(Issue, pk=issue_id)
+    i_title = str(i)
+    i.delete()
+    messages.success(request, str("deleted issue '" + i_title + "': " + str(issue_id)))
+    return render(request, "planapp/issues.html", context)
 
 def planify(request):
     context = get_context(request)
@@ -210,6 +222,12 @@ def run_jobs(request):
 
 
 def handler404(request, exception=None):
+    i = Issue.objects.create(
+        obj_info = "n/a",
+        where = "404",
+        exception_string = str(exception)
+    )
+    i.save()
     messages.error(request, "404: Page not found. Redirecting to home")
     return HttpResponseRedirect(reverse("home"))
 

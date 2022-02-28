@@ -1,0 +1,65 @@
+<p class="text-center">
+  <button id="issue-help-button" class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample-issue"
+    aria-expanded="false" aria-controls="collapseExample">
+    Help
+  </button>
+</p>
+<div class="collapse" id="collapseExample-issue">
+  <div id="help-issue" class="card card-body text-center">
+    Delete the issue when it is completed
+  </div>
+</div>
+
+{% if issue_list %}
+  {% for issue in issue_list %}
+    <div class="card text-center">
+      <h1 class="card-header">{{ issue }}</h1>
+      <div class="card-body">
+        <h5 class="card-title">{{ issue.exception_string }}</h5>
+        </div>
+        <div id="issue-{{ issue.id }}-exception_string" class="card-text">Exception String: {{ issue.exception_string }}</div>
+        <div id="issue-{{ issue.id }}-obj_info" class="card-text">obj_info: {{ issue.obj_info }}</div>
+        <div id="issue-{{ issue.id }}-where" class="card-text">Where: {{ issue.where }}</div>
+        <div id="issue-{{ issue.id }}-when" class="card-text">When: {{ issue.when }}</div>
+        {% if issue.ticket %}
+          <div id="issue-{{ issue.id }}-ticket" class="card-text"><span class="badge badge-pill badge-primary">Ticket Created</span></div>
+        {% endif %}
+        {% if issue.resolved %}
+          <div id="issue-{{ issue.id }}-resolved" class="card-text"><span class="badge badge-pill badge-success">Resolved</span></div>
+        {% endif %}
+        <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
+          data-target="#exampleModalCenter{{ issue.id }}">Delete issue</button>
+
+      <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter{{ issue.id }}" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Delete issue</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to delete the '<b>{{ issue.title }}</b>' issue?</p>
+                {% if points_enabled %}
+                  <br>
+                  <p>Deleting this issue will award you {{ issue.points }} point(s)</p>
+                {% endif %}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="{% url 'delete_issue' issue.id %}" class="btn btn-primary"
+                  style="background-color: red; border-color: red;">Delete issue</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+  {% endfor %}
+{% else %}
+  <p>No issues are available.</p>
+{% endif %}

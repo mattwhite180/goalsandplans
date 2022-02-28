@@ -58,6 +58,16 @@
           <span class="badge badge-pill badge-secondary">Enable Prizes</span>
         </a>
       </li>
+      <li class="nav-item navbar-brand">
+        <a class="nav-link active" href="{% url 'issues' %}">
+          <span class="badge badge-pill badge-danger">Issues</span>
+        </a>
+      </li>
+      <li class="nav-item navbar-brand">
+        <a class="nav-link active" href="{% url 'run_jobs' %}">
+          <span class="badge badge-pill badge-success">Run jobs</span>
+        </a>
+      </li>
     {% endif %}
   {% else %}
     <li class="nav-item navbar-brand">

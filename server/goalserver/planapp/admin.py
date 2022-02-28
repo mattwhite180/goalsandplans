@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Goal, Plan, Prize, Task, TodoList, UserData
+from .models import Goal, Plan, Prize, Task, TodoList, UserData, Issue
 
 admin.site.site_url = "/planapp"
 
@@ -49,6 +49,15 @@ class PrizeAdmin(admin.ModelAdmin):
 class UserDataAdmin(admin.ModelAdmin):
     list_display = ("user", "points", "id")
 
+class IssueAdmin(admin.ModelAdmin):
+    list_display = (
+        "obj_info",
+        "where",
+        "when",
+        "exception_string",
+        "ticket",
+        "resolved"
+    )
 
 admin.site.register(Goal, GoalAdmin)
 admin.site.register(Plan, PlanAdmin)
@@ -56,3 +65,4 @@ admin.site.register(Task, TaskAdmin)
 admin.site.register(TodoList, TodoListAdmin)
 admin.site.register(Prize, PrizeAdmin)
 admin.site.register(UserData, UserDataAdmin)
+admin.site.register(Issue, IssueAdmin)
