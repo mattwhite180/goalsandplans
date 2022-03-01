@@ -13,6 +13,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django import forms
+import datetime
+
 
 
 from .forms import (BackupCreateForm, ChangePointsForm, GoalForm, PlanForm,
@@ -89,6 +91,37 @@ def planify(request):
         call_command("planify")
         messages.success(request, "planify command ran")
     return HttpResponseRedirect(reverse("home"))
+
+def taskify(plan):
+    count = 0
+    deltaDate = datetime.date.today() - plan.last_updated
+    if (deltaDate.days >= 1 and plan.today()) or plan.keep_at_limit:
+        try:
+            for i in range(plan.add_count):
+                currentCount = Task.objects.filter(plan=plan).count()
+                if currentCount < plan.limit:
+                    newT = Task.objects.create(
+                        title=plan.recurring_task_title,
+                        description=plan.recurring_task_description,
+                        priority=plan.default_priority,
+                        plan=plan,
+                        points=plan.default_points,
+                    )
+                    if plan.default_todolist:
+                        newT.todolist = plan.default_todolist
+                    newT.save()
+                    count += 1
+            plan.last_updated = datetime.date.today()
+            plan.save()
+        except Exception as e:
+            i = Issue.objects.create(
+                obj_info = "Plan: " + str(plan.id),
+                where = "taskify",
+                exception_string = str(e)
+            )
+            i.save()
+    return count
+
 
 def enable_prizes(request):
     context = get_context(request)
@@ -216,8 +249,10 @@ def create_account(request):
 
 
 def run_jobs(request):
-    call_command("taskify")
-    messages.success(request, "ran taskify")
+    count = 0
+    for plan in Plan.objects.filter(continuous=True):
+        count += taskify(plan)
+    messages.success(request, "ran taskify. created " + str(count) + " tasks")
     return redirect("home")
 
 
@@ -371,6 +406,8 @@ def goal(request, goal_id):
             form.fields["default_points"].widget = forms.HiddenInput()
 
     plan_list = Plan.objects.filter(goal=g).order_by("-default_priority", "title")
+    for p in plan_list:
+        taskify(p)
     context["goal_list"] = goal_list
     context["plan_list"] = plan_list
     context["todo"] = g.pull_report()
@@ -440,6 +477,8 @@ def plan(request, plan_id):
     context = get_context(request)
 
     plan_list = Plan.objects.filter(id=plan_id)
+    for p in plan_list:
+        taskify(p)
     if len(plan_list) == 0:
         messages.error(request, f"could not find plan of id: { plan_id }")
         return HttpResponseRedirect(reverse("home"))
