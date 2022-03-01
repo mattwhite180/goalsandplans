@@ -45,5 +45,5 @@ urlpatterns = [
     path("planify/", views.planify, name="planify"),
     path("enable_prizes/", views.enable_prizes, name="enable_prizes"),
     path("issues/", views.issues, name="issues"),
-    path("issue/<int:issue_id>/delete", views.delete_issue, name="delete_issue"),
+    path("issues/<int:issue_id>/delete", views.delete_issue, name="delete_issue"),
 ]
