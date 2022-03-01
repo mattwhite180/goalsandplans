@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import Goal, Plan, Prize, Task, TodoList, UserData, Issue
 
-admin.site.site_url = "/planapp"
+admin.site.site_url = "/"
 
 
 class GoalAdmin(admin.ModelAdmin):
