@@ -758,6 +758,8 @@ def task_todo(request):
 
     goal_list = Goal.objects.filter(user=request.user)
     plan_list = Plan.objects.filter(goal__in=goal_list)
+    for p in plan_list:
+        taskify(p)
     task_list = Task.objects.filter(plan__in=plan_list).order_by("-priority", "title")
 
     context["task_list"] = task_list
