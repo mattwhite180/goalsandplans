@@ -17,10 +17,10 @@
         <a class="nav-link active" href="{% url 'quicknote' %}">
           <button type="button" class="btn btn-primary">QuickNote</button>
         </a>
+        <a class="nav-link active" href="{% url 'userdata' %}">
+          <button type="button" class="btn btn-danger">UserData</button>
+        </a>
         {% if points_enabled %}
-          <a class="nav-link active" href="{% url 'change_points' %}">
-            <button type="button" class="btn btn-danger">Edit Points</button>
-          </a>
           <a class="nav-link active" href="{% url 'prize' %}">
             <button type="button" class="btn btn-success">Prizes</button>
           </a>

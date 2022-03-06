@@ -28,6 +28,7 @@ from .forms import (
     TodoListForm,
     EnablePrizeForm,
     QuickNoteForm,
+    UserDataForm,
 )
 from .models import Goal, Plan, Prize, Task, TodoList, UserData, Issue, QuickNote
 
@@ -79,6 +80,7 @@ def get_context(request):
             ud = UserData.objects.create(user=request.user)
         context["user_data"] = ud.pull_report()
         context["points_enabled"] = ud.points_enabled
+        context["dark"] = ud.dark
     return context
 
 
@@ -325,6 +327,33 @@ def home(request):
     context["goal_list"] = goal_list
 
     return render(request, "planapp/home.html", context)
+
+def userdata(request):
+    context = get_context(request)
+
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("index"))
+
+    ud = UserData.objects.get(user=request.user)
+
+    if request.method == "POST":
+
+        form = UserDataForm(request.POST, instance=ud)
+
+        if form.is_valid():
+            ud = form.save(commit=False)
+            ud.save()
+            messages.info(request, "edited user data")
+            return HttpResponseRedirect(reverse("home"))
+        else:
+            context["error_list"] = get_errors(form)
+
+    else:
+        form = UserDataForm(instance=ud)
+
+    context["form"] = form
+    context["form_title"] = "Edit user data"
+    return render(request, "planapp/formedit.html", context)
 
 
 def change_points(request):

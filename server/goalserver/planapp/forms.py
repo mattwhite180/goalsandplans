@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import AnonymousUser, User
 from django.forms import ModelForm
 
-from .models import Goal, Plan, Prize, Task, TodoList, QuickNote
+from .models import Goal, Plan, Prize, Task, TodoList, QuickNote, UserData
 
 
 class GoalForm(forms.ModelForm):
@@ -92,6 +92,11 @@ class QuickNoteForm(forms.ModelForm):
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=QuickNote.PriorityLevels),
         }
+
+class UserDataForm(forms.ModelForm):
+    class Meta:
+        model = UserData
+        fields = ("dark", "points_enabled", "points")
 
 
 class ChangePointsForm(forms.Form):

@@ -10,6 +10,7 @@ class UserData(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
     points_enabled = models.BooleanField(default=False)
+    dark = models.BooleanField(default=False)
 
     def pull_report(self, *args, **kwargs):
         report = dict()
