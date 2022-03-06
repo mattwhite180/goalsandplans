@@ -14,7 +14,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             for p in Plan.objects.filter(continuous=True):
-                for t in Task.objects.filter(plan=p).filter(title=p.recurring_task_title):
+                for t in Task.objects.filter(plan=p).filter(
+                    title=p.recurring_task_title
+                ):
                     t.description = p.recurring_task_description
                     t.points = p.default_points
                     t.todolist = p.default_todolist

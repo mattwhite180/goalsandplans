@@ -81,9 +81,8 @@ class PrizeForm(forms.ModelForm):
     class Meta:
         model = Prize
         fields = ("title", "description", "points")
-        widgets = {
-            "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
-        }
+        widgets = {"description": forms.Textarea(attrs={"cols": 20, "rows": 10})}
+
 
 class QuickNoteForm(forms.ModelForm):
     class Meta:
@@ -94,14 +93,18 @@ class QuickNoteForm(forms.ModelForm):
             "priority": forms.Select(choices=QuickNote.PriorityLevels),
         }
 
+
 class ChangePointsForm(forms.Form):
     amount = forms.IntegerField(initial=1)
+
 
 class RedeemPrizeForm(forms.Form):
     count = forms.IntegerField(initial=1)
 
+
 class BackupCreateForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
+
 
 class EnablePrizeForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())

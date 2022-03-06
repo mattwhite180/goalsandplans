@@ -155,9 +155,7 @@ class Command(BaseCommand):
         )
         mp2.save()
         todo = TodoList.objects.create(
-            title="TodoList test",
-            description="this is a test todolist",
-            user=mattw
+            title="TodoList test", description="this is a test todolist", user=mattw
         )
         todo.save()
         mpc = Plan.objects.create(

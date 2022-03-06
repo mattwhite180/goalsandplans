@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand, CommandError
 from planapp.models import Goal, Plan, Task, Issue
 import time
 
+
 class Command(BaseCommand):
     help = "creates tasks from plans"
 
@@ -35,9 +36,9 @@ class Command(BaseCommand):
                     plan.save()
                 except Exception as e:
                     i = Issue.objects.create(
-                        obj_info = "Plan: " + str(plan.id),
-                        where = "taskify",
-                        exception_string = str(e)
+                        obj_info="Plan: " + str(plan.id),
+                        where="taskify",
+                        exception_string=str(e),
                     )
                     i.save()
         self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))

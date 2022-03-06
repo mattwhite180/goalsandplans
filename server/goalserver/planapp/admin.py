@@ -24,7 +24,8 @@ class PlanAdmin(admin.ModelAdmin):
         "wednesday",
         "thursday",
         "friday",
-        "saturday",)
+        "saturday",
+    )
 
 
 class TaskAdmin(admin.ModelAdmin):
@@ -36,18 +37,21 @@ class TaskAdmin(admin.ModelAdmin):
         "priority",
         "todolist",
         "plan",
-        "points"
+        "points",
     )
 
 
 class TodoListAdmin(admin.ModelAdmin):
     list_display = ("title", "id", "user", "description", "priority")
 
+
 class PrizeAdmin(admin.ModelAdmin):
     list_display = ("title", "id", "user", "description", "points")
 
+
 class UserDataAdmin(admin.ModelAdmin):
     list_display = ("user", "points", "id")
+
 
 class IssueAdmin(admin.ModelAdmin):
     list_display = (
@@ -56,8 +60,9 @@ class IssueAdmin(admin.ModelAdmin):
         "when",
         "exception_string",
         "ticket",
-        "resolved"
+        "resolved",
     )
+
 
 admin.site.register(Goal, GoalAdmin)
 admin.site.register(Plan, PlanAdmin)

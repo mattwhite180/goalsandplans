@@ -47,6 +47,14 @@ urlpatterns = [
     path("issues/", views.issues, name="issues"),
     path("issues/<int:issue_id>/delete", views.delete_issue, name="delete_issue"),
     path("quicknote/", views.quicknote, name="quicknote"),
-    path("quicknote/<int:quicknote_id>/edit/", views.edit_quicknote, name="edit_quicknote"),
-    path("quicknote/<int:quicknote_id>/delete/", views.delete_quicknote, name="delete_quicknote"),
+    path(
+        "quicknote/<int:quicknote_id>/edit/",
+        views.edit_quicknote,
+        name="edit_quicknote",
+    ),
+    path(
+        "quicknote/<int:quicknote_id>/delete/",
+        views.delete_quicknote,
+        name="delete_quicknote",
+    ),
 ]

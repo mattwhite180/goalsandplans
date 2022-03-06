@@ -14,7 +14,9 @@ class UserData(models.Model):
     def pull_report(self, *args, **kwargs):
         report = dict()
         report["goal_count"] = str(Goal.objects.filter(user=self.user).count())
-        report["plan_count"] = str(Plan.objects.filter(goal__in=Goal.objects.filter(user=self.user)).count())
+        report["plan_count"] = str(
+            Plan.objects.filter(goal__in=Goal.objects.filter(user=self.user)).count()
+        )
         daily_task_count = 0
         for p in Plan.objects.filter(
             goal__in=Goal.objects.filter(user=self.user)
@@ -34,15 +36,13 @@ class UserData(models.Model):
                 if p.saturday:
                     days_of_week += 1
                 if p.sunday:
-                    days_of_week += 1    
-                daily_task_count += (days_of_week / 7)
+                    days_of_week += 1
+                daily_task_count += days_of_week / 7
         report["daily_task_count"] = str(round(daily_task_count, 3))
         report["task_count"] = str(
             Task.objects.filter(
                 plan__in=Plan.objects.filter(
-                    goal__in=Goal.objects.filter(
-                        user=self.user
-                    )
+                    goal__in=Goal.objects.filter(user=self.user)
                 )
             ).count()
         )
@@ -120,13 +120,13 @@ class Plan(models.Model):
         TodoList, models.SET_NULL, blank=True, null=True
     )
     keep_at_limit = models.BooleanField(default=False)
-    sunday  = models.BooleanField(default=False)
+    sunday = models.BooleanField(default=False)
     monday = models.BooleanField(default=False)
     tuesday = models.BooleanField(default=False)
     wednesday = models.BooleanField(default=False)
     thursday = models.BooleanField(default=False)
-    friday  = models.BooleanField(default=False)
-    saturday  = models.BooleanField(default=False)
+    friday = models.BooleanField(default=False)
+    saturday = models.BooleanField(default=False)
     recurring_task_title = models.CharField(max_length=200, default="?")
     recurring_task_description = models.CharField(max_length=2000, default="?")
     default_points = models.IntegerField(default=1, blank=True, null=True)
@@ -158,6 +158,7 @@ class Plan(models.Model):
             return True
         return False
 
+
 class Task(models.Model):
     class PriorityLevels(models.TextChoices):
         BACKLOG = "0 BK", _("Backlog")
@@ -187,6 +188,7 @@ class Task(models.Model):
     def user(self):
         return self.plan.goal.user
 
+
 class Prize(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=2000, default="?")
@@ -202,6 +204,7 @@ class Prize(models.Model):
     def __str__(self):
         return self.title
 
+
 class Issue(models.Model):
     obj_info = models.CharField(max_length=2000, default="?")
     where = models.CharField(max_length=2000, default="?")
@@ -212,9 +215,10 @@ class Issue(models.Model):
 
     def __str__(self):
         return self.exception_string[:10] + " (" + self.get_datetime() + ")"
-    
+
     def get_datetime(self):
         return str(self.when.date())
+
 
 class QuickNote(models.Model):
     class PriorityLevels(models.TextChoices):

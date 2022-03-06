@@ -16,10 +16,19 @@ from django import forms
 import datetime
 
 
-
-from .forms import (BackupCreateForm, ChangePointsForm, GoalForm, PlanForm,
-                    PrizeForm, QuickTaskForm, RedeemPrizeForm, TaskForm,
-                    TodoListForm, EnablePrizeForm, QuickNoteForm)
+from .forms import (
+    BackupCreateForm,
+    ChangePointsForm,
+    GoalForm,
+    PlanForm,
+    PrizeForm,
+    QuickTaskForm,
+    RedeemPrizeForm,
+    TaskForm,
+    TodoListForm,
+    EnablePrizeForm,
+    QuickNoteForm,
+)
 from .models import Goal, Plan, Prize, Task, TodoList, UserData, Issue, QuickNote
 
 
@@ -72,10 +81,12 @@ def get_context(request):
         context["points_enabled"] = ud.points_enabled
     return context
 
+
 def issues(request):
     context = get_context(request)
-    context["issue_list"] = Issue.objects.all().order_by('-when')
+    context["issue_list"] = Issue.objects.all().order_by("-when")
     return render(request, "planapp/issues.html", context)
+
 
 def delete_issue(request, issue_id):
     context = get_context(request)
@@ -85,12 +96,14 @@ def delete_issue(request, issue_id):
     messages.success(request, str("deleted issue '" + i_title + "': " + str(issue_id)))
     return render(request, "planapp/issues.html", context)
 
+
 def planify(request):
     context = get_context(request)
     if request.user.is_superuser or request.user.is_staff:
         call_command("planify")
         messages.success(request, "planify command ran")
     return HttpResponseRedirect(reverse("home"))
+
 
 def taskify(plan):
     count = 0
@@ -115,9 +128,9 @@ def taskify(plan):
             plan.save()
         except Exception as e:
             i = Issue.objects.create(
-                obj_info = "Plan: " + str(plan.id),
-                where = "taskify",
-                exception_string = str(e)
+                obj_info="Plan: " + str(plan.id),
+                where="taskify",
+                exception_string=str(e),
             )
             i.save()
     return count
@@ -125,7 +138,9 @@ def taskify(plan):
 
 def enable_prizes(request):
     context = get_context(request)
-    if request.user.is_authenticated and (request.user.is_superuser or request.user.is_staff):
+    if request.user.is_authenticated and (
+        request.user.is_superuser or request.user.is_staff
+    ):
         if request.method == "POST":
             form = EnablePrizeForm(request.POST)
             if form.is_valid():
@@ -138,7 +153,10 @@ def enable_prizes(request):
                     ud = UserData.objects.create(user=user_id)
                 ud.points_enabled = choice
                 ud.save()
-                messages.success(request, "enabled/disabled the user " + str(ud.user.username) + "'s point")
+                messages.success(
+                    request,
+                    "enabled/disabled the user " + str(ud.user.username) + "'s point",
+                )
                 return HttpResponseRedirect(reverse("home"))
         form = EnablePrizeForm()
         context["form"] = form
@@ -148,7 +166,9 @@ def enable_prizes(request):
 
 def create_backup(request):
     context = get_context(request)
-    if request.user.is_authenticated and (request.user.is_superuser or request.user.is_staff):
+    if request.user.is_authenticated and (
+        request.user.is_superuser or request.user.is_staff
+    ):
         if request.method == "POST":
             form = BackupCreateForm(request.POST)
             if form.is_valid():
@@ -207,14 +227,16 @@ def get_errors(f):
     errorList.sort()
     return errorList
 
+
 def point_changer(request, points):
     if request.user.is_authenticated:
-        ud = UserData.objects.get(user = request.user)
+        ud = UserData.objects.get(user=request.user)
         ud.points += points
         ud.save()
         return True
     else:
         return False
+
 
 """
 #####
@@ -258,9 +280,7 @@ def run_jobs(request):
 
 def handler404(request, exception=None):
     i = Issue.objects.create(
-        obj_info = "n/a",
-        where = "404",
-        exception_string = str(exception)
+        obj_info="n/a", where="404", exception_string=str(exception)
     )
     i.save()
     messages.error(request, "404: Page not found. Redirecting to home")
@@ -306,6 +326,7 @@ def home(request):
 
     return render(request, "planapp/home.html", context)
 
+
 def change_points(request):
     context = get_context(request)
 
@@ -319,11 +340,19 @@ def change_points(request):
         if form.is_valid():
             cd = form.cleaned_data
             amount = cd.get("amount")
-            ud = UserData.objects.get(user = request.user)
+            ud = UserData.objects.get(user=request.user)
             before = ud.points
             ud.points = amount
             ud.save()
-            messages.success(request, str("user's points counts changed from " + str(before) + " to " + str(amount)))
+            messages.success(
+                request,
+                str(
+                    "user's points counts changed from "
+                    + str(before)
+                    + " to "
+                    + str(amount)
+                ),
+            )
             return HttpResponseRedirect(reverse("home"))
         else:
             context["error_list"] = get_errors(form)
@@ -512,6 +541,7 @@ def plan(request, plan_id):
     context["form"] = form
     return render(request, "planapp/plan.html", context)
 
+
 @login_required
 def plan_create_task(request, plan_id):
     context = get_context(request)
@@ -533,6 +563,7 @@ def plan_create_task(request, plan_id):
     if context["points_enabled"]:
         point_changer(request, 1)
     return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
+
 
 @login_required
 def edit_plan(request, plan_id):
@@ -589,6 +620,7 @@ def delete_plan(request, plan_id):
 #####
 Task Views
 """
+
 
 @login_required
 def task(request, task_id):
@@ -679,22 +711,25 @@ def delete_task(request, task_id):
     else:
         unauthorized_message(request, t)
 
-    url = request.META.get('HTTP_REFERER')
+    url = request.META.get("HTTP_REFERER")
     if url == None:
-      return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
-    source = 'https://goalsandplans101.com/'
-    if debug():
-      source = 'http://localhost/'
-    cut_url = url.replace(source, '')
-    if cut_url[:9] == 'task_todo':
-        return HttpResponseRedirect(reverse("task_todo"))
-    elif cut_url[:4] in ['plan', 'task']:
         return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
-    elif cut_url[:8] == 'todolist' and todolist_id:
+    source = "https://goalsandplans101.com/"
+    if debug():
+        source = "http://localhost/"
+    cut_url = url.replace(source, "")
+    if cut_url[:9] == "task_todo":
+        return HttpResponseRedirect(reverse("task_todo"))
+    elif cut_url[:4] in ["plan", "task"]:
+        return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
+    elif cut_url[:8] == "todolist" and todolist_id:
         return HttpResponseRedirect(reverse("todolist", args=(todolist_id,)))
     else:
-        messages.warning(request, f"task redirect could not find a good match for the url: { url }")
+        messages.warning(
+            request, f"task redirect could not find a good match for the url: { url }"
+        )
         return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
+
 
 @login_required
 def quick_task(request):
@@ -837,6 +872,7 @@ def delete_todolist(request, todo_id):
 
     return HttpResponseRedirect(reverse("task_todo"))
 
+
 """
 #####
 Prize Views
@@ -866,6 +902,7 @@ def prize(request):
     context["prize_list"] = prize_list
     context["form"] = form
     return render(request, "planapp/prize.html", context)
+
 
 @login_required
 def redeem_prize(request, prize_id):
@@ -898,6 +935,7 @@ def redeem_prize(request, prize_id):
     context["prize_list"] = prize_list
     return render(request, "planapp/redeem_prize.html", context)
 
+
 @login_required
 def edit_prize(request, prize_id):
     context = get_context(request)
@@ -927,6 +965,7 @@ def edit_prize(request, prize_id):
     context["form_title"] = "edit prize (" + str(p.title) + ")"
     return render(request, "planapp/formedit.html", context)
 
+
 @login_required
 def delete_prize(request, prize_id):
 
@@ -942,10 +981,12 @@ def delete_prize(request, prize_id):
 
     return HttpResponseRedirect(reverse("prize"))
 
+
 """
 #####
 QuickNote Views
 """
+
 
 @login_required
 def quicknote(request):
@@ -967,13 +1008,14 @@ def quicknote(request):
     else:
         form = QuickNoteForm()
 
-    quicknote_list = QuickNote.objects.filter(user=request.user).order_by("-priority", "title")
+    quicknote_list = QuickNote.objects.filter(user=request.user).order_by(
+        "-priority", "title"
+    )
 
     context["quicknote_list"] = quicknote_list
     context["form"] = form
 
     return render(request, "planapp/quicknote.html", context)
-
 
 
 @login_required
