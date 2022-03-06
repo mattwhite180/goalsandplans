@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import AnonymousUser, User
 from django.forms import ModelForm
 
-from .models import Goal, Plan, Prize, Task, TodoList
+from .models import Goal, Plan, Prize, Task, TodoList, QuickNote, UserData
 
 
 class GoalForm(forms.ModelForm):
@@ -81,18 +81,35 @@ class PrizeForm(forms.ModelForm):
     class Meta:
         model = Prize
         fields = ("title", "description", "points")
+        widgets = {"description": forms.Textarea(attrs={"cols": 20, "rows": 10})}
+
+
+class QuickNoteForm(forms.ModelForm):
+    class Meta:
+        model = QuickNote
+        fields = ("title", "description", "priority")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
+            "priority": forms.Select(choices=QuickNote.PriorityLevels),
         }
+
+class UserDataForm(forms.ModelForm):
+    class Meta:
+        model = UserData
+        fields = ("dark", "points_enabled", "points")
+
 
 class ChangePointsForm(forms.Form):
     amount = forms.IntegerField(initial=1)
 
+
 class RedeemPrizeForm(forms.Form):
     count = forms.IntegerField(initial=1)
 
+
 class BackupCreateForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
+
 
 class EnablePrizeForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())

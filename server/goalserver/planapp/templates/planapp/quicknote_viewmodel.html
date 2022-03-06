@@ -1,0 +1,39 @@
+{% if quicknote_list %}
+  {% for quicknote in quicknote_list %}
+    <div class="card">
+      <h1 class="card-header">{{ quicknote.title }}</h1>
+      <div class="card-body">
+        <h5 class="card-title">{{ quicknote.description }}</h5>
+        <div class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ quicknote.priority|slice:"2:" }}</span></div>
+        <a href="{% url 'edit_quicknote' quicknote.id %}" class="btn btn-primary">Edit quicknote</a>
+        <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;"
+          data-toggle="modal" data-target="#exampleModalCenter{{ quicknote.id }}">Delete quicknote</button>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter{{ quicknote.id }}" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Delete quicknote</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete the '<b>{{ quicknote.title }}</b>' quicknote?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="{% url 'delete_quicknote' quicknote.id %}" class="btn btn-primary"
+                  style="background-color: red; border-color: red;">Delete quicknote</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+  {% endfor %}
+{% else %}
+  <p>No quicknotes are created yet</p>
+{% endif %}

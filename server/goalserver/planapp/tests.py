@@ -103,29 +103,31 @@ class CronTestCase(TestCase):
         )
         self.assertEqual(val, expected, errmsg)
 
+
 class RemoteGoogleTestCase(unittest.TestCase):
-    #check if selenium is working
+    # check if selenium is working
     def setUp(self):
         self.browser = webdriver.Remote(
-            command_executor='http://chrome:4444/wd/hub',
-            desired_capabilities=DesiredCapabilities.CHROME)
+            command_executor="http://chrome:4444/wd/hub",
+            desired_capabilities=DesiredCapabilities.CHROME,
+        )
         self.addCleanup(self.browser.quit)
 
     def testPageTitle(self):
-        self.browser.get('http://www.google.com')
-        self.assertIn('Google', self.browser.title)
+        self.browser.get("http://www.google.com")
+        self.assertIn("Google", self.browser.title)
 
 
 class SeleniumTestCase(unittest.TestCase):
-
     def setUp(self):
         self.browser = webdriver.Remote(
-            command_executor='http://chrome:4444/wd/hub',
-            desired_capabilities=DesiredCapabilities.CHROME)
+            command_executor="http://chrome:4444/wd/hub",
+            desired_capabilities=DesiredCapabilities.CHROME,
+        )
         self.addCleanup(self.browser.quit)
 
     def test_title_page(self):
-        self.browser.get('http://server:8000')
+        self.browser.get("http://server:8000")
         # driver = webdriver.Chrome(options=set_chrome_options())
         val = self.browser.title
         expected = "GoalsAndPlans"
