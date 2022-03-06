@@ -19,8 +19,8 @@ import datetime
 
 from .forms import (BackupCreateForm, ChangePointsForm, GoalForm, PlanForm,
                     PrizeForm, QuickTaskForm, RedeemPrizeForm, TaskForm,
-                    TodoListForm, EnablePrizeForm)
-from .models import Goal, Plan, Prize, Task, TodoList, UserData, Issue
+                    TodoListForm, EnablePrizeForm, QuickNoteForm)
+from .models import Goal, Plan, Prize, Task, TodoList, UserData, Issue, QuickNote
 
 
 """
@@ -839,7 +839,7 @@ def delete_todolist(request, todo_id):
 
 """
 #####
-TodoList Views
+Prize Views
 """
 
 
@@ -941,3 +941,83 @@ def delete_prize(request, prize_id):
         unauthorized_message(request, p)
 
     return HttpResponseRedirect(reverse("prize"))
+
+"""
+#####
+QuickNote Views
+"""
+
+@login_required
+def quicknote(request):
+    context = get_context(request)
+
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("index"))
+
+    if request.method == "POST":
+
+        form = QuickNoteForm(request.POST, use_required_attribute=False)
+
+        if form.is_valid():
+            m = form.save(commit=False)
+            m.user = request.user
+            m.save()
+            messages.success(request, message_generator("created", m))
+
+    else:
+        form = QuickNoteForm()
+
+    quicknote_list = QuickNote.objects.filter(user=request.user).order_by("-priority", "title")
+
+    context["quicknote_list"] = quicknote_list
+    context["form"] = form
+
+    return render(request, "planapp/quicknote.html", context)
+
+
+
+@login_required
+def edit_quicknote(request, quicknote_id):
+    context = get_context(request)
+
+    m = get_object_or_404(QuickNote, pk=quicknote_id)
+
+    if request.user.id != m.user.id:
+        unauthorized_message(request, m)
+        return HttpResponseRedirect(reverse("home"))
+
+    if request.method == "POST":
+        # form = GoalForm(request.POST or None, request.FILES or None)
+        form = QuickNoteForm(request.POST, instance=m)
+
+        if form.is_valid():
+            m = form.save(commit=False)
+            m.user = request.user
+            m.save()
+            messages.info(request, message_generator("edited", m))
+            return HttpResponseRedirect(reverse("quicknote"))
+        else:
+            context["error_list"] = get_errors(form)
+
+    else:
+        form = QuickNoteForm(instance=m)
+
+    context["form"] = form
+    context["form_title"] = "edit todolist (" + str(m.title) + ")"
+    return render(request, "planapp/formedit.html", context)
+
+
+@login_required
+def delete_quicknote(request, quicknote_id):
+
+    context = get_context(request)
+
+    m = get_object_or_404(QuickNote, pk=quicknote_id)
+
+    if request.user.id == m.user.id:
+        messages.warning(request, message_generator("deleted", m))
+        m.delete()
+    else:
+        unauthorized_message(request, m)
+
+    return HttpResponseRedirect(reverse("quicknotes"))

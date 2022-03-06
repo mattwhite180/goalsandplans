@@ -14,6 +14,9 @@
         <a class="nav-link active" href="{% url 'task_todo' %}">
           <button type="button" class="btn btn-info">TodoList</button>
         </a>
+        <a class="nav-link active" href="{% url 'quicknote' %}">
+          <button type="button" class="btn btn-primary">quicknote</button>
+        </a>
         {% if points_enabled %}
           <a class="nav-link active" href="{% url 'change_points' %}">
             <button type="button" class="btn btn-danger">Edit Points</button>

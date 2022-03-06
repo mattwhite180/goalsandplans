@@ -215,3 +215,21 @@ class Issue(models.Model):
     
     def get_datetime(self):
         return str(self.when.date())
+
+class QuickNote(models.Model):
+    class PriorityLevels(models.TextChoices):
+        BACKLOG = "0 BK", _("Backlog")
+        LOW = "1 LW", _("Low")
+        MEDIUM = "2 MD", _("Medium")
+        HIGH = "3 HI", _("High")
+        UG = "4 UG", _("Urgent")
+
+    title = models.CharField(max_length=200, default="QuickNote: ")
+    description = models.CharField(max_length=2000, default="")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    priority = models.CharField(
+        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
+    )
+
+    def __str__(self):
+        return self.title + ":: " + self.description[:10]
