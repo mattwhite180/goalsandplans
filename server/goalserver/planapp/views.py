@@ -1091,4 +1091,4 @@ def delete_quicknote(request, quicknote_id):
     else:
         unauthorized_message(request, m)
 
-    return HttpResponseRedirect(reverse("quicknotes"))
+    return HttpResponseRedirect(reverse("quicknote"))

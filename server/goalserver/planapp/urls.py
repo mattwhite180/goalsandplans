@@ -46,8 +46,8 @@ urlpatterns = [
     path("enable_prizes/", views.enable_prizes, name="enable_prizes"),
     path("issues/", views.issues, name="issues"),
     path("issues/<int:issue_id>/delete", views.delete_issue, name="delete_issue"),
-    path("quicknote/", views.quicknote, name="quicknote"),
     path("userdata/", views.userdata, name="userdata"),
+    path("quicknote/", views.quicknote, name="quicknote"),
     path(
         "quicknote/<int:quicknote_id>/edit/",
         views.edit_quicknote,
