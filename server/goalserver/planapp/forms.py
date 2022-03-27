@@ -24,6 +24,7 @@ class PlanForm(forms.ModelForm):
             "continuous",
             "limit",
             "add_count",
+            "tasks_expire",
             "keep_at_limit",
             "sunday",
             "monday",

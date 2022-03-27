@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from .models import Goal, Plan, Task
-from .views import data_to_json, run_jobs
+from .views import data_to_json, run_jobs, taskify
 
 
 class CronTestCase(TestCase):
@@ -99,11 +99,13 @@ class CronTestCase(TestCase):
 
     def test_sanity_check(self):
         errmsg = "if this fails, there is a syntax error in taskify, or a fatal runtime error"
-        call_command("taskify")
+        for p in Plan.objects.all():
+            taskify(p)
         self.assertEqual(0, 0, errmsg)
 
     def test_task_limit(self):
-        call_command("taskify")
+        for p in Plan.objects.all():
+            taskify(p)
         val = Task.objects.count()
         expected = 4
         errmsg = (
@@ -138,6 +140,54 @@ class CronTestCase(TestCase):
         if the number of tasks counted is over 1000 then the add period might not be working"""
         )
         self.assertEqual(val, expected, errmsg)
+
+class TaskExpireTestCase(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        test_user = User.objects.create_user(username="testuser", password="1234")
+        g = Goal.objects.create(
+            title="test goal", description="test goal description", user=test_user
+        )
+        Plan.objects.create(
+            title="test plan (continuous)",
+            description="This test should create 1 task",
+            goal=g,
+            continuous=True,
+            tasks_expire=True,
+            limit=1,
+            add_count=1,
+            sunday=True,
+            monday=True,
+            tuesday=True,
+            wednesday=True,
+            thursday=True,
+            friday=True,
+            saturday=True,
+        )
+    def test_expire(self):
+        for p in Plan.objects.all():
+            taskify(p)
+        val = Task.objects.count()
+        expected = 1
+        errmsg = (
+            "Task was not created"
+        )
+        self.assertEqual(val, expected, errmsg)
+        p.sunday = False
+        p.monday = False
+        p.tuesday = False
+        p.wednesday = False
+        p.thursday = False
+        p.friday = False
+        p.saturday = False
+        p.save()
+        for p in Plan.objects.all():
+            taskify(p)
+        val = Task.objects.count()
+        expected = 0
+        errmsg = (
+            "Task failed to expire"
+        )
 
 
 class RemoteGoogleTestCase(unittest.TestCase):

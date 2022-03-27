@@ -109,6 +109,7 @@ class Plan(models.Model):
     description = models.CharField(max_length=20000)
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE)
     continuous = models.BooleanField(default=True)
+    tasks_expire = models.BooleanField(default=False)
     limit = models.IntegerField(default=10)
     add_count = models.IntegerField(default=1)
     default_priority = models.CharField(

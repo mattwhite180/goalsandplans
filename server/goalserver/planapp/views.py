@@ -99,8 +99,20 @@ def planify(request):
 
 def taskify(plan):
     count = 0
+    if not plan.continuous:
+        return 0
     deltaDate = datetime.date.today() - plan.last_updated
     if (deltaDate.days >= 1 and plan.today()) or plan.keep_at_limit:
+        try:
+            if plan.tasks_expire and not plan.today():
+                for t in Tasks.objects.filter(plan=plan):
+                    t.delete()
+        except:
+            i = Issue.objects.create(
+                obj_info="Plan: " + str(plan.id),
+                where="taskify (delete expired tasks)",
+                exception_string=str(e),
+            )
         try:
             for i in range(plan.add_count):
                 currentCount = Task.objects.filter(plan=plan).count()
@@ -121,7 +133,7 @@ def taskify(plan):
         except Exception as e:
             i = Issue.objects.create(
                 obj_info="Plan: " + str(plan.id),
-                where="taskify",
+                where="taskify (create new tasks)",
                 exception_string=str(e),
             )
             i.save()
