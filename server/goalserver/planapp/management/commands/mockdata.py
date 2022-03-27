@@ -40,9 +40,7 @@ class Command(BaseCommand):
         )
         g.save()
         todo1 = TodoList.objects.create(
-            title="todolist A",
-            description="description of todolist A",
-            user = root_user
+            title="todolist A", description="description of todolist A", user=root_user
         )
         todo1.save()
         p1 = Plan.objects.create(
