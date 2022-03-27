@@ -16,6 +16,8 @@ class Command(BaseCommand):
         if settings.DEBUG:
             for g in Goal.objects.all():
                 g.delete()
+            for t in TodoList.objects.all():
+                t.delete()
         usernameList = list()
         for u in User.objects.all():
             usernameList.append(u.username)
@@ -43,6 +45,10 @@ class Command(BaseCommand):
             title="todolist A", description="description of todolist A", user=root_user
         )
         todo1.save()
+        todo2 = TodoList.objects.create(
+            title="todolist B", description="description of todolist B", user=root_user
+        )
+        todo2.save()
         p1 = Plan.objects.create(
             title="test plan (continuous)",
             description="this should increase the task count by 5",
@@ -63,6 +69,33 @@ class Command(BaseCommand):
             saturday=True,
         )
         p1.save()
+        newp = Plan.objects.create(
+            title="test plan (continuous) with diff tasks",
+            description="this should increase the task count by 5",
+            goal=g,
+            continuous=True,
+            limit=5,
+            add_count=2,
+            default_points=1,
+            default_todolist=todo2,
+            recurring_task_title="same task title",
+            recurring_task_description="same task description",
+            sunday=True,
+            monday=True,
+            tuesday=True,
+            wednesday=True,
+            thursday=True,
+            friday=True,
+            saturday=True,
+        )
+        newp.save()
+        newtt = Task.objects.create(
+            title="diff task title",
+            description="diff task descr",
+            plan=newp,
+            todolist=newp.default_todolist,
+        )
+        newtt.save()
         p2 = Plan.objects.create(
             title="test plan",
             description="not continuous",

@@ -23,8 +23,13 @@
     <div class="card-body text-left">
       <div class="list-group form-inline">
         {% for task in item.1 %}
-          <li class="list-group-item list-group-item-action"><a href="{% url 'task' task.id %}"><b>{{ task }}</b> ({{ task.plan }})</a>
-            <button
+          <li class="list-group-item list-group-item-action"><a href="{% url 'task' task.0.id %}"><b>{{ task.0 }}</b> ({{ task.0.plan }})</a>
+          {% if task.1 %}
+            <button class="badge badge-primary badge-pill">
+            {{ task.1 }}
+            </button>
+          {% endif %}
+          <button
             id="delete-task-left-{{ task.id }}-warning"
             data-toggle="modal"
             data-target="#exampleModalCenter-left-{{ task.id }}"
@@ -50,7 +55,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a href="{% url 'delete_task' task.id %}" class="btn btn-primary"
+                <a href="{% url 'delete_task' task.0.id %}" class="btn btn-primary"
                   style="background-color: red; border-color: red;">Delete Task</a>
               </div>
             </div>
@@ -84,7 +89,7 @@
             <a href="{% url 'task' task.id %}">
               <b>{{ task }}</b>
               {% if item.2 %}
-                <buttonn class="badge badge-primary badge-pill">
+                <button class="badge badge-primary badge-pill">
                 {{ item.2 }}
                 </button>
               {% endif %}

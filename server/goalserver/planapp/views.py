@@ -446,11 +446,24 @@ def home(request):
 
     left_list = []
     for todo in TodoList.objects.filter(user=request.user).order_by("-priority", "title"):
-        if Task.objects.filter(todolist=todo).count() > 0:
+        task_list = Task.objects.filter(todolist=todo)
+        if task_list.count() > 0:
+            task_values = []
+            task_todolist = []
+            for task in task_list:
+                if [task.title, task.description] not in task_values:
+                    task_count = Task.objects.filter(title=task.title, description=task.description, plan=task.plan).count()
+                    task_todolist.append(
+                        (
+                            task,
+                            task_count if task_count > 1 else None
+                        )
+                    )
+                    task_values.append([task.title, task.description])
             left_list.append(
                 (
                     todo,
-                    Task.objects.filter(todolist=todo)
+                    task_todolist
                 )
             )
     context["right_list"] = right_list
