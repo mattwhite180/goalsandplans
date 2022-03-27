@@ -309,7 +309,6 @@ def all_goals(request):
         return HttpResponseRedirect(reverse("index"))
 
     if request.method == "POST":
-        # form = GoalForm(request.POST or None, request.FILES or None)
         form = GoalForm(request.POST)
 
         if form.is_valid():
@@ -365,7 +364,6 @@ def change_points(request):
         return HttpResponseRedirect(reverse("index"))
 
     if request.method == "POST":
-        # form = GoalForm(request.POST or None, request.FILES or None)
         form = ChangePointsForm(request.POST)
 
         if form.is_valid():
@@ -493,7 +491,11 @@ def goal(request, goal_id):
             context["error_list"] = get_errors(form)
 
     else:
-        form = PlanForm()
+        form = PlanForm(
+            initial={
+                'goal': g
+            }
+        )
         form.fields["default_todolist"].queryset = TodoList.objects.filter(
             user=request.user
         ).order_by("title")
@@ -524,7 +526,6 @@ def edit_goal(request, goal_id):
         return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
-        # form = GoalForm(request.POST or None, request.FILES or None)
         form = GoalForm(request.POST, instance=g)
 
         if form.is_valid():
@@ -542,7 +543,6 @@ def edit_goal(request, goal_id):
     context["form"] = form
     context["form_title"] = "edit goal (" + str(g.title) + ")"
     return render(request, "planapp/formedit.html", context)
-    # return HttpResponseRedirect(reverse(all_goals))
 
 
 @login_required
@@ -598,7 +598,16 @@ def plan(request, plan_id):
             messages.success(request, message_generator("created", t))
 
     else:
-        form = TaskForm()
+        form = TaskForm(
+            initial={
+                'plan': p,
+                'title': p.recurring_task_title,
+                'description': p.recurring_task_title,
+                'todolist': p.default_todolist,
+                'priority': p.default_priority,
+                'points': p.default_points
+            }
+        )
         form.fields["todolist"].queryset = TodoList.objects.filter(
             user=request.user
         ).order_by("title")
@@ -652,7 +661,6 @@ def edit_plan(request, plan_id):
         return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
-        # form = GoalForm(request.POST or None, request.FILES or None)
         form = PlanForm(request.POST, instance=p)
 
         if form.is_valid():
@@ -730,7 +738,6 @@ def edit_task(request, task_id):
         return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
-        # form = GoalForm(request.POST or None, request.FILES or None)
         form = TaskForm(request.POST, instance=t)
 
         if form.is_valid():
@@ -827,7 +834,6 @@ def quick_task(request):
     context = get_context(request)
 
     if request.method == "POST":
-        # form = GoalForm(request.POST or None, request.FILES or None)
         form = QuickTaskForm(request.POST)
 
         if form.is_valid():
@@ -931,7 +937,6 @@ def edit_todolist(request, todo_id):
         return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
-        # form = GoalForm(request.POST or None, request.FILES or None)
         form = TodoListForm(request.POST, instance=m)
 
         if form.is_valid():
@@ -1041,7 +1046,6 @@ def edit_prize(request, prize_id):
         return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
-        # form = GoalForm(request.POST or None, request.FILES or None)
         form = PrizeForm(request.POST, instance=p)
 
         if form.is_valid():
@@ -1123,7 +1127,6 @@ def edit_quicknote(request, quicknote_id):
         return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
-        # form = GoalForm(request.POST or None, request.FILES or None)
         form = QuickNoteForm(request.POST, instance=m)
 
         if form.is_valid():
