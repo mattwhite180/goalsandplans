@@ -47,10 +47,10 @@
                 </button>
               </div>
               <div class="modal-body">
-                <p>Are you sure you want to delete the '<b>{{ task.title }}</b>' task?</p>
+                <p>Are you sure you want to delete the '<b>{{ task.0.title }}</b>' task?</p>
                 {% if points_enabled %}
                   <br>
-                  <p>Deleting this task will award you {{ task.points }} point(s)</p>
+                  <p>Deleting this task will award you {{ task.0.points }} point(s)</p>
                 {% endif %}
               </div>
               <div class="modal-footer">
