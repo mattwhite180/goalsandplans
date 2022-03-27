@@ -1,15 +1,18 @@
 {% extends "planapp/bootstrap.html" %}
 
 {% block content %}
-<div class="card text-center">
-  <div class="card-header">
-    {{ user.username }}
-  </div>
-  <div class="card-body">
-    <h5 class="card-title"><u>{{ user.username }}'s stats</u></h5>
-    {% for key, value in user_data.items %}
-      <p class="card-text"><b>{{ key }}</b>: <i>{{ value }}</i></p>
-    {% endfor %}
+<p class="text-center">
+  <button id="help" class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseHelp"
+    aria-expanded="false" aria-controls="collapseHelp">
+    {{ user.username }}'s stats
+  </button>
+</p>
+
+<div class="collapse" id="collapseHelp">
+    <div class="card-body text-center">
+      {% for key, value in user_data.items %}
+        <p class="card-text"><b>{{ key }}</b>: <i>{{ value }}</i></p>
+      {% endfor %}
   </div>
 </div>
 {% endblock %}
