@@ -30,13 +30,13 @@
             </button>
           {% endif %}
           <button
-            id="delete-task-left-{{ task.id }}-warning"
+            id="delete-task-left-{{ task.0.id }}-warning"
             data-toggle="modal"
-            data-target="#exampleModalCenter-left-{{ task.id }}"
+            data-target="#exampleModalCenter-left-{{ task.0.id }}"
             class="badge badge-danger badge-pill">
             x
           </button></li>
-          <div class="modal fade" id="exampleModalCenter-left-{{ task.id }}" tabindex="-1" role="dialog"
+          <div class="modal fade" id="exampleModalCenter-left-{{ task.0.id }}" tabindex="-1" role="dialog"
           aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
