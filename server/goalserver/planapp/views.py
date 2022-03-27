@@ -518,7 +518,7 @@ def goal(request, goal_id):
         if context["points_enabled"] == False:
             form.fields["default_points"].widget = forms.HiddenInput()
 
-    plan_list = Plan.objects.filter(goal=g)
+    plan_list = Plan.objects.filter(goal=g).order_by("-default_priority", "title")
     for p in plan_list:
         taskify(p)
     context["goal_list"] = goal_list
