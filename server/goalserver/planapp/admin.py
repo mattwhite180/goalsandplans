@@ -63,12 +63,9 @@ class IssueAdmin(admin.ModelAdmin):
         "resolved",
     )
 
+
 class ArchiveAdmin(admin.ModelAdmin):
-    list_display = (
-        "created",
-        "title",
-        "description",
-    )
+    list_display = ("created", "title", "description")
 
 
 admin.site.register(Goal, GoalAdmin)

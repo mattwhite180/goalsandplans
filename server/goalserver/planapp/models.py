@@ -240,6 +240,7 @@ class QuickNote(models.Model):
     def __str__(self):
         return self.title + ":: " + self.description[:10]
 
+
 class Archive(models.Model):
     created = models.DateTimeField("created", default=datetime.datetime.now())
     title = models.CharField(max_length=201, default="?")

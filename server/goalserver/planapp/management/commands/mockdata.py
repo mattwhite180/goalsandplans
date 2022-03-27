@@ -79,9 +79,7 @@ class Command(BaseCommand):
         )
         p2.save()
         t1 = Task.objects.create(
-            title = "test task",
-            description = "test description for task",
-            plan = p2
+            title="test task", description="test description for task", plan=p2
         )
         t1.save()
 

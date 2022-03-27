@@ -141,6 +141,7 @@ class CronTestCase(TestCase):
         )
         self.assertEqual(val, expected, errmsg)
 
+
 class TaskExpireTestCase(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -164,14 +165,13 @@ class TaskExpireTestCase(TestCase):
             friday=True,
             saturday=True,
         )
+
     def test_expire(self):
         for p in Plan.objects.all():
             taskify(p)
         val = Task.objects.count()
         expected = 1
-        errmsg = (
-            "Task was not created"
-        )
+        errmsg = "Task was not created"
         self.assertEqual(val, expected, errmsg)
         p.sunday = False
         p.monday = False
@@ -185,9 +185,7 @@ class TaskExpireTestCase(TestCase):
             taskify(p)
         val = Task.objects.count()
         expected = 0
-        errmsg = (
-            "Task failed to expire"
-        )
+        errmsg = "Task failed to expire"
 
 
 class RemoteGoogleTestCase(unittest.TestCase):

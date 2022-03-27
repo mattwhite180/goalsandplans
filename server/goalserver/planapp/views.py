@@ -19,8 +19,8 @@ from .forms import (BackupCreateForm, ChangePointsForm, EnablePrizeForm,
                     GoalForm, PlanForm, PrizeForm, QuickNoteForm,
                     QuickTaskForm, RedeemPrizeForm, TaskForm, TodoListForm,
                     UserDataForm)
-from .models import (Archive, Goal, Issue, Plan, Prize, QuickNote, Task, TodoList,
-                     UserData)
+from .models import (Archive, Goal, Issue, Plan, Prize, QuickNote, Task,
+                     TodoList, UserData)
 
 
 """
@@ -285,7 +285,7 @@ def run_jobs(request):
 def custom_error_handle(request, exception=None):
     s = str(request)
     i = Issue.objects.create(
-        obj_info="n/a", where="custom error handling", exception_string=s,
+        obj_info="n/a", where="custom error handling", exception_string=s
     )
     i.save()
     messages.error(request, "An exception occurred at " + str(s))
@@ -464,9 +464,9 @@ def goal(request, goal_id):
         form.fields["default_todolist"].queryset = TodoList.objects.filter(
             user=request.user
         ).order_by("title")
-        form.fields["goal"].queryset = Goal.objects.filter(
-            user=request.user
-        ).order_by("title")
+        form.fields["goal"].queryset = Goal.objects.filter(user=request.user).order_by(
+            "title"
+        )
         if context["points_enabled"] == False:
             form.fields["default_points"].widget = forms.HiddenInput()
 
@@ -570,7 +570,9 @@ def plan(request, plan_id):
             user=request.user
         ).order_by("title")
         goal_list = Goal.objects.filter(user=request.user)
-        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by("title")
+        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by(
+            "title"
+        )
         if context["points_enabled"] == False:
             form.fields["points"].widget = forms.HiddenInput()
 
@@ -711,7 +713,9 @@ def edit_task(request, task_id):
             user=request.user
         ).order_by("title")
         goal_list = Goal.objects.filter(user=request.user)
-        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by("title")
+        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by(
+            "title"
+        )
         if context["points_enabled"] == False:
             form.fields["points"].widget = forms.HiddenInput()
 
@@ -775,7 +779,8 @@ def delete_task(request, task_id, redirect=None):
     else:
         if not redirect:
             messages.warning(
-                request, f"task redirect could not find a good match for the url: { url }"
+                request,
+                f"task redirect could not find a good match for the url: { url }",
             )
         return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
