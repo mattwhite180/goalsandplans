@@ -874,6 +874,9 @@ def todolist(request, todo_id):
         unauthorized_message(request, m)
         return HttpResponseRedirect(reverse("home"))
 
+    goal_list = Goal.objects.filter(user=request.user)
+    for p in Plan.objects.filter(goal__in=goal_list):
+        taskify(p)
     task_list = Task.objects.filter(todolist=m).order_by("-priority", "title")
     context["todolist_list"] = todolist_list
     context["task_list"] = task_list
