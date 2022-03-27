@@ -19,11 +19,11 @@
   {% if left_list %}
   {% for item in left_list %}
   <div class="card text-center">
-    <div class="card-header"><a href="{% url 'todolist' item.0.id %}"><h1>{{ item.0 }}</h1></a></div>
+    <div class="card-header"><a href="{% url 'todolist' item.0.id %}"><h1 class="text-dark">{{ item.0 }}</h1></a></div>
     <div class="card-body">
       <div class="list-group form-inline">
         {% for task in item.1 %}
-          <li class="list-group-item list-group-item-action text-left"><a href="{% url 'task' task.0.id %}"><b>{{ task.0 }}</b> ({{ task.0.plan }})</a>
+          <li class="list-group-item list-group-item-action text-left"><a class="text-dark" href="{% url 'task' task.0.id %}"><b>{{ task.0 }}</b> ({{ task.0.plan }})</a>
           <button
             style="float:right"
             id="delete-task-left-{{ task.0.id }}-warning"
@@ -83,12 +83,12 @@
   {% if right_list %}
   {% for item in right_list %}
   <div class="card text-center">
-    <div class="card-header"><a href="{% url 'plan' item.0.id %}"><h1>{{ item.0.title }}</h1></a></div>
+    <div class="card-header"><a href="{% url 'plan' item.0.id %}"><h1 class="text-dark">{{ item.0.title }}</h1></a></div>
     <div class="card-body text-left">
       <div class="list-group form-inline">
         {% for task in item.1 %}
           <li class="list-group-item list-group-item-action">
-            <a href="{% url 'task' task.id %}">
+            <a class="text-dark" href="{% url 'task' task.id %}">
               <b>{{ task }}</b>
             </a>
             <button
