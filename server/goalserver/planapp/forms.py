@@ -21,6 +21,7 @@ class PlanForm(forms.ModelForm):
         fields = (
             "title",
             "description",
+            "goal",
             "continuous",
             "limit",
             "add_count",
@@ -61,7 +62,7 @@ class QuickTaskForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ("title", "description", "points", "priority", "todolist")
+        fields = ("title", "plan", "description", "points", "priority", "todolist")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Task.PriorityLevels),

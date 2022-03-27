@@ -464,6 +464,9 @@ def goal(request, goal_id):
         form.fields["default_todolist"].queryset = TodoList.objects.filter(
             user=request.user
         ).order_by("title")
+        form.fields["goal"].queryset = Goal.objects.filter(
+            user=request.user
+        ).order_by("title")
         if context["points_enabled"] == False:
             form.fields["default_points"].widget = forms.HiddenInput()
 
@@ -566,6 +569,8 @@ def plan(request, plan_id):
         form.fields["todolist"].queryset = TodoList.objects.filter(
             user=request.user
         ).order_by("title")
+        goal_list = Goal.objects.filter(user=request.user)
+        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by("title")
         if context["points_enabled"] == False:
             form.fields["points"].widget = forms.HiddenInput()
 
@@ -705,6 +710,8 @@ def edit_task(request, task_id):
         form.fields["todolist"].queryset = TodoList.objects.filter(
             user=request.user
         ).order_by("title")
+        goal_list = Goal.objects.filter(user=request.user)
+        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by("title")
         if context["points_enabled"] == False:
             form.fields["points"].widget = forms.HiddenInput()
 
