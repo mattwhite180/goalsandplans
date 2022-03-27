@@ -1,13 +1,12 @@
 import datetime
 import unittest
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
 from django.contrib.auth.models import AnonymousUser, User
 from django.core.management import call_command
 from django.test import Client, RequestFactory, TestCase
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from .models import Goal, Plan, Task
 from .views import data_to_json, run_jobs
@@ -108,11 +107,7 @@ class CronTestCase(TestCase):
         val = Task.objects.count()
         expected = 4
         errmsg = (
-            "expected "
-            + str(expected)
-            + " tasks, but counted "
-            + str(val)
-            + " tasks"
+            "expected " + str(expected) + " tasks, but counted " + str(val) + " tasks"
         )
         self.assertEqual(val, expected, errmsg)
 

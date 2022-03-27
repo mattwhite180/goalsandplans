@@ -1,9 +1,9 @@
 import datetime
+import time
 
 from django.contrib.auth.models import AnonymousUser, User
 from django.core.management.base import BaseCommand, CommandError
-from planapp.models import Goal, Plan, Task, Issue
-import time
+from planapp.models import Goal, Issue, Plan, Task
 
 
 class Command(BaseCommand):

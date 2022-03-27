@@ -1,13 +1,11 @@
 import datetime
+import time
 
 from django.contrib.auth.models import AnonymousUser, User
-from django.core.management.base import BaseCommand, CommandError
-from planapp.models import Goal, Plan, Task, Issue
 from django.core.management import call_command
-from planapp.models import Issue
+from django.core.management.base import BaseCommand, CommandError
+from planapp.models import Goal, Issue, Plan, Task
 
-
-import time
 
 class Command(BaseCommand):
     help = "creates tasks from plans"

@@ -36,9 +36,7 @@ class Command(BaseCommand):
             test_data = UserData.objects.create(user=test_user)
             test_data.save()
         g = Goal.objects.create(
-            title="test goal",
-            description="test goal description",
-            user=test_user
+            title="test goal", description="test goal description", user=test_user
         )
         g.save()
         p1 = Plan.objects.create(
@@ -60,7 +58,6 @@ class Command(BaseCommand):
             saturday=True,
         )
         p1.save()
- 
 
         self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
         self.stdout.write(self.style.SUCCESS("created test data"))

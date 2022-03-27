@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Goal, Plan, Prize, Task, TodoList, UserData, Issue
+from .models import Goal, Issue, Plan, Prize, Task, TodoList, UserData
 
 admin.site.site_url = "/"
 

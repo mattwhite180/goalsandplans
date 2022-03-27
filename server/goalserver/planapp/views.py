@@ -1,6 +1,8 @@
+import datetime
 import json
 import re
 
+from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -12,25 +14,13 @@ from django.core.management import call_command
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django import forms
-import datetime
 
-
-from .forms import (
-    BackupCreateForm,
-    ChangePointsForm,
-    GoalForm,
-    PlanForm,
-    PrizeForm,
-    QuickTaskForm,
-    RedeemPrizeForm,
-    TaskForm,
-    TodoListForm,
-    EnablePrizeForm,
-    QuickNoteForm,
-    UserDataForm,
-)
-from .models import Goal, Plan, Prize, Task, TodoList, UserData, Issue, QuickNote
+from .forms import (BackupCreateForm, ChangePointsForm, EnablePrizeForm,
+                    GoalForm, PlanForm, PrizeForm, QuickNoteForm,
+                    QuickTaskForm, RedeemPrizeForm, TaskForm, TodoListForm,
+                    UserDataForm)
+from .models import (Goal, Issue, Plan, Prize, QuickNote, Task, TodoList,
+                     UserData)
 
 
 """
@@ -327,6 +317,7 @@ def home(request):
     context["goal_list"] = goal_list
 
     return render(request, "planapp/home.html", context)
+
 
 def userdata(request):
     context = get_context(request)
