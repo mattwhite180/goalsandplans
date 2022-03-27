@@ -239,3 +239,15 @@ class QuickNote(models.Model):
 
     def __str__(self):
         return self.title + ":: " + self.description[:10]
+
+class Archive(models.Model):
+    created = models.DateTimeField("created", default=datetime.datetime.now())
+    title = models.CharField(max_length=201, default="?")
+    description = models.CharField(max_length=2001, default="?")
+
+    def consume_task(self, task):
+        self.title = task.title[:200]
+        self.description = task.description[:2000]
+
+    def get_datetime(self):
+        return str(self.created.date())

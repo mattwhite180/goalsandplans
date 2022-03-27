@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Goal, Issue, Plan, Prize, Task, TodoList, UserData
+from .models import Archive, Goal, Issue, Plan, Prize, Task, TodoList, UserData
 
 admin.site.site_url = "/"
 
@@ -63,6 +63,13 @@ class IssueAdmin(admin.ModelAdmin):
         "resolved",
     )
 
+class ArchiveAdmin(admin.ModelAdmin):
+    list_display = (
+        "created",
+        "title",
+        "description",
+    )
+
 
 admin.site.register(Goal, GoalAdmin)
 admin.site.register(Plan, PlanAdmin)
@@ -71,3 +78,4 @@ admin.site.register(TodoList, TodoListAdmin)
 admin.site.register(Prize, PrizeAdmin)
 admin.site.register(UserData, UserDataAdmin)
 admin.site.register(Issue, IssueAdmin)
+admin.site.register(Archive, ArchiveAdmin)

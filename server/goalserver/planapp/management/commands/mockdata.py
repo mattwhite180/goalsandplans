@@ -36,7 +36,7 @@ class Command(BaseCommand):
             test_data = UserData.objects.create(user=test_user)
             test_data.save()
         g = Goal.objects.create(
-            title="test goal", description="test goal description", user=test_user
+            title="test goal", description="test goal description", user=root_user
         )
         g.save()
         p1 = Plan.objects.create(
@@ -58,6 +58,32 @@ class Command(BaseCommand):
             saturday=True,
         )
         p1.save()
+
+        p2 = Plan.objects.create(
+            title="test plan",
+            description="not continuous",
+            goal=g,
+            continuous=False,
+            limit=0,
+            add_count=0,
+            default_points=1,
+            recurring_task_title="task title goes here",
+            recurring_task_description="task description goes here",
+            sunday=True,
+            monday=True,
+            tuesday=True,
+            wednesday=True,
+            thursday=True,
+            friday=True,
+            saturday=True,
+        )
+        p2.save()
+        t1 = Task.objects.create(
+            title = "test task",
+            description = "test description for task",
+            plan = p2
+        )
+        t1.save()
 
         self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
         self.stdout.write(self.style.SUCCESS("created test data"))

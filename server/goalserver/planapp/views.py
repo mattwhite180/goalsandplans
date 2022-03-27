@@ -19,7 +19,7 @@ from .forms import (BackupCreateForm, ChangePointsForm, EnablePrizeForm,
                     GoalForm, PlanForm, PrizeForm, QuickNoteForm,
                     QuickTaskForm, RedeemPrizeForm, TaskForm, TodoListForm,
                     UserDataForm)
-from .models import (Goal, Issue, Plan, Prize, QuickNote, Task, TodoList,
+from .models import (Archive, Goal, Issue, Plan, Prize, QuickNote, Task, TodoList,
                      UserData)
 
 
@@ -516,10 +516,11 @@ def delete_goal(request, goal_id):
 
     if request.user.id is g.user.id:
         for p in Plan.objects.filter(goal=g):
-            messages.warning(request, message_generator("deleted", p))
-            for t in Task.objects.filter(plan=p):
-                messages.warning(request, message_generator("deleted", t))
+            delete_plan(request, p.id)
         messages.warning(request, message_generator("deleted", g))
+        a = Archive.objects.create()
+        a.consume_task(g)
+        a.save()
         g.delete()
     else:
         unauthorized_message(request, g)
@@ -639,8 +640,11 @@ def delete_plan(request, plan_id):
 
     if request.user.id is p.user().id:
         for t in Task.objects.filter(plan=p):
-            messages.warning(request, message_generator("deleted", t))
+            delete_task(request, t.id, True)
         messages.warning(request, message_generator("deleted", p))
+        a = Archive.objects.create()
+        a.consume_task(p)
+        a.save()
         p.delete()
     else:
         unauthorized_message(request, p)
@@ -726,7 +730,7 @@ def task_remove_todo(request, task_id):
 
 
 @login_required
-def delete_task(request, task_id):
+def delete_task(request, task_id, redirect=None):
 
     context = get_context(request)
 
@@ -739,6 +743,10 @@ def delete_task(request, task_id):
     if request.user.id is t.user().id:
         messages.warning(request, message_generator("deleted", t))
         point_changer(request, t.points)
+        if not t.plan.continuous:
+            a = Archive.objects.create()
+            a.consume_task(t)
+            a.save()
         t.delete()
     else:
         unauthorized_message(request, t)
@@ -757,9 +765,10 @@ def delete_task(request, task_id):
     elif cut_url[:8] == "todolist" and todolist_id:
         return HttpResponseRedirect(reverse("todolist", args=(todolist_id,)))
     else:
-        messages.warning(
-            request, f"task redirect could not find a good match for the url: { url }"
-        )
+        if not redirect:
+            messages.warning(
+                request, f"task redirect could not find a good match for the url: { url }"
+            )
         return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
 
@@ -1090,6 +1099,9 @@ def delete_quicknote(request, quicknote_id):
 
     if request.user.id == m.user.id:
         messages.warning(request, message_generator("deleted", m))
+        a = Archive.objects.create()
+        a.consume_task(m)
+        a.save()
         m.delete()
     else:
         unauthorized_message(request, m)
