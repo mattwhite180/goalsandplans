@@ -27,6 +27,13 @@ class CronTestCase(TestCase):
             continuous=True,
             limit=1,
             add_count=1,
+            sunday=True,
+            monday=True,
+            tuesday=True,
+            wednesday=True,
+            thursday=True,
+            friday=True,
+            saturday=True,
         )
         Plan.objects.create(
             title="test plan (continuous)",
@@ -34,7 +41,14 @@ class CronTestCase(TestCase):
             goal=g,
             continuous=False,
             limit=10,
-            add_count=1,
+            add_count=10,
+            sunday=True,
+            monday=True,
+            tuesday=True,
+            wednesday=True,
+            thursday=True,
+            friday=True,
+            saturday=True,
         )
         Plan.objects.create(
             title="test plan (continuous - limit)",
@@ -42,16 +56,46 @@ class CronTestCase(TestCase):
             goal=g,
             continuous=True,
             limit=3,
-            add_count=5,
+            add_count=500,
+            sunday=True,
+            monday=True,
+            tuesday=True,
+            wednesday=True,
+            thursday=True,
+            friday=True,
+            saturday=True,
         )
         Plan.objects.create(
             title="test plan (continuous - not yet time)",
             description="This test should not create any tasks",
             goal=g,
             continuous=True,
-            limit=1,
-            add_count=1,
+            limit=1000,
+            add_count=1000,
+            last_updated=datetime.date.today(),
+            sunday=True,
+            monday=True,
+            tuesday=True,
+            wednesday=True,
+            thursday=True,
+            friday=True,
+            saturday=True,
+        )
+        Plan.objects.create(
+            title="test plan (continuous - not the right day)",
+            description="This test should not create any tasks",
+            goal=g,
+            continuous=True,
+            limit=10000,
+            add_count=10000,
             last_updated=datetime.date.today() - datetime.timedelta(days=1),
+            sunday=False,
+            monday=False,
+            tuesday=False,
+            wednesday=False,
+            thursday=False,
+            friday=False,
+            saturday=False,
         )
 
     def test_sanity_check(self):
@@ -69,9 +113,6 @@ class CronTestCase(TestCase):
             + " tasks, but counted "
             + str(val)
             + " tasks"
-            + """
-        if the number of tasks counted is over 100 then there might be an issue with the continuous flag
-        if the number of tasks counted is over 1000 then the add period might not be working"""
         )
         self.assertEqual(val, expected, errmsg)
 

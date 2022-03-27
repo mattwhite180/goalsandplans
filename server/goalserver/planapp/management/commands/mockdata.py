@@ -57,7 +57,7 @@ class Command(BaseCommand):
             wednesday=True,
             thursday=True,
             friday=True,
-            saturday=True,   
+            saturday=True,
         )
         p1.save()
  
