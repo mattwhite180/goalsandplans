@@ -16,23 +16,106 @@
 
 {% block leftcontent %}
 
-<div class="card text-center">
-  <div class="card-header">
-    <h1>Create a new goal</h1>
+  {% for item in left_list %}
+  <div class="card text-center">
+    <div class="card-header"><a href="{% url 'todolist' item.0.id %}"><h1>{{ item.0 }}</h1></a></div>
+    <div class="card-body text-left">
+      <div class="list-group form-inline">
+        {% for task in item.1 %}
+          <li class="list-group-item list-group-item-action"><a href="{% url 'task' task.id %}"><b>{{ task }}</b> ({{ task.plan }})</a>
+            <button
+            id="delete-task-left-{{ task.id }}-warning"
+            data-toggle="modal"
+            data-target="#exampleModalCenter-left-{{ task.id }}"
+            class="badge badge-danger badge-pill">
+            x
+          </button></li>
+          <div class="modal fade" id="exampleModalCenter-left-{{ task.id }}" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Delete Task</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to delete the '<b>{{ task.title }}</b>' task?</p>
+                {% if points_enabled %}
+                  <br>
+                  <p>Deleting this task will award you {{ task.points }} point(s)</p>
+                {% endif %}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="{% url 'delete_task' task.id %}" class="btn btn-primary"
+                  style="background-color: red; border-color: red;">Delete Task</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
   </div>
-  <div class="card-body">
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input id="submit" class="btn btn-primary" type="submit" value="Submit">
-    </form>
-  </div>
-</div>
+  {% endfor %}
 
 {% endblock %}
 
 {% block rightcontent %}
 
-  {% include "planapp/goal_viewmodel.html" %}
+  {% for item in right_list %}
+  <div class="card text-center">
+    <div class="card-header"><a href="{% url 'plan' item.0.id %}"><h1>{{ item.0.title }}</h1></a></div>
+    <div class="card-body text-left">
+      <div class="list-group form-inline">
+        {% for task in item.1 %}
+          <li class="list-group-item list-group-item-action">
+            <a href="{% url 'task' task.id %}">
+              <b>{{ task }}</b>
+              {% if item.2 %}
+                <buttonn class="badge badge-primary badge-pill">
+                {{ item.2 }}
+                </button>
+              {% endif %}
+            </a>
+            <button
+            id="delete-task-right-{{ task.id }}-warning"
+            data-toggle="modal"
+            data-target="#exampleModalCenter-right-{{ task.id }}"
+            class="badge badge-danger badge-pill">
+            x
+            </button></li>
+          <div class="modal fade" id="exampleModalCenter-right-{{ task.id }}" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Delete Task</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to delete the '<b>{{ task.title }}</b>' task?</p>
+                {% if points_enabled %}
+                  <br>
+                  <p>Deleting this task will award you {{ task.points }} point(s)</p>
+                {% endif %}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="{% url 'delete_task' task.id %}" class="btn btn-primary"
+                  style="background-color: red; border-color: red;">Delete Task</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 
 {% endblock %}

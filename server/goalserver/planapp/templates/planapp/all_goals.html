@@ -1,0 +1,24 @@
+{% extends "planapp/bootstrap.html" %}
+
+{% block leftcontent %}
+
+<div class="card text-center">
+  <div class="card-header">
+    <h1>Create a new goal</h1>
+  </div>
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input id="submit" class="btn btn-primary" type="submit" value="Submit">
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block rightcontent %}
+
+  {% include "planapp/goal_viewmodel.html" %}
+
+{% endblock %}

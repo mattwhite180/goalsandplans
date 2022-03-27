@@ -393,8 +393,8 @@ def change_points(request):
         form = ChangePointsForm()
 
     context["form"] = form
-    goals_list = Goal.objects.filter(user=request.user).order_by("-priority", "title")
-    context["goals_list"] = goals_list
+    goal_list = Goal.objects.filter(user=request.user).order_by("-priority", "title")
+    context["goal_list"] = goal_list
 
     return render(request, "planapp/changepoints.html", context)
 
@@ -424,6 +424,40 @@ def search_list(request):
 
     return render(request, "planapp/search-list.html", context)
 
+@login_required
+def home(request):
+    context = get_context(request)
+
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("index"))
+
+    right_list = []
+
+    goal_list = Goal.objects.filter(user=request.user)
+    plan_list = Plan.objects.filter(goal__in=goal_list).order_by("-default_priority", "title")
+    for p in plan_list:
+        taskify(p)
+        task_list = Task.objects.filter(plan=p).order_by("-priority", "title")
+        if not (p.default_todolist or task_list.count() == 0):
+            right_list.append(
+                (
+                    p,
+                    [task_list[0]] if p.continuous else task_list,
+                    task_list.count() if p.continuous else None
+                )
+            )
+
+    left_list = []
+    for todo in TodoList.objects.filter(user=request.user).order_by("-priority", "title"):
+        left_list.append(
+            (
+                todo,
+                Task.objects.filter(todolist=todo)
+            )
+        )
+    context["right_list"] = right_list
+    context["left_list"] = left_list
+    return render(request, "planapp/home.html", context)
 
 """
 #####
@@ -469,7 +503,7 @@ def goal(request, goal_id):
         if context["points_enabled"] == False:
             form.fields["default_points"].widget = forms.HiddenInput()
 
-    plan_list = Plan.objects.filter(goal=g).order_by("-default_priority", "title")
+    plan_list = Plan.objects.filter(goal=g)
     for p in plan_list:
         taskify(p)
     context["goal_list"] = goal_list
@@ -777,6 +811,8 @@ def delete_task(request, task_id, redirect=None):
         return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
     elif cut_url[:8] == "todolist" and todolist_id:
         return HttpResponseRedirect(reverse("todolist", args=(todolist_id,)))
+    elif cut_url[:4] == "home":
+        return HttpResponseRedirect(reverse("home"))
     else:
         if not redirect:
             messages.warning(
