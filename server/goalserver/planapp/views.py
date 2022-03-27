@@ -446,7 +446,7 @@ def home(request):
 
     left_list = []
     for todo in TodoList.objects.filter(user=request.user).order_by("-priority", "title"):
-        task_list = Task.objects.filter(todolist=todo)
+        task_list = Task.objects.filter(todolist=todo).order_by("-priority", "title")
         if task_list.count() > 0:
             task_values = []
             task_todolist = []
