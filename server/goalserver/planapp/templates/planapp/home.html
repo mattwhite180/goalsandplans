@@ -29,12 +29,11 @@
             id="delete-task-left-{{ task.0.id }}-warning"
             data-toggle="modal"
             data-target="#exampleModalCenter-left-{{ task.0.id }}"
-            class="btn btn-danger btn-sm">
+            class="badge badge-danger badge">
             x
           </button>
-          <p style="float:right">&nbsp&nbsp</p>
           {% if task.1 %}
-            <button style="float:right" class="btn btn-secondary btn-sm">
+            <button style="float:right; margin-right:10px" class="badge badge-primary badge">
               {{ task.1 }}
             </button>
           {% endif %}
@@ -58,7 +57,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a href="{% url 'delete_task' task.0.id %}" class="btn btn-primary btn-sm"
+                <a href="{% url 'delete_task' task.0.id %}" class="btn btn-primary btn"
                   style="background-color: red; border-color: red;">Delete Task</a>
               </div>
             </div>
@@ -97,12 +96,11 @@
               id="delete-task-right-{{ task.id }}-warning"
               data-toggle="modal"
               data-target="#exampleModalCenter-right-{{ task.id }}"
-              class="btn btn-danger btn-sm">
+              class="badge badge-danger badge">
               x
             </button>
-            <p style="float:right">&nbsp&nbsp</p>
             {% if item.2 %}
-              <button style="float:right" class="btn btn-primary btn-sm">
+            <button style="float:right; margin-right:10px" class="badge badge-primary badge">
               {{ item.2 }}
               </button>
             {% endif %}
