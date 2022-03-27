@@ -600,6 +600,8 @@ def plan_create_task(request, plan_id):
         plan=p,
         points=p.default_points,
     )
+    if p.default_todolist:
+        newT.todolist = p.default_todolist
     newT.save()
     if context["points_enabled"]:
         point_changer(request, 1)

@@ -39,6 +39,12 @@ class Command(BaseCommand):
             title="test goal", description="test goal description", user=root_user
         )
         g.save()
+        todo1 = TodoList.objects.create(
+            title="todolist A",
+            description="description of todolist A",
+            user = root_user
+        )
+        todo1.save()
         p1 = Plan.objects.create(
             title="test plan (continuous)",
             description="this should increase the task count by 5",
@@ -47,6 +53,7 @@ class Command(BaseCommand):
             limit=5,
             add_count=2,
             default_points=1,
+            default_todolist=todo1,
             recurring_task_title="task title goes here",
             recurring_task_description="task description goes here",
             sunday=True,
@@ -58,7 +65,6 @@ class Command(BaseCommand):
             saturday=True,
         )
         p1.save()
-
         p2 = Plan.objects.create(
             title="test plan",
             description="not continuous",
