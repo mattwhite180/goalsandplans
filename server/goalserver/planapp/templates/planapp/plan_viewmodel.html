@@ -47,32 +47,32 @@
         {% if plan.continuous and not plan.keep_at_limit %}
           {% if plan.sunday %}
             <div id="plan-{{ plan.id }}-sunday" class="card-text">
-              <span class="badge badge-pill badge-secondary">Sunday</span>
+              <span class="badge badge-pill badge-dark">Sunday</span>
             </div>
           {% endif %}
           {% if plan.monday %}
             <div id="plan-{{ plan.id }}-monday" class="card-text">
-              <span class="badge badge-pill badge-secondary">Monday</span>
+              <span class="badge badge-pill badge-danger">Monday</span>
             </div>
           {% endif %}
           {% if plan.tuesday %}
             <div id="plan-{{ plan.id }}-tuesday" class="card-text">
-              <span class="badge badge-pill badge-secondary">Tuesday</span>
+              <span class="badge badge-pill badge-warning">Tuesday</span>
             </div>
           {% endif %}
           {% if plan.wednesday %}
             <div id="plan-{{ plan.id }}-wednesday" class="card-text">
-              <span class="badge badge-pill badge-secondary">Wednesday</span>
+              <span class="badge badge-pill badge-success">Wednesday</span>
             </div>
           {% endif %}
           {% if plan.thursday %}
             <div id="plan-{{ plan.id }}-thursday" class="card-text">
-              <span class="badge badge-pill badge-secondary">Thursday</span>
+              <span class="badge badge-pill badge-info">Thursday</span>
             </div>
           {% endif %}
           {% if plan.friday %}
             <div id="plan-{{ plan.id }}-friday" class="card-text">
-              <span class="badge badge-pill badge-secondary">Friday</span>
+              <span class="badge badge-pill badge-primary">Friday</span>
             </div>
           {% endif %}
           {% if plan.saturday %}
