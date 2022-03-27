@@ -16,6 +16,7 @@
 
 {% block leftcontent %}
 
+  {% if left_list %}
   {% for item in left_list %}
   <div class="card text-center">
     <div class="card-header"><a href="{% url 'todolist' item.0.id %}"><h1>{{ item.0 }}</h1></a></div>
@@ -61,10 +62,17 @@
   </div>
   {% endfor %}
 
+  {% else %}
+  <div class="card text-center">
+    <div class="card-header">There are no todolists that have any tasks. <a href="{% url 'task_todo' %}">click here</a> to get started</div>
+  </div>
+  {% endif %}
+
 {% endblock %}
 
 {% block rightcontent %}
 
+  {% if right_list %}
   {% for item in right_list %}
   <div class="card text-center">
     <div class="card-header"><a href="{% url 'plan' item.0.id %}"><h1>{{ item.0.title }}</h1></a></div>
@@ -117,5 +125,12 @@
     </div>
   </div>
   {% endfor %}
+
+  {% else %}
+  <div class="card text-center">
+    <div class="card-header">You do not have any plans created. <a href="{% url 'all_goals' %}">click here</a> to get started</div>
+  </div>
+    <p>
+  {% endif %}
 
 {% endblock %}

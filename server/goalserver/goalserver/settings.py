@@ -189,7 +189,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = "all_goals"
+LOGIN_REDIRECT_URL = "home"
 
 LOGOUT_REDIRECT_URL = "index"
 

@@ -241,7 +241,6 @@ def point_changer(request, points):
     else:
         return False
 
-
 """
 #####
 Non-model views
@@ -449,12 +448,13 @@ def home(request):
 
     left_list = []
     for todo in TodoList.objects.filter(user=request.user).order_by("-priority", "title"):
-        left_list.append(
-            (
-                todo,
-                Task.objects.filter(todolist=todo)
+        if Task.objects.filter(todolist=todo).count() > 0:
+            left_list.append(
+                (
+                    todo,
+                    Task.objects.filter(todolist=todo)
+                )
             )
-        )
     context["right_list"] = right_list
     context["left_list"] = left_list
     return render(request, "planapp/home.html", context)

@@ -1,6 +1,11 @@
 <ul class="nav justify-content-center">
   {% if user.is_authenticated %}
     <li class="nav-item navbar-brand">
+      <a class="nav-link active" href="{% url 'home' %}">
+        <span class="badge badge-pill badge-primary">Home</span>
+      </a>
+    </li>
+    <li class="nav-item navbar-brand">
       <a class="nav-link active" href="{% url 'all_goals' %}">
         <span class="badge badge-pill badge-success">View All Goals</span>
       </a>
