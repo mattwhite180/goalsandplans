@@ -16,12 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.static import serve
+from django.conf.urls import (
+    handler400, handler403, handler404, handler500
+)
 
 from . import settings
+
+handler404 = 'planapp.views.custom_error_handle'
+handler500 = 'planapp.views.custom_error_handle'
+handler403 = 'planapp.views.custom_error_handle'
+handler400 = 'planapp.views.custom_error_handle'
 
 urlpatterns = [
     path("", include("planapp.urls")),
     path("admin/", admin.site.urls),
     re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
 ]
-handler404 = "planapp.views.handler404"

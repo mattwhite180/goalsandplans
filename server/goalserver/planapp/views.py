@@ -282,12 +282,13 @@ def run_jobs(request):
     return redirect("home")
 
 
-def handler404(request, exception=None):
+def custom_error_handle(request, exception=None):
+    s = str(request)
     i = Issue.objects.create(
-        obj_info="n/a", where="404", exception_string=str(exception)
+        obj_info="n/a", where="custom error handling", exception_string=s,
     )
     i.save()
-    messages.error(request, "404: Page not found. Redirecting to home")
+    messages.error(request, "An exception occurred at " + str(s))
     return HttpResponseRedirect(reverse("home"))
 
 
