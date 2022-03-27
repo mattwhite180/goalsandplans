@@ -20,22 +20,25 @@
   {% for item in left_list %}
   <div class="card text-center">
     <div class="card-header"><a href="{% url 'todolist' item.0.id %}"><h1>{{ item.0 }}</h1></a></div>
-    <div class="card-body text-left">
+    <div class="card-body">
       <div class="list-group form-inline">
         {% for task in item.1 %}
-          <li class="list-group-item list-group-item-action"><a href="{% url 'task' task.0.id %}"><b>{{ task.0 }}</b> ({{ task.0.plan }})</a>
-          {% if task.1 %}
-            <button class="badge badge-primary badge-pill">
-            {{ task.1 }}
-            </button>
-          {% endif %}
+          <li class="list-group-item list-group-item-action text-left"><a href="{% url 'task' task.0.id %}"><b>{{ task.0 }}</b> ({{ task.0.plan }})</a>
           <button
+            style="float:right"
             id="delete-task-left-{{ task.0.id }}-warning"
             data-toggle="modal"
             data-target="#exampleModalCenter-left-{{ task.0.id }}"
-            class="badge badge-danger badge-pill">
+            class="btn btn-danger btn-sm">
             x
-          </button></li>
+          </button>
+          <p style="float:right">&nbsp&nbsp</p>
+          {% if task.1 %}
+            <button style="float:right" class="btn btn-secondary btn-sm">
+              {{ task.1 }}
+            </button>
+          {% endif %}
+          </li>
           <div class="modal fade" id="exampleModalCenter-left-{{ task.0.id }}" tabindex="-1" role="dialog"
           aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
@@ -55,7 +58,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a href="{% url 'delete_task' task.0.id %}" class="btn btn-primary"
+                <a href="{% url 'delete_task' task.0.id %}" class="btn btn-primary btn-sm"
                   style="background-color: red; border-color: red;">Delete Task</a>
               </div>
             </div>
@@ -88,19 +91,22 @@
           <li class="list-group-item list-group-item-action">
             <a href="{% url 'task' task.id %}">
               <b>{{ task }}</b>
-              {% if item.2 %}
-                <button class="badge badge-primary badge-pill">
-                {{ item.2 }}
-                </button>
-              {% endif %}
             </a>
             <button
-            id="delete-task-right-{{ task.id }}-warning"
-            data-toggle="modal"
-            data-target="#exampleModalCenter-right-{{ task.id }}"
-            class="badge badge-danger badge-pill">
-            x
-            </button></li>
+              style="float:right"
+              id="delete-task-right-{{ task.id }}-warning"
+              data-toggle="modal"
+              data-target="#exampleModalCenter-right-{{ task.id }}"
+              class="btn btn-danger btn-sm">
+              x
+            </button>
+            <p style="float:right">&nbsp&nbsp</p>
+            {% if item.2 %}
+              <button style="float:right" class="btn btn-primary btn-sm">
+              {{ item.2 }}
+              </button>
+            {% endif %}
+            </li>
           <div class="modal fade" id="exampleModalCenter-right-{{ task.id }}" tabindex="-1" role="dialog"
           aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">

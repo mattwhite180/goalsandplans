@@ -97,7 +97,7 @@ class Command(BaseCommand):
         )
         newtt.save()
         p2 = Plan.objects.create(
-            title="test plan",
+            title="test plan right side",
             description="not continuous",
             goal=g,
             continuous=False,
@@ -119,6 +119,26 @@ class Command(BaseCommand):
             title="test task", description="test description for task", plan=p2
         )
         t1.save()
+
+        p3 = Plan.objects.create(
+            title="test plan right side multiple",
+            description="not continuous",
+            goal=g,
+            continuous=True,
+            limit=3,
+            add_count=3,
+            default_points=1,
+            recurring_task_title="task title goes here",
+            recurring_task_description="task description goes here",
+            sunday=True,
+            monday=True,
+            tuesday=True,
+            wednesday=True,
+            thursday=True,
+            friday=True,
+            saturday=True,
+        )
+        p3.save()
 
         self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
         self.stdout.write(self.style.SUCCESS("created test data"))
