@@ -16,7 +16,7 @@
   {% if data %}
     <div class="card-body">
       <a id="copy" onclick="copyToClipboard('data')" class="btn btn-primary">Copy</a>
-      <a id="home" href="{% url 'home' %}" class="btn btn-primary" style="background-color: orange; border-color: orange;">Home</a>
+      <a id="all_goals" href="{% url 'all_goals' %}" class="btn btn-primary" style="background-color: orange; border-color: orange;">all_goals</a>
       <p id="data">{{ data }}</p>
     </div>
   {% endif %}

@@ -94,7 +94,7 @@ def planify(request):
     if request.user.is_superuser or request.user.is_staff:
         call_command("planify")
         messages.success(request, "planify command ran")
-    return HttpResponseRedirect(reverse("home"))
+    return HttpResponseRedirect(reverse("all_goals"))
 
 
 def taskify(plan):
@@ -161,11 +161,11 @@ def enable_prizes(request):
                     request,
                     "enabled/disabled the user " + str(ud.user.username) + "'s point",
                 )
-                return HttpResponseRedirect(reverse("home"))
+                return HttpResponseRedirect(reverse("all_goals"))
         form = EnablePrizeForm()
         context["form"] = form
         return render(request, "planapp/formedit.html", context)
-    return HttpResponseRedirect(reverse("home"))
+    return HttpResponseRedirect(reverse("all_goals"))
 
 
 def create_backup(request):
@@ -185,7 +185,7 @@ def create_backup(request):
 
         return render(request, "planapp/backup.html", context)
     else:
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
 
 def message_generator(verb, obj):
@@ -262,7 +262,7 @@ def create_account(request):
             user_data.save()
             login(request, u)
             messages.success(request, message_generator("created", u))
-            return redirect("home")
+            return redirect("all_goals")
 
         else:
             context["error_list"] = get_errors(form)
@@ -279,7 +279,7 @@ def run_jobs(request):
     for plan in Plan.objects.filter(continuous=True):
         count += taskify(plan)
     messages.success(request, "ran taskify. created " + str(count) + " tasks")
-    return redirect("home")
+    return redirect("all_goals")
 
 
 def custom_error_handle(request, exception=None):
@@ -289,7 +289,7 @@ def custom_error_handle(request, exception=None):
     )
     i.save()
     messages.error(request, "An exception occurred at " + str(s))
-    return HttpResponseRedirect(reverse("home"))
+    return HttpResponseRedirect(reverse("all_goals"))
 
 
 def index(request):
@@ -303,8 +303,7 @@ def about(request):
 
     return render(request, "planapp/about.html", context)
 
-
-def home(request):
+def all_goals(request):
     context = get_context(request)
 
     if not request.user.is_authenticated:
@@ -329,7 +328,7 @@ def home(request):
     goal_list = Goal.objects.filter(user=request.user).order_by("-priority", "title")
     context["goal_list"] = goal_list
 
-    return render(request, "planapp/home.html", context)
+    return render(request, "planapp/all_goals.html", context)
 
 
 def userdata(request):
@@ -348,7 +347,7 @@ def userdata(request):
             ud = form.save(commit=False)
             ud.save()
             messages.info(request, "edited user data")
-            return HttpResponseRedirect(reverse("home"))
+            return HttpResponseRedirect(reverse("all_goals"))
         else:
             context["error_list"] = get_errors(form)
 
@@ -386,7 +385,7 @@ def change_points(request):
                     + str(amount)
                 ),
             )
-            return HttpResponseRedirect(reverse("home"))
+            return HttpResponseRedirect(reverse("all_goals"))
         else:
             context["error_list"] = get_errors(form)
 
@@ -439,13 +438,13 @@ def goal(request, goal_id):
     goal_list = Goal.objects.filter(id=goal_id)
     if len(goal_list) == 0:
         messages.error(request, f"could not find goal of id: { goal_id }")
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     g = goal_list[0]
 
     if request.user.id is not g.user.id:
         unauthorized_message(request, g)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
 
@@ -488,7 +487,7 @@ def edit_goal(request, goal_id):
 
     if request.user.id is not g.user.id:
         unauthorized_message(request, g)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
         # form = GoalForm(request.POST or None, request.FILES or None)
@@ -509,7 +508,7 @@ def edit_goal(request, goal_id):
     context["form"] = form
     context["form_title"] = "edit goal (" + str(g.title) + ")"
     return render(request, "planapp/formedit.html", context)
-    # return HttpResponseRedirect(reverse(home))
+    # return HttpResponseRedirect(reverse(all_goals))
 
 
 @login_required
@@ -529,7 +528,7 @@ def delete_goal(request, goal_id):
     else:
         unauthorized_message(request, g)
 
-    return HttpResponseRedirect(reverse("home"))
+    return HttpResponseRedirect(reverse("all_goals"))
 
 
 """
@@ -547,12 +546,12 @@ def plan(request, plan_id):
         taskify(p)
     if len(plan_list) == 0:
         messages.error(request, f"could not find plan of id: { plan_id }")
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
     p = plan_list[0]
 
     if request.user.id is not p.user().id:
         unauthorized_message(request, p)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
 
@@ -591,7 +590,7 @@ def plan_create_task(request, plan_id):
 
     if request.user.id is not p.user().id:
         unauthorized_message(request, p)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     newT = Task.objects.create(
         title=p.recurring_task_title,
@@ -616,7 +615,7 @@ def edit_plan(request, plan_id):
 
     if request.user.id is not p.user().id:
         unauthorized_message(request, p)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
         # form = GoalForm(request.POST or None, request.FILES or None)
@@ -675,12 +674,12 @@ def task(request, task_id):
     task_list = Task.objects.filter(id=task_id)
     if len(task_list) == 0:
         messages.error(request, f"could not find task of id: { task_id }")
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
     t = task_list[0]
 
     if request.user.id is not t.user().id:
         unauthorized_message(request, t)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     context["task_list"] = task_list
     return render(request, "planapp/task.html", context)
@@ -694,7 +693,7 @@ def edit_task(request, task_id):
 
     if request.user.id is not t.user().id:
         unauthorized_message(request, t)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
         # form = GoalForm(request.POST or None, request.FILES or None)
@@ -734,7 +733,7 @@ def task_remove_todo(request, task_id):
 
     if request.user.id is not t.user().id:
         unauthorized_message(request, t)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     t.todolist = None
     t.save()
@@ -800,7 +799,7 @@ def quick_task(request):
             t.user = request.user
             t.save()
             messages.info(request, message_generator("created", t))
-            return HttpResponseRedirect(reverse("home"))
+            return HttpResponseRedirect(reverse("all_goals"))
         else:
             context["error_list"] = get_errors(form)
 
@@ -869,12 +868,12 @@ def todolist(request, todo_id):
     todolist_list = TodoList.objects.filter(id=todo_id)
     if len(todolist_list) == 0:
         messages.error(request, f"could not find todolist of id: { todolist_list }")
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
     m = todolist_list[0]
 
     if m.user.id != request.user.id:
         unauthorized_message(request, m)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     goal_list = Goal.objects.filter(user=request.user)
     for p in Plan.objects.filter(goal__in=goal_list):
@@ -893,7 +892,7 @@ def edit_todolist(request, todo_id):
 
     if request.user.id != m.user.id:
         unauthorized_message(request, m)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
         # form = GoalForm(request.POST or None, request.FILES or None)
@@ -972,7 +971,7 @@ def redeem_prize(request, prize_id):
 
     if request.user.id != p.user.id:
         unauthorized_message(request, p)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
 
@@ -1003,7 +1002,7 @@ def edit_prize(request, prize_id):
 
     if request.user.id != p.user.id:
         unauthorized_message(request, p)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
         # form = GoalForm(request.POST or None, request.FILES or None)
@@ -1085,7 +1084,7 @@ def edit_quicknote(request, quicknote_id):
 
     if request.user.id != m.user.id:
         unauthorized_message(request, m)
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("all_goals"))
 
     if request.method == "POST":
         # form = GoalForm(request.POST or None, request.FILES or None)
