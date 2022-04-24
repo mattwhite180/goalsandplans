@@ -687,6 +687,9 @@ def edit_plan(request, plan_id):
 
     else:
         form = PlanForm(instance=p)
+        form.fields["goal"].queryset = Goal.objects.filter(user=request.user).order_by(
+            "title"
+        )
         if context["points_enabled"] == False:
             form.fields["default_points"].widget = forms.HiddenInput()
 
