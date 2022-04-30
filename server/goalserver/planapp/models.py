@@ -205,9 +205,6 @@ class Prize(models.Model):
     def is_due_soon(self):
         return self.due < timezone.now() + datetime.timedelta(days=2)
 
-    def __str__(self):
-        return self.title
-
 
 class Issue(models.Model):
     obj_info = models.CharField(max_length=2000, default="?")
@@ -254,3 +251,13 @@ class Archive(models.Model):
 
     def get_datetime(self):
         return str(self.created.date())
+
+
+class Pic(models.Model):
+    title = models.CharField(max_length=300)
+    url = models.CharField(max_length=300)
+    description = models.CharField(max_length=2000, default="?")
+    attribute = models.CharField(max_length=300)
+
+    def __str__(self):
+        return self.title

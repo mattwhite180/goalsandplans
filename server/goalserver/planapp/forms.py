@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import AnonymousUser, User
 from django.forms import ModelForm
 
-from .models import Goal, Plan, Prize, QuickNote, Task, TodoList, UserData
+from .models import Goal, Plan, Prize, QuickNote, Task, TodoList, UserData, Pic
 
 
 class GoalForm(forms.ModelForm):
@@ -118,3 +118,12 @@ class BackupCreateForm(forms.Form):
 class EnablePrizeForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
     choice = forms.BooleanField()
+
+
+class PicForm(forms.ModelForm):
+    class Meta:
+        model = Pic
+        fields = ("title", "url", "description", "attribute")
+        widgets = {
+            "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
+        }

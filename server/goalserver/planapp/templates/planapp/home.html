@@ -26,7 +26,7 @@
     <div class="card-body">
       <div class="list-group form-inline">
         {% for task in item.1 %}
-          <li class="list-group-item list-group-item-action text-left"><a class="text-dark" href="{% url 'task' task.0.id %}"><b>{{ task.0 }}</b> ({{ task.0.plan }})</a>
+          <li class="list-group-item list-group-item-action text-left"><a class="text-dark" href="{% url 'task' task.0.id %}"><img src="https://cdn-icons-png.flaticon.com/512/3004/3004458.png" alt="Italian Trulli"><b>{{ task.0 }}</b> ({{ task.0.plan }})</a>
           <button
             style="float:right"
             id="delete-task-left-{{ task.0.id }}-warning"
@@ -78,6 +78,8 @@
     <div class="card-header">There are no todolists that have any tasks. <a href="{% url 'task_todo' %}">click here</a> to get started</div>
   </div>
   {% endif %}
+
+  <a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Freepik - Flaticon</a>
 
 {% endblock %}
 
