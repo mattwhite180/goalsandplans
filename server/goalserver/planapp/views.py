@@ -431,7 +431,7 @@ def home(request):
     right_list = []
 
     goal_list = Goal.objects.filter(user=request.user)
-    plan_list = Plan.objects.filter(goal__in=goal_list).order_by("-default_priority", "title")
+    plan_list = Plan.objects.filter(goal__in=goal_list).filter(hide_from_homepage=False).order_by("-default_priority", "title")
     for p in plan_list:
         taskify(p)
         task_list = Task.objects.filter(plan=p).order_by("-priority", "title")
@@ -445,7 +445,7 @@ def home(request):
             )
 
     left_list = []
-    for todo in TodoList.objects.filter(user=request.user).order_by("-priority", "title"):
+    for todo in TodoList.objects.filter(user=request.user).filter(hide_from_homepage=False).order_by("-priority", "title"):
         task_list = Task.objects.filter(todolist=todo).order_by("-priority", "title")
         if task_list.count() > 0:
             task_values = []

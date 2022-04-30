@@ -92,6 +92,7 @@ class TodoList(models.Model):
     priority = models.CharField(
         max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
+    hide_from_homepage = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -121,6 +122,7 @@ class Plan(models.Model):
     default_todolist = models.ForeignKey(
         TodoList, models.SET_NULL, blank=True, null=True
     )
+    hide_from_homepage = models.BooleanField(default=False)
     keep_at_limit = models.BooleanField(default=False)
     sunday = models.BooleanField(default=False)
     monday = models.BooleanField(default=False)

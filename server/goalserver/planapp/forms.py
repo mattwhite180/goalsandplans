@@ -27,6 +27,7 @@ class PlanForm(forms.ModelForm):
             "add_count",
             "tasks_expire",
             "keep_at_limit",
+            "hide_from_homepage",
             "sunday",
             "monday",
             "tuesday",
@@ -72,7 +73,7 @@ class TaskForm(forms.ModelForm):
 class TodoListForm(forms.ModelForm):
     class Meta:
         model = TodoList
-        fields = ("title", "description", "priority")
+        fields = ("title", "description", "priority", "hide_from_homepage")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Goal.PriorityLevels),
