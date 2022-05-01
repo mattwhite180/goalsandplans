@@ -21,7 +21,6 @@ class Command(BaseCommand):
                     t.points = p.default_points
                     t.todolist = p.default_todolist
                     t.priority = p.default_priority
-                    t.pic = p.default_pic
                     t.save()
         except:
             raise CommandError("error running planify.py")

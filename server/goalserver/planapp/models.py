@@ -75,7 +75,7 @@ class Goal(models.Model):
         max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    default_pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -203,6 +203,15 @@ class Task(models.Model):
 
     def user(self):
         return self.plan.goal.user
+
+    def get_pic(self):
+        if self.pic:
+            return self.pic
+        elif self.plan.default_pic:
+            return self.plan.default_pic
+        elif self.plan.goal.default_pic:
+            return self.plan.goal.default_pic
+        return False
 
 
 class Prize(models.Model):

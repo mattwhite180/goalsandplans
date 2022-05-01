@@ -8,7 +8,7 @@ from .models import Goal, Plan, Prize, QuickNote, Task, TodoList, UserData, Pic
 class GoalForm(forms.ModelForm):
     class Meta:
         model = Goal
-        fields = ("title", "description", "priority")
+        fields = ("title", "description", "priority", "default_pic")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Goal.PriorityLevels),

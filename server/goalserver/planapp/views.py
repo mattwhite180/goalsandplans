@@ -329,6 +329,7 @@ def all_goals(request):
 
     else:
         form = GoalForm()
+        form.fields["default_pic"].queryset = Pic.objects.all().order_by("title")
 
     context["form"] = form
     goal_list = Goal.objects.filter(user=request.user).order_by("-priority", "title")
@@ -562,6 +563,7 @@ def edit_goal(request, goal_id):
 
     else:
         form = GoalForm(instance=g)
+        form.fields["default_pic"].queryset = Pic.objects.all().order_by("title")
 
     context["form"] = form
     context["form_title"] = "edit goal (" + str(g.title) + ")"
