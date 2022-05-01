@@ -103,8 +103,8 @@
         {% for task in item.1 %}
           <li class="list-group-item list-group-item-action">
             <a class="text-dark" href="{% url 'task' task.id %}">
-              {% if task.0.pic %}
-              <img src="{% static task.0.pic.url %}" alt="{{ task.0.pic.title }}">
+              {% if task.pic %}
+              <img src="{% static task.pic.url %}" alt="{{ task.pic.title }}">
               {% else %}
               <img src="{% static default_pic.url %}" alt="{{ default_pic.title }}">
               {% endif %}
