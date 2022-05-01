@@ -226,6 +226,16 @@ class Command(BaseCommand):
             )
             coffee_cup.save()
             pic_count += 1
+        if "tea" not in pic_list:
+            tea = Pic.objects.create(
+                title = "tea",
+                url = "planapp/images/tea.png",
+                attr_link = "https://www.flaticon.com/free-icons/food",
+                attr_title = "tea icons",
+                attr_description = "Tea icons created by Freepik - Flaticon"
+            )
+            tea.save()
+            pic_count += 1
 
         self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
         self.stdout.write(self.style.SUCCESS(f"created { pic_count } pic(s)"))
