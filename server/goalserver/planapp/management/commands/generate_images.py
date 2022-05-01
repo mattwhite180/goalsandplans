@@ -186,6 +186,46 @@ class Command(BaseCommand):
             )
             todo.save()
             pic_count += 1
+        if "eye" not in pic_list:
+            eye = Pic.objects.create(
+                title = "eye",
+                url = "planapp/images/eye.png",
+                attr_link = "https://www.flaticon.com/free-icons/eye",
+                attr_title = "eye icons",
+                attr_description = "Eye icons created by Freepik - Flaticon"
+            )
+            eye.save()
+            pic_count += 1
+        if "notebook" not in pic_list:
+            notebook = Pic.objects.create(
+                title = "notebook",
+                url = "planapp/images/notebook.png",
+                attr_link = "https://www.flaticon.com/free-icons/notebook",
+                attr_title = "notebook icons",
+                attr_description = "Notebook icons created by Freepik - Flaticon"
+            )
+            notebook.save()
+            pic_count += 1
+        if "coffee_mug" not in pic_list:
+            coffee_mug = Pic.objects.create(
+                title = "coffee_mug",
+                url = "planapp/images/coffee_mug.png",
+                attr_link = "https://www.flaticon.com/free-icons/food",
+                attr_title = "food icons",
+                attr_description = "Food icons created by Freepik - Flaticon"
+            )
+            coffee_mug.save()
+            pic_count += 1
+        if "coffee_cup" not in pic_list:
+            coffee_cup = Pic.objects.create(
+                title = "coffee_cup",
+                url = "planapp/images/coffee_cup.png",
+                attr_link = "https://www.flaticon.com/free-icons/food",
+                attr_title = "food icons",
+                attr_description = "Coffee icons created by Freepik - Flaticon"
+            )
+            coffee_cup.save()
+            pic_count += 1
 
         self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
         self.stdout.write(self.style.SUCCESS(f"created { pic_count } pic(s)"))

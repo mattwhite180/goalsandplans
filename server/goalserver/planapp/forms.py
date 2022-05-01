@@ -100,7 +100,7 @@ class QuickNoteForm(forms.ModelForm):
 class UserDataForm(forms.ModelForm):
     class Meta:
         model = UserData
-        fields = ("dark", "points_enabled", "points")
+        fields = ("dark", "points_enabled", "points", "default_pic")
 
 
 class ChangePointsForm(forms.Form):

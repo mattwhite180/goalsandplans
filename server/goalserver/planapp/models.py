@@ -5,12 +5,22 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+class Pic(models.Model):
+    title = models.CharField(max_length=300)
+    url = models.CharField(max_length=300)
+    attr_link = models.CharField(max_length=200, default="?")
+    attr_title = models.CharField(max_length=300)
+    attr_description = models.CharField(max_length=300)
+
+    def __str__(self):
+        return self.title
 
 class UserData(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
     points_enabled = models.BooleanField(default=False)
     dark = models.BooleanField(default=False)
+    default_pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
 
     def pull_report(self, *args, **kwargs):
         report = dict()
@@ -50,16 +60,6 @@ class UserData(models.Model):
         if self.points_enabled:
             report["points_count"] = self.points
         return report
-
-class Pic(models.Model):
-    title = models.CharField(max_length=300)
-    url = models.CharField(max_length=300)
-    attr_link = models.CharField(max_length=200, default="?")
-    attr_title = models.CharField(max_length=300)
-    attr_description = models.CharField(max_length=300)
-
-    def __str__(self):
-        return self.title
 
 class Goal(models.Model):
     class PriorityLevels(models.TextChoices):

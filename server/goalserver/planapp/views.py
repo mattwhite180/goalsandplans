@@ -23,7 +23,7 @@ from .forms import (BackupCreateForm, ChangePointsForm, EnablePrizeForm,
 from .models import (Archive, Goal, Issue, Plan, Prize, QuickNote, Task,
                      TodoList, UserData, Pic)
 
-DEFAULT_PIC_TITLE = "check"
+DEFAULT_PIC_TITLE = "todo"
 
 """
 #####
@@ -64,18 +64,21 @@ def get_context(request):
     context = {}
     context["is_mobile"] = mobile(request)
     context["debug"] = debug()
-    default_pic_list = Pic.objects.filter(title=DEFAULT_PIC_TITLE)
-    if len(default_pic_list) == 0:
-        context["default_pic"] = Pic.objects.all()[0]
-    else:
-        context["default_pic"] = default_pic_list[0]
-    context["pic_list"] = Pic.objects.all()
     if request.user.is_authenticated:
         if UserData.objects.filter(user=request.user).count() > 0:
             ud = UserData.objects.get(user=request.user)
         else:
             ud = UserData.objects.create(user=request.user)
         context["user_data"] = ud.pull_report()
+        if ud.default_pic:
+            context["default_pic"] = ud.default_pic
+        else:
+            default_pic_list = Pic.objects.filter(title=DEFAULT_PIC_TITLE)
+            if len(default_pic_list) == 0:
+                context["default_pic"] = Pic.objects.all()[0]
+            else:
+                context["default_pic"] = default_pic_list[0]
+        context["pic_list"] = Pic.objects.all()
         context["points_enabled"] = ud.points_enabled
         context["dark"] = ud.dark
     return context
