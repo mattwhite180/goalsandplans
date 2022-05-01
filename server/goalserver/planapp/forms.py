@@ -54,7 +54,7 @@ class PlanForm(forms.ModelForm):
 class QuickTaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ("title", "description", "points", "priority", "todolist", "plan", "pic")
+        fields = ("title", "description", "points", "priority", "todolist", "plan")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Task.PriorityLevels),
@@ -74,7 +74,7 @@ class TaskForm(forms.ModelForm):
 class TodoListForm(forms.ModelForm):
     class Meta:
         model = TodoList
-        fields = ("title", "description", "priority", "hide_from_homepage", "pic")
+        fields = ("title", "description", "priority", "hide_from_homepage")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Goal.PriorityLevels),
@@ -84,7 +84,7 @@ class TodoListForm(forms.ModelForm):
 class PrizeForm(forms.ModelForm):
     class Meta:
         model = Prize
-        fields = ("title", "description", "points", "pic")
+        fields = ("title", "description", "points")
         widgets = {"description": forms.Textarea(attrs={"cols": 20, "rows": 10})}
 
 

@@ -75,7 +75,7 @@ class Goal(models.Model):
         max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
+
 
     def __str__(self):
         return self.title
@@ -103,7 +103,6 @@ class TodoList(models.Model):
         max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
     hide_from_homepage = models.BooleanField(default=False)
-    pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -211,7 +210,6 @@ class Prize(models.Model):
     description = models.CharField(max_length=2000, default="?")
     points = models.IntegerField(default=1, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title

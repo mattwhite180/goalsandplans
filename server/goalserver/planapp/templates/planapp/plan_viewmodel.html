@@ -1,3 +1,5 @@
+{% load static %}
+
 <p class="text-center">
   <button id="help" class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapsePlan"
     aria-expanded="false" aria-controls="collapsePlan">
@@ -43,6 +45,9 @@
           <div id="plan-{{ plan.id }}-currentcount" class="card-text">Current Count: <span class="badge badge-pill badge-danger">{{ plan.task_count }}</span></div>
           <div id="plan-{{ plan.id }}-priority" class="card-text">Default Priority: <span class="badge badge-pill badge-warning">
             {{ plan.default_priority|slice:"2:" }}</span></div>
+        {% endif %}
+        {% if plan.default_pic %}
+          <div>Pic: <img src="{% static plan.default_pic.url %}" alt="{{ plan.default_pic.title }}"></div>
         {% endif %}
         {% if plan.continuous and not plan.keep_at_limit %}
           {% if plan.sunday %}

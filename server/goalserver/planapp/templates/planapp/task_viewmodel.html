@@ -1,3 +1,5 @@
+{% load static %}
+
 <p class="text-center">
   <button id="task-help-button" class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseExample-task"
     aria-expanded="false" aria-controls="collapseExample">
@@ -20,6 +22,9 @@
         </div>
         {% if points_enabled %}
           <div id="task-{{ task.id }}-points" class="card-text">Points: <span class="badge badge-pill badge-primary">{{ task.points }}</span></div>
+        {% endif %}
+        {% if task.pic %}
+          <div>Pic: <img src="{% static task.pic.url %}" alt="{{ task.pic.title }}"></div>
         {% endif %}
         {% if task.todolist %}
           <div class="card-text task-todo">TodoList: <span class="badge badge-pill badge-secondary">{{ task.todolist }}</span></div>
