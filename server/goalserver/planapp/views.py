@@ -14,14 +14,16 @@ from django.core.management import call_command
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.db.models import Q
 
 from .forms import (BackupCreateForm, ChangePointsForm, EnablePrizeForm,
                     GoalForm, PlanForm, PrizeForm, QuickNoteForm,
                     QuickTaskForm, RedeemPrizeForm, TaskForm, TodoListForm,
                     UserDataForm)
 from .models import (Archive, Goal, Issue, Plan, Prize, QuickNote, Task,
-                     TodoList, UserData)
+                     TodoList, UserData, Pic)
 
+DEFAULT_PIC_TITLE = "check"
 
 """
 #####
@@ -58,11 +60,16 @@ def mobile(request):
     else:
         return False
 
-
 def get_context(request):
     context = {}
     context["is_mobile"] = mobile(request)
     context["debug"] = debug()
+    default_pic_list = Pic.objects.filter(title=DEFAULT_PIC_TITLE)
+    if len(default_pic_list) == 0:
+        context["default_pic"] = Pic.objects.all()[0]
+    else:
+        context["default_pic"] = default_pic_list[0]
+    context["pic_list"] = Pic.objects.all()
     if request.user.is_authenticated:
         if UserData.objects.filter(user=request.user).count() > 0:
             ud = UserData.objects.get(user=request.user)
@@ -72,7 +79,6 @@ def get_context(request):
         context["points_enabled"] = ud.points_enabled
         context["dark"] = ud.dark
     return context
-
 
 def issues(request):
     context = get_context(request)
@@ -299,7 +305,6 @@ def index(request):
 
 def about(request):
     context = get_context(request)
-
     return render(request, "planapp/about.html", context)
 
 def all_goals(request):
@@ -466,6 +471,7 @@ def home(request):
                     task_todolist
                 )
             )
+
     context["right_list"] = right_list
     context["left_list"] = left_list
     return render(request, "planapp/home.html", context)

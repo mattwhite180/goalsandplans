@@ -51,6 +51,15 @@ class UserData(models.Model):
             report["points_count"] = self.points
         return report
 
+class Pic(models.Model):
+    title = models.CharField(max_length=300)
+    url = models.CharField(max_length=300)
+    attr_link = models.CharField(max_length=200, default="?")
+    attr_title = models.CharField(max_length=300)
+    attr_description = models.CharField(max_length=300)
+
+    def __str__(self):
+        return self.title
 
 class Goal(models.Model):
     class PriorityLevels(models.TextChoices):
@@ -66,6 +75,7 @@ class Goal(models.Model):
         max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -93,6 +103,7 @@ class TodoList(models.Model):
         max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
     )
     hide_from_homepage = models.BooleanField(default=False)
+    pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -134,6 +145,7 @@ class Plan(models.Model):
     recurring_task_title = models.CharField(max_length=200, default="?")
     recurring_task_description = models.CharField(max_length=2000, default="?")
     default_points = models.IntegerField(default=1, blank=True, null=True)
+    default_pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -179,6 +191,7 @@ class Task(models.Model):
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     todolist = models.ForeignKey(TodoList, models.SET_NULL, blank=True, null=True)
     points = models.IntegerField(default=1)
+    pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -198,15 +211,13 @@ class Prize(models.Model):
     description = models.CharField(max_length=2000, default="?")
     points = models.IntegerField(default=1, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title
 
     def is_due_soon(self):
         return self.due < timezone.now() + datetime.timedelta(days=2)
-
-    def __str__(self):
-        return self.title
 
 
 class Issue(models.Model):
