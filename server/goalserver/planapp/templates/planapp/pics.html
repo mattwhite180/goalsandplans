@@ -20,10 +20,6 @@
               <td><a href="{{ pic.attr_link }}" title="{{ pic.attr_title }}">{{ pic.attr_description }}</a></td>
             </tr>
             {% endfor %}
-            <tr>
-              <th scope="row"><img src="{% static default_pic.url %}" alt="{{ default_pic.attr_description }}"></th>
-              <td><a href="{{ default_pic.attr_link }}" title="{{ default_pic.attr_title }}">{{ default_pic.attr_description }}</a></td>
-            </tr>
           </tbody>
         </table>
       </div>
