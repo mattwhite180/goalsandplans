@@ -40,6 +40,7 @@ class PlanForm(forms.ModelForm):
             "default_points",
             "default_priority",
             "default_todolist",
+            "default_pic",
         )
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
@@ -53,7 +54,7 @@ class PlanForm(forms.ModelForm):
 class QuickTaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ("title", "description", "points", "priority", "todolist", "plan")
+        fields = ("title", "description", "points", "priority", "todolist", "plan", "pic")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Task.PriorityLevels),
@@ -63,7 +64,7 @@ class QuickTaskForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ("title", "plan", "description", "points", "priority", "todolist")
+        fields = ("title", "plan", "description", "points", "priority", "todolist", "pic")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Task.PriorityLevels),
@@ -73,7 +74,7 @@ class TaskForm(forms.ModelForm):
 class TodoListForm(forms.ModelForm):
     class Meta:
         model = TodoList
-        fields = ("title", "description", "priority", "hide_from_homepage")
+        fields = ("title", "description", "priority", "hide_from_homepage", "pic")
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Goal.PriorityLevels),
@@ -83,7 +84,7 @@ class TodoListForm(forms.ModelForm):
 class PrizeForm(forms.ModelForm):
     class Meta:
         model = Prize
-        fields = ("title", "description", "points")
+        fields = ("title", "description", "points", "pic")
         widgets = {"description": forms.Textarea(attrs={"cols": 20, "rows": 10})}
 
 
@@ -95,7 +96,6 @@ class QuickNoteForm(forms.ModelForm):
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=QuickNote.PriorityLevels),
         }
-
 
 class UserDataForm(forms.ModelForm):
     class Meta:
@@ -118,12 +118,3 @@ class BackupCreateForm(forms.Form):
 class EnablePrizeForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
     choice = forms.BooleanField()
-
-
-class PicForm(forms.ModelForm):
-    class Meta:
-        model = Pic
-        fields = ("title", "url", "description", "attribute")
-        widgets = {
-            "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
-        }

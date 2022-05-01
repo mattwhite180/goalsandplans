@@ -1,5 +1,7 @@
 {% extends "planapp/bootstrap.html" %}
 
+{% load static %}
+
 {% block content %}
 <p class="text-center">
   <button id="help" class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseHelp"
@@ -26,7 +28,15 @@
     <div class="card-body">
       <div class="list-group form-inline">
         {% for task in item.1 %}
-          <li class="list-group-item list-group-item-action text-left"><a class="text-dark" href="{% url 'task' task.0.id %}"><img src="https://cdn-icons-png.flaticon.com/512/3004/3004458.png" alt="Italian Trulli"><b>{{ task.0 }}</b> ({{ task.0.plan }})</a>
+          <li class="list-group-item list-group-item-action text-left">
+            <a class="text-dark" href="{% url 'task' task.0.id %}">
+              {% if task.0.pic %}
+              <img src="{% static task.0.pic.url %}" alt="{{ task.0.pic.title }}">
+              {% else %}
+              <img src="{% static default_pic.url %}" alt="{{ default_pic.title }}">
+              {% endif %}
+              &nbsp<b>{{ task.0 }}</b> ({{ task.0.plan }})
+          </a>
           <button
             style="float:right"
             id="delete-task-left-{{ task.0.id }}-warning"
@@ -79,9 +89,8 @@
   </div>
   {% endif %}
 
-  <a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Freepik - Flaticon</a>
-
 {% endblock %}
+
 
 {% block rightcontent %}
 
@@ -94,7 +103,12 @@
         {% for task in item.1 %}
           <li class="list-group-item list-group-item-action">
             <a class="text-dark" href="{% url 'task' task.id %}">
-              <b>{{ task }}</b>
+              {% if task.0.pic %}
+              <img src="{% static task.0.pic.url %}" alt="{{ task.0.pic.title }}">
+              {% else %}
+              <img src="{% static default_pic.url %}" alt="{{ default_pic.title }}">
+              {% endif %}
+              &nbsp<b>{{ task }}</b>
             </a>
             <button
               style="float:right"
@@ -142,6 +156,7 @@
   <br>
   {% endfor %}
 
+
   {% else %}
   <div class="card text-center">
     <div class="card-header">You do not have any plans created. <a href="{% url 'all_goals' %}">click here</a> to get started</div>
@@ -150,3 +165,4 @@
   {% endif %}
 
 {% endblock %}
+
