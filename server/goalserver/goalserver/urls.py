@@ -19,13 +19,15 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.static import serve
 
-handler404 = "planapp.views.custom_error_handle"
-handler500 = "planapp.views.custom_error_handle"
-handler403 = "planapp.views.custom_error_handle"
-handler400 = "planapp.views.custom_error_handle"
+handler404 = "planapp.views.custom_error_handle"  # noqa
+handler500 = "planapp.views.custom_error_handle"  # noqa
+handler403 = "planapp.views.custom_error_handle"  # noqa
+handler400 = "planapp.views.custom_error_handle"  # noqa
 
 urlpatterns = [
     path("", include("planapp.urls")),
     path("admin/", admin.site.urls),
-    re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
+    re_path(r"^static/(?P<path>.*)$", serve, {
+        "document_root": settings.STATIC_ROOT
+    }),
 ]

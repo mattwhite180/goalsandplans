@@ -5,23 +5,22 @@ import re
 from django import forms
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.core.management import call_command
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.db.models import Q
 
 from .forms import (BackupCreateForm, ChangePointsForm, EnablePrizeForm,
                     GoalForm, PlanForm, PrizeForm, QuickNoteForm,
                     QuickTaskForm, RedeemPrizeForm, TaskForm, TodoListForm,
                     UserDataForm)
-from .models import (Archive, Goal, Issue, Plan, Prize, QuickNote, Task,
-                     TodoList, UserData, Pic)
+from .models import (Archive, Goal, Issue, Pic, Plan, Prize, QuickNote, Task,
+                     TodoList, UserData)
 
 DEFAULT_PIC_TITLE = "todo"
 
@@ -38,7 +37,7 @@ def debug():
 def data_to_json(user_id=-1):
     dataList = list()
     if user_id == -1:
-        return dataToJsonAll()
+        return {}  # dataToJsonAll()
 
     u = User.objects.get(id=user_id)
     dataList.insert(len(dataList), {"user": {"username": u.username}})
@@ -46,19 +45,47 @@ def data_to_json(user_id=-1):
     plan_list = Plan.objects.filter(goal__in=goal_list).order_by("title")
     plan_noncontinuous_list = plan_list.filter(continuous=False)
     task_list = Task.objects.filter(plan__in=plan_noncontinuous_list)
-    dataList.insert(len(dataList), json.loads(serializers.serialize("json", goal_list)))
-    dataList.insert(len(dataList), json.loads(serializers.serialize("json", plan_list)))
-    dataList.insert(len(dataList), json.loads(serializers.serialize("json", task_list)))
+    dataList.insert(
+        len(dataList),
+        json.loads(
+            serializers.serialize(
+                "json",
+                goal_list
+            )
+        )
+    )
+    dataList.insert(
+        len(dataList),
+        json.loads(
+            serializers.serialize(
+                "json",
+                plan_list
+            )
+        )
+    )
+    dataList.insert(
+        len(dataList),
+        json.loads(
+            serializers.serialize(
+                "json",
+                task_list
+            )
+        )
+    )
     return json.dumps(dataList)
 
 
 def mobile(request):
     # Return True if the request comes from a mobile device.
-    MOBILE_AGENT_RE = re.compile(r".*(iphone|mobile|androidtouch)", re.IGNORECASE)
+    MOBILE_AGENT_RE = re.compile(
+        r".*(iphone|mobile|androidtouch)",
+        re.IGNORECASE
+    )
     if MOBILE_AGENT_RE.match(request.META["HTTP_USER_AGENT"]):
         return True
     else:
         return False
+
 
 def get_context(request):
     context = {}
@@ -83,6 +110,7 @@ def get_context(request):
         context["dark"] = ud.dark
     return context
 
+
 def issues(request):
     context = get_context(request)
     context["issue_list"] = Issue.objects.all().order_by("-when")
@@ -94,12 +122,14 @@ def delete_issue(request, issue_id):
     i = get_object_or_404(Issue, pk=issue_id)
     i_title = str(i)
     i.delete()
-    messages.success(request, str("deleted issue '" + i_title + "': " + str(issue_id)))
+    messages.success(
+        request,
+        str("deleted issue '" + i_title + "': " + str(issue_id))
+    )
     return render(request, "planapp/issues.html", context)
 
 
 def planify(request):
-    context = get_context(request)
     if request.user.is_superuser or request.user.is_staff:
         call_command("planify")
         messages.success(request, "planify command ran")
@@ -112,16 +142,9 @@ def taskify(plan):
         return 0
     deltaDate = datetime.date.today() - plan.last_updated
     if (deltaDate.days >= 1 and plan.today()) or plan.keep_at_limit:
-        try:
-            if plan.tasks_expire and not plan.today():
-                for t in Tasks.objects.filter(plan=plan):
-                    t.delete()
-        except:
-            i = Issue.objects.create(
-                obj_info="Plan: " + str(plan.id),
-                where="taskify (delete expired tasks)",
-                exception_string=str(e),
-            )
+        if plan.tasks_expire and not plan.today():
+            for t in Task.objects.filter(plan=plan):
+                t.delete()
         try:
             for i in range(plan.add_count):
                 currentCount = Task.objects.filter(plan=plan).count()
@@ -168,7 +191,11 @@ def enable_prizes(request):
                 ud.save()
                 messages.success(
                     request,
-                    "enabled/disabled the user " + str(ud.user.username) + "'s point",
+                    (
+                        "enabled/disabled the user ",
+                        str(ud.user.username),
+                        "'s point"
+                    ),
                 )
                 return HttpResponseRedirect(reverse("all_goals"))
         form = EnablePrizeForm()
@@ -187,7 +214,7 @@ def create_backup(request):
             if form.is_valid():
                 cd = form.cleaned_data
                 user_id = cd.get("user").id
-                context["data"] = dataToJson(user_id)
+                context["data"] = data_to_json(user_id)
         else:
             form = BackupCreateForm()
             context["form"] = form
@@ -210,14 +237,14 @@ def message_generator(verb, obj):
     except:
         model_name = "User"
     return (
-        str(verb)
-        + " a "
-        + str(model_name)
-        + ": "
-        + str(name)
-        + " (id="
-        + str(obj.id)
-        + ")"
+        str(verb),
+        " a ",
+        str(model_name),
+        ": ",
+        str(name),
+        " (id=",
+        str(obj.id),
+        ")"
     )
 
 
@@ -519,17 +546,19 @@ def goal(request, goal_id):
                 'goal': g
             }
         )
-        form.fields["default_todolist"].queryset = TodoList.objects.filter(
-            user=request.user
-        ).order_by("title")
-        form.fields["default_pic"].queryset = Pic.objects.all().order_by("title")
-        form.fields["goal"].queryset = Goal.objects.filter(user=request.user).order_by(
-            "title"
-        )
-        if context["points_enabled"] == False:
+        form.fields["default_todolist"].queryset = \
+            TodoList.objects.filter(user=request.user).order_by("title")
+        form.fields["default_pic"].queryset = \
+            Pic.objects.all().order_by("title")
+        form.fields["goal"].queryset = \
+            Goal.objects.filter(user=request.user).order_by("title")
+        if not context["points_enabled"]:
             form.fields["default_points"].widget = forms.HiddenInput()
 
-    plan_list = Plan.objects.filter(goal=g).order_by("-default_priority", "title")
+    plan_list = Plan.objects.filter(goal=g).order_by(
+        "-default_priority",
+        "title"
+    )
     for p in plan_list:
         taskify(p)
     context["goal_list"] = goal_list
@@ -563,7 +592,8 @@ def edit_goal(request, goal_id):
 
     else:
         form = GoalForm(instance=g)
-        form.fields["default_pic"].queryset = Pic.objects.all().order_by("title")
+        form.fields["default_pic"].queryset = \
+            Pic.objects.all().order_by("title")
 
     context["form"] = form
     context["form_title"] = "edit goal (" + str(g.title) + ")"
@@ -572,8 +602,6 @@ def edit_goal(request, goal_id):
 
 @login_required
 def delete_goal(request, goal_id):
-    context = get_context(request)
-
     g = get_object_or_404(Goal, pk=goal_id)
 
     if request.user.id is g.user.id:
@@ -638,10 +666,9 @@ def plan(request, plan_id):
         ).order_by("title")
         form.fields["pic"].queryset = Pic.objects.all().order_by("title")
         goal_list = Goal.objects.filter(user=request.user)
-        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by(
-            "title"
-        )
-        if context["points_enabled"] == False:
+        form.fields["plan"].queryset = \
+            Plan.objects.filter(goal__in=goal_list).order_by("title")
+        if not context["points_enabled"]:
             form.fields["points"].widget = forms.HiddenInput()
 
     task_list = Task.objects.filter(plan=p).order_by("-priority", "title")
@@ -700,11 +727,11 @@ def edit_plan(request, plan_id):
 
     else:
         form = PlanForm(instance=p)
-        form.fields["goal"].queryset = Goal.objects.filter(user=request.user).order_by(
-            "title"
-        )
-        form.fields["default_pic"].queryset = Pic.objects.all().order_by("title")
-        if context["points_enabled"] == False:
+        form.fields["goal"].queryset = \
+            Goal.objects.filter(user=request.user).order_by("title")
+        form.fields["default_pic"].queryset = \
+            Pic.objects.all().order_by("title")
+        if not context["points_enabled"]:
             form.fields["default_points"].widget = forms.HiddenInput()
 
     context["form"] = form
@@ -714,8 +741,6 @@ def edit_plan(request, plan_id):
 
 @login_required
 def delete_plan(request, plan_id):
-    context = get_context(request)
-
     p = get_object_or_404(Plan, pk=plan_id)
     goal_id = p.goal.id
 
@@ -785,11 +810,10 @@ def edit_task(request, task_id):
             user=request.user
         ).order_by("title")
         goal_list = Goal.objects.filter(user=request.user)
-        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by(
-            "title"
-        )
+        form.fields["plan"].queryset = \
+            Plan.objects.filter(goal__in=goal_list).order_by("title")
         form.fields["pic"].queryset = Pic.objects.all().order_by("title")
-        if context["points_enabled"] == False:
+        if not context["points_enabled"]:
             form.fields["points"].widget = forms.HiddenInput()
 
     context["form"] = form
@@ -815,10 +839,7 @@ def task_remove_todo(request, task_id):
 
 
 @login_required
-def delete_task(request, task_id, redirect=None):
-
-    context = get_context(request)
-
+def delete_task(request, task_id, redirect=None):  # noqa: C901
     t = get_object_or_404(Task, pk=task_id)
     plan_id = t.plan.id
     todolist_id = None
@@ -837,7 +858,7 @@ def delete_task(request, task_id, redirect=None):
         unauthorized_message(request, t)
 
     url = request.META.get("HTTP_REFERER")
-    if url == None:
+    if not url:
         return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
     source = "https://goalsandplans101.com/"
     if debug():
@@ -855,7 +876,8 @@ def delete_task(request, task_id, redirect=None):
         if not redirect:
             messages.warning(
                 request,
-                f"task redirect could not find a good match for the url: { url }",
+                f"task redirect could not find a ",
+                f"good match for the url: { url }",
             )
         return HttpResponseRedirect(reverse("plan", args=(plan_id,)))
 
@@ -879,13 +901,12 @@ def quick_task(request):
     else:
         form = QuickTaskForm()
         goal_list = Goal.objects.filter(user=request.user)
-        form.fields["plan"].queryset = Plan.objects.filter(goal__in=goal_list).order_by(
-            "title"
-        )
+        form.fields["plan"].queryset = \
+            Plan.objects.filter(goal__in=goal_list).order_by("title")
         form.fields["todolist"].queryset = TodoList.objects.filter(
             user=request.user
         ).order_by("title")
-        if context["points_enabled"] == False:
+        if not context["points_enabled"]:
             form.fields["points"].widget = forms.HiddenInput()
 
     context["form"] = form
@@ -923,11 +944,18 @@ def task_todo(request):
     plan_list = Plan.objects.filter(goal__in=goal_list)
     for p in plan_list:
         taskify(p)
-    task_list = Task.objects.filter(plan__in=plan_list).order_by("-priority", "title")
+    task_list = Task.objects.filter(
+        plan__in=plan_list
+    ).order_by(
+        "-priority",
+        "title"
+    )
 
     context["task_list"] = task_list
     context["form"] = form
-    context["todolist_list"] = TodoList.objects.filter(user=request.user).order_by(
+    context["todolist_list"] = TodoList.objects.filter(
+        user=request.user
+    ).order_by(
         "-priority", "title"
     )
 
@@ -940,7 +968,10 @@ def todolist(request, todo_id):
 
     todolist_list = TodoList.objects.filter(id=todo_id)
     if len(todolist_list) == 0:
-        messages.error(request, f"could not find todolist of id: { todolist_list }")
+        messages.error(
+            request,
+            f"could not find todolist of id: { todolist_list }"
+        )
         return HttpResponseRedirect(reverse("all_goals"))
     m = todolist_list[0]
 
@@ -989,9 +1020,6 @@ def edit_todolist(request, todo_id):
 
 @login_required
 def delete_todolist(request, todo_id):
-
-    context = get_context(request)
-
     m = get_object_or_404(TodoList, pk=todo_id)
 
     if request.user.id == m.user.id:
@@ -1054,7 +1082,12 @@ def redeem_prize(request, prize_id):
             count = cd.get("count")
             points_count = -1 * abs(count * p.points)
             point_changer(request, points_count)
-            messages.success(request, "Redeemed " + str(abs(points_count)) + " points")
+            messages.success(
+                request,
+                "Redeemed ",
+                str(abs(points_count)),
+                " points"
+            )
         else:
             context["error_list"] = get_errors(form)
 
@@ -1097,9 +1130,6 @@ def edit_prize(request, prize_id):
 
 @login_required
 def delete_prize(request, prize_id):
-
-    context = get_context(request)
-
     p = get_object_or_404(Prize, pk=prize_id)
 
     if request.user.id == p.user.id:
@@ -1179,9 +1209,6 @@ def edit_quicknote(request, quicknote_id):
 
 @login_required
 def delete_quicknote(request, quicknote_id):
-
-    context = get_context(request)
-
     m = get_object_or_404(QuickNote, pk=quicknote_id)
 
     if request.user.id == m.user.id:

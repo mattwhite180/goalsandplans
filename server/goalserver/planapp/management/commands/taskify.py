@@ -1,9 +1,5 @@
-import datetime
-import time
-
-from django.contrib.auth.models import AnonymousUser, User
-from django.core.management.base import BaseCommand, CommandError
-from planapp.models import Goal, Issue, Plan, Task
+from django.core.management.base import BaseCommand
+# from planapp.models import Issue, Plan, Task
 
 
 class Command(BaseCommand):
@@ -13,7 +9,7 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        created = 0
+        # created = 0
         # for plan in Plan.objects.filter(continuous=True):
         #     deltaDate = datetime.date.today() - plan.last_updated
         #     if (deltaDate.days >= 1 and plan.today()) or plan.keep_at_limit:
@@ -51,5 +47,7 @@ class Command(BaseCommand):
         #             i.save()
         # self.stdout.write(self.style.SUCCESS(str(datetime.datetime.now())))
         # self.stdout.write(
-        #     self.style.SUCCESS('Successfully created "%s" tasks\n----' % created)
+        # self.style.SUCCESS(
+        #     'Successfully created "%s" tasks\n----' % created)
         # )
+        pass

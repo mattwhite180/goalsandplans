@@ -5,19 +5,24 @@ from django.contrib.auth.models import AnonymousUser, User
 from django.core.management import call_command
 from django.test import Client, RequestFactory, TestCase
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from .models import Goal, Plan, Task
-from .views import data_to_json, run_jobs, taskify
+from .views import taskify
 
 
 class CronTestCase(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
-        test_user = User.objects.create_user(username="testuser", password="1234")
+        test_user = User.objects.create_user(
+            username="testuser",
+            password="1234"
+        )
         g = Goal.objects.create(
-            title="test goal", description="test goal description", user=test_user
+            title="test goal",
+            description="test goal description",
+            user=test_user
         )
         Plan.objects.create(
             title="test plan (continuous)",
@@ -87,7 +92,9 @@ class CronTestCase(TestCase):
             continuous=True,
             limit=10000,
             add_count=10000,
-            last_updated=datetime.date.today() - datetime.timedelta(days=1),
+            last_updated=(
+                datetime.date.today() - datetime.timedelta(days=1)
+            ),
             sunday=False,
             monday=False,
             tuesday=False,
@@ -98,7 +105,8 @@ class CronTestCase(TestCase):
         )
 
     def test_sanity_check(self):
-        errmsg = "if this fails, there is a syntax error in taskify, or a fatal runtime error"
+        errmsg = "if this fails, there is a syntax ",
+        "error in taskify, or a fatal runtime error"
         for p in Plan.objects.all():
             taskify(p)
         self.assertEqual(0, 0, errmsg)
@@ -109,35 +117,47 @@ class CronTestCase(TestCase):
         val = Task.objects.count()
         expected = 4
         errmsg = (
-            "expected " + str(expected) + " tasks, but counted " + str(val) + " tasks"
+            "expected ",
+            str(expected),
+            " tasks, but counted ",
+            str(val),
+            " tasks"
         )
         self.assertEqual(val, expected, errmsg)
 
     def test_client_side(self):
         c = Client()
-        response = c.post("/run_jobs/", {"username": "testuser", "password": "1234"})
+        response = c.post(
+            "/run_jobs/",
+            {
+                "username": "testuser",
+                "password": "1234"
+            }
+        )
         val = response.status_code
         expected = 302
         errmsg = (
-            "expected a response code of '"
-            + str(expected)
-            + "', but got a response "
-            + "code of '"
-            + str(val)
-            + "'"
+            "expected a response code of '",
+            str(expected),
+            "', but got a response ",
+            "code of '",
+            str(val),
+            "'"
         )
         self.assertEqual(val, expected, errmsg)
         val = Task.objects.count()
         expected = 4
         errmsg = (
-            "expected "
-            + str(expected)
-            + " tasks, but counted "
-            + str(val)
-            + " tasks"
-            + """
-        if the number of tasks counted is over 100 then there might be an issue with the continuous flag
-        if the number of tasks counted is over 1000 then the add period might not be working"""
+            "expected ",
+            str(expected),
+            " tasks, but counted ",
+            str(val),
+            " tasks",
+            "if the number of tasks counted is over 100 ",
+            "then there might be an issue with the ",
+            "continuous flag\nif the number of tasks ",
+            "counted is over 1000 then the add period ",
+            "might not be working"
         )
         self.assertEqual(val, expected, errmsg)
 
@@ -145,9 +165,14 @@ class CronTestCase(TestCase):
 class TaskExpireTestCase(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
-        test_user = User.objects.create_user(username="testuser", password="1234")
+        test_user = User.objects.create_user(
+            username="testuser",
+            password="1234"
+        )
         g = Goal.objects.create(
-            title="test goal", description="test goal description", user=test_user
+            title="test goal",
+            description="test goal description",
+            user=test_user
         )
         Plan.objects.create(
             title="test plan (continuous)",
@@ -216,10 +241,10 @@ class SeleniumTestCase(unittest.TestCase):
         val = self.browser.title
         expected = "GoalsAndPlans"
         errmsg = (
-            "expected "
-            + str(expected)
-            + " but got "
-            + str(val)
-            + " for the title of website"
+            "expected ",
+            str(expected),
+            " but got ",
+            str(val),
+            " for the title of website"
         )
         self.assertEqual(val, expected, errmsg)

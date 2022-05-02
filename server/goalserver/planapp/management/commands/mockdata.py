@@ -2,8 +2,8 @@ import datetime
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.management.base import BaseCommand, CommandError
-from planapp.models import Goal, Plan, Prize, Task, TodoList, UserData
+from django.core.management.base import BaseCommand
+from planapp.models import Goal, Plan, Task, TodoList, UserData
 
 
 class Command(BaseCommand):
@@ -25,7 +25,10 @@ class Command(BaseCommand):
             root_user = User.objects.get(username="root")
         else:
             root_user = User.objects.create_user(
-                username="root", password="asdf", is_superuser=True, is_staff=True
+                username="root",
+                password="asdf",
+                is_superuser=True,
+                is_staff=True
             )
             root_user.save()
             root_data = UserData.objects.create(user=root_user)
@@ -33,20 +36,29 @@ class Command(BaseCommand):
         if "test" in usernameList:
             test_user = User.objects.get(username="test")
         else:
-            test_user = User.objects.create_user(username="test", password="asdf")
+            test_user = User.objects.create_user(
+                username="test",
+                password="asdf"
+            )
             test_user.save()
             test_data = UserData.objects.create(user=test_user)
             test_data.save()
         g = Goal.objects.create(
-            title="test goal", description="test goal description", user=root_user
+            title="test goal",
+            description="test goal description",
+            user=root_user
         )
         g.save()
         todo1 = TodoList.objects.create(
-            title="todolist A", description="description of todolist A", user=root_user
+            title="todolist A",
+            description="description of todolist A",
+            user=root_user
         )
         todo1.save()
         todo2 = TodoList.objects.create(
-            title="todolist B", description="description of todolist B", user=root_user
+            title="todolist B",
+            description="description of todolist B",
+            user=root_user
         )
         todo2.save()
         p1 = Plan.objects.create(

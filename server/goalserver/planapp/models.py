@@ -1,9 +1,11 @@
 import datetime
+from typing import Type
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
 
 class Pic(models.Model):
     title = models.CharField(max_length=300)
@@ -12,43 +14,48 @@ class Pic(models.Model):
     attr_title = models.CharField(max_length=300)
     attr_description = models.CharField(max_length=300)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
+
 
 class UserData(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
     points_enabled = models.BooleanField(default=False)
     dark = models.BooleanField(default=False)
-    default_pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
+    default_pic = models.ForeignKey(
+        Pic, models.SET_NULL, blank=True, null=True)
 
-    def pull_report(self, *args, **kwargs):
+    def pull_report(self, *args, **kwargs) -> dict:
         report = dict()
         report["goal_count"] = str(Goal.objects.filter(user=self.user).count())
         report["plan_count"] = str(
-            Plan.objects.filter(goal__in=Goal.objects.filter(user=self.user)).count()
+            Plan.objects.filter(
+                goal__in=Goal.objects.filter(
+                    user=self.user
+                )
+            ).count()
         )
         daily_task_count = 0
         for p in Plan.objects.filter(
             goal__in=Goal.objects.filter(user=self.user)
-        ).filter(continuous=True):
-            if not p.keep_at_limit:
-                days_of_week = 0
-                if p.monday:
-                    days_of_week += 1
-                if p.tuesday:
-                    days_of_week += 1
-                if p.wednesday:
-                    days_of_week += 1
-                if p.thursday:
-                    days_of_week += 1
-                if p.friday:
-                    days_of_week += 1
-                if p.saturday:
-                    days_of_week += 1
-                if p.sunday:
-                    days_of_week += 1
-                daily_task_count += days_of_week / 7
+        ).filter(continuous=True).exclude(keep_at_limit=False):
+            days_of_week = 0
+            if p.monday:
+                days_of_week += 1
+            if p.tuesday:
+                days_of_week += 1
+            if p.wednesday:
+                days_of_week += 1
+            if p.thursday:
+                days_of_week += 1
+            if p.friday:
+                days_of_week += 1
+            if p.saturday:
+                days_of_week += 1
+            if p.sunday:
+                days_of_week += 1
+            daily_task_count += days_of_week / 7
         report["daily_task_count"] = str(round(daily_task_count, 3))
         report["task_count"] = str(
             Task.objects.filter(
@@ -61,6 +68,7 @@ class UserData(models.Model):
             report["points_count"] = self.points
         return report
 
+
 class Goal(models.Model):
     class PriorityLevels(models.TextChoices):
         BACKLOG = "0 BK", _("Backlog")
@@ -72,15 +80,22 @@ class Goal(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=2000)
     priority = models.CharField(
-        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
+        max_length=4,
+        choices=PriorityLevels.choices,
+        default=PriorityLevels.LOW
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    default_pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
+    default_pic = models.ForeignKey(
+        Pic,
+        models.SET_NULL,
+        blank=True,
+        null=True
+    )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
-    def pull_report(self, *args, **kwargs):
+    def pull_report(self, *args, **kwargs) -> int:
         total = 0
         for p in Plan.objects.filter(goal=self):
             for t in Task.objects.filter(plan=p):
@@ -100,11 +115,13 @@ class TodoList(models.Model):
     description = models.CharField(max_length=20000)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     priority = models.CharField(
-        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
+        max_length=4,
+        choices=PriorityLevels.choices,
+        default=PriorityLevels.LOW
     )
     hide_from_homepage = models.BooleanField(default=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
 
@@ -124,10 +141,13 @@ class Plan(models.Model):
     limit = models.IntegerField(default=10)
     add_count = models.IntegerField(default=1)
     default_priority = models.CharField(
-        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
+        max_length=4,
+        choices=PriorityLevels.choices,
+        default=PriorityLevels.LOW
     )
     last_updated = models.DateField(
-        "last_updated", default=datetime.date.today() - datetime.timedelta(days=366)
+        "last_updated",
+        default=datetime.date.today() - datetime.timedelta(days=366)
     )
     default_todolist = models.ForeignKey(
         TodoList, models.SET_NULL, blank=True, null=True
@@ -143,16 +163,25 @@ class Plan(models.Model):
     saturday = models.BooleanField(default=False)
     recurring_task_title = models.CharField(max_length=200, default="?")
     recurring_task_description = models.CharField(max_length=2000, default="?")
-    default_points = models.IntegerField(default=1, blank=True, null=True)
-    default_pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
+    default_points = models.IntegerField(
+        default=1,
+        blank=True,
+        null=True
+    )
+    default_pic = models.ForeignKey(
+        Pic,
+        models.SET_NULL,
+        blank=True,
+        null=True
+    )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
-    def task_count(self):
-        return Task.objects.filter(plan=self).count()
+    def task_count(self) -> int:
+        return int(Task.objects.filter(plan=self).count())
 
-    def user(self):
+    def user(self) -> User:
         return self.goal.user
 
     def today(self):
@@ -185,33 +214,37 @@ class Task(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=2000, default="?")
     priority = models.CharField(
-        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
+        max_length=4,
+        choices=PriorityLevels.choices,
+        default=PriorityLevels.LOW
     )
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
-    todolist = models.ForeignKey(TodoList, models.SET_NULL, blank=True, null=True)
+    todolist = models.ForeignKey(
+        TodoList,
+        models.SET_NULL,
+        blank=True,
+        null=True
+    )
     points = models.IntegerField(default=1)
     pic = models.ForeignKey(Pic, models.SET_NULL, blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
-    def is_due_soon(self):
+    def is_due_soon(self) -> bool:
         return self.due < timezone.now() + datetime.timedelta(days=2)
 
-    def __str__(self):
-        return self.title
-
-    def user(self):
+    def user(self) -> User:
         return self.plan.goal.user
 
-    def get_pic(self):
+    def get_pic(self) -> Type[Pic]:
         if self.pic:
             return self.pic
         elif self.plan.default_pic:
             return self.plan.default_pic
         elif self.plan.goal.default_pic:
             return self.plan.goal.default_pic
-        return False
+        return None
 
 
 class Prize(models.Model):
@@ -220,10 +253,10 @@ class Prize(models.Model):
     points = models.IntegerField(default=1, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
-    def is_due_soon(self):
+    def is_due_soon(self) -> bool:
         return self.due < timezone.now() + datetime.timedelta(days=2)
 
 
@@ -235,10 +268,10 @@ class Issue(models.Model):
     ticket = models.BooleanField(default=False)
     resolved = models.BooleanField(default=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.exception_string[:10] + " (" + self.get_datetime() + ")"
 
-    def get_datetime(self):
+    def get_datetime(self) -> str:
         return str(self.when.date())
 
 
@@ -254,10 +287,12 @@ class QuickNote(models.Model):
     description = models.CharField(max_length=2000, default="")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     priority = models.CharField(
-        max_length=4, choices=PriorityLevels.choices, default=PriorityLevels.LOW
+        max_length=4,
+        choices=PriorityLevels.choices,
+        default=PriorityLevels.LOW
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title + ":: " + self.description[:10]
 
 
@@ -270,5 +305,5 @@ class Archive(models.Model):
         self.title = task.title[:200]
         self.description = task.description[:2000]
 
-    def get_datetime(self):
+    def get_datetime(self) -> str:
         return str(self.created.date())

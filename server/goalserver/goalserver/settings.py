@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import base64
 import json
 import os
-from pathlib import Path
 
 import boto3
 from botocore.exceptions import ClientError
@@ -29,13 +28,18 @@ def get_secret():
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
-    client = session.client(service_name="secretsmanager", region_name=region_name)
+    client = session.client(
+        service_name="secretsmanager",
+        region_name=region_name
+    )
 
     try:
-        get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+        get_secret_value_response = \
+            client.get_secret_value(SecretId=secret_name)
     except ClientError as e:
         if e.response["Error"]["Code"] == "DecryptionFailureException":
-            # Secrets Manager can't decrypt the protected secret text using the provided KMS key.
+            # Secrets Manager can't decrypt the protected
+            # secret text using the provided KMS key.
             # Deal with the exception here, and/or rethrow at your discretion.
             raise e
         elif e.response["Error"]["Code"] == "InternalServiceErrorException":
@@ -47,7 +51,8 @@ def get_secret():
             # Deal with the exception here, and/or rethrow at your discretion.
             raise e
         elif e.response["Error"]["Code"] == "InvalidRequestException":
-            # You provided a parameter value that is not valid for the current state of the resource.
+            # You provided a parameter value that is
+            # not valid for the current state of the resource.
             # Deal with the exception here, and/or rethrow at your discretion.
             raise e
         elif e.response["Error"]["Code"] == "ResourceNotFoundException":
@@ -56,11 +61,14 @@ def get_secret():
             raise e
     else:
         # Decrypts secret using the associated KMS CMK.
-        # Depending on whether the secret is a string or binary, one of these fields will be populated.
+        # Depending on whether the secret is a string or binary,
+        # one of these fields will be populated.
         if "SecretString" in get_secret_value_response:
             secret = get_secret_value_response["SecretString"]
         else:
-            secret = base64.b64decode(get_secret_value_response["SecretBinary"])
+            secret = base64.b64decode(
+                get_secret_value_response["SecretBinary"]
+            )
     return json.loads(secret)
 
 
@@ -168,11 +176,16 @@ if "SECRET" in os.environ and "REGION" in os.environ:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+        "NAME":
+            ("django.contrib.auth.password_validation.",
+                "UserAttributeSimilarityValidator")
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+    {"NAME":
+        "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME":
+        "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME":
+        "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 

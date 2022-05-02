@@ -1,8 +1,7 @@
 from django import forms
-from django.contrib.auth.models import AnonymousUser, User
-from django.forms import ModelForm
+from django.contrib.auth.models import User
 
-from .models import Goal, Plan, Prize, QuickNote, Task, TodoList, UserData, Pic
+from .models import Goal, Plan, Prize, QuickNote, Task, TodoList, UserData
 
 
 class GoalForm(forms.ModelForm):
@@ -54,7 +53,14 @@ class PlanForm(forms.ModelForm):
 class QuickTaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ("title", "description", "points", "priority", "todolist", "plan")
+        fields = (
+            "title",
+            "description",
+            "points",
+            "priority",
+            "todolist",
+            "plan"
+        )
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Task.PriorityLevels),
@@ -64,7 +70,15 @@ class QuickTaskForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ("title", "plan", "description", "points", "priority", "todolist", "pic")
+        fields = (
+            "title",
+            "plan",
+            "description",
+            "points",
+            "priority",
+            "todolist",
+            "pic"
+        )
         widgets = {
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=Task.PriorityLevels),
@@ -85,7 +99,14 @@ class PrizeForm(forms.ModelForm):
     class Meta:
         model = Prize
         fields = ("title", "description", "points")
-        widgets = {"description": forms.Textarea(attrs={"cols": 20, "rows": 10})}
+        widgets = {
+            "description": forms.Textarea(
+                attrs={
+                    "cols": 20,
+                    "rows": 10
+                }
+            )
+        }
 
 
 class QuickNoteForm(forms.ModelForm):
@@ -96,6 +117,7 @@ class QuickNoteForm(forms.ModelForm):
             "description": forms.Textarea(attrs={"cols": 20, "rows": 10}),
             "priority": forms.Select(choices=QuickNote.PriorityLevels),
         }
+
 
 class UserDataForm(forms.ModelForm):
     class Meta:

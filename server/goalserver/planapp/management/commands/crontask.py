@@ -1,10 +1,8 @@
-import datetime
 import time
 
-from django.contrib.auth.models import AnonymousUser, User
 from django.core.management import call_command
-from django.core.management.base import BaseCommand, CommandError
-from planapp.models import Goal, Issue, Plan, Task
+from django.core.management.base import BaseCommand
+from planapp.models import Issue
 
 
 class Command(BaseCommand):
@@ -21,8 +19,8 @@ class Command(BaseCommand):
                 time.sleep(WAIT_TIME)
         except Exception as e:
             i = Issue.objects.create(
-                obj_info = "crontask: outside of taskify"
-                where = "crontask",
-                exception_string = str(e)
+                obj_info="crontask: outside of taskify",
+                where="crontask",
+                exception_string=str(e)
             )
             i.save()
