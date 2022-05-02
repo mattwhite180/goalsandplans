@@ -1,8 +1,7 @@
 import datetime
 import unittest
 
-from django.contrib.auth.models import AnonymousUser, User
-from django.core.management import call_command
+from django.contrib.auth.models import User
 from django.test import Client, RequestFactory, TestCase
 from selenium import webdriver
 # from selenium.webdriver.chrome.options import Options
@@ -17,7 +16,9 @@ class CronTestCase(TestCase):
         self.factory = RequestFactory()
         test_user = User.objects.create_user(
             username="testuser",
-            password="1234"
+            password="1234",
+            is_staff=True,
+            is_superuser=True
         )
         g = Goal.objects.create(
             title="test goal",
@@ -105,8 +106,9 @@ class CronTestCase(TestCase):
         )
 
     def test_sanity_check(self):
-        errmsg = "if this fails, there is a syntax ",
-        "error in taskify, or a fatal runtime error"
+        errmsg = ("if this fails, there is a syntax "
+                  "error in taskify, or a fatal runtime error"
+                  )
         for p in Plan.objects.all():
             taskify(p)
         self.assertEqual(0, 0, errmsg)
@@ -148,15 +150,11 @@ class CronTestCase(TestCase):
         val = Task.objects.count()
         expected = 4
         errmsg = (
-            "expected ",
-            str(expected),
-            " tasks, but counted ",
-            str(val),
-            " tasks",
-            "if the number of tasks counted is over 100 ",
-            "then there might be an issue with the ",
-            "continuous flag\nif the number of tasks ",
-            "counted is over 1000 then the add period ",
+            f"expected {expected} tasks, but counted {val} tasks"
+            "if the number of tasks counted is over 100 "
+            "then there might be an issue with the "
+            "continuous flag\nif the number of tasks "
+            "counted is over 1000 then the add period "
             "might not be working"
         )
         self.assertEqual(val, expected, errmsg)
@@ -228,16 +226,41 @@ class RemoteGoogleTestCase(unittest.TestCase):
 
 
 class SeleniumTestCase(unittest.TestCase):
+    gp_ids = {
+        "login_btn": "topbar-login",
+        "create_account_btn": "topbar-create",
+        "about_btn": "topbar-about"
+    }
+
     def setUp(self):
         self.browser = webdriver.Remote(
             command_executor="http://chrome:4444/wd/hub",
             desired_capabilities=DesiredCapabilities.CHROME,
         )
+        self.username = "testuser"
+        self.password = "1234"
+        self.test_user = User.objects.create_user(
+            username=self.username,
+            password=self.password,
+            is_staff=True,
+            is_superuser=True
+        )
+        self.test_user.save()
+        self.browser.get("http://server:8000")
         self.addCleanup(self.browser.quit)
+        self.driver = webdriver.Chrome(options=set_chrome_options())
+        self.user = User.objects.get(username="test_user")
+
+    def get_element(self, element_name: str):
+        return self.driver.find_element_by_id(element_name)
+
+    def login(self):
+        self.get_element(self.gp_ids["login"]).click()
+        self.driver.find_element_by_name("username").send_keys(self.username)
+        self.driver.find_element_by_name("password").send_keys(self.password)
+        self.get_element("submit").click()
 
     def test_title_page(self):
-        self.browser.get("http://server:8000")
-        # driver = webdriver.Chrome(options=set_chrome_options())
         val = self.browser.title
         expected = "GoalsAndPlans"
         errmsg = (
@@ -248,3 +271,7 @@ class SeleniumTestCase(unittest.TestCase):
             " for the title of website"
         )
         self.assertEqual(val, expected, errmsg)
+
+    def test_login(self):
+        self.login()
+

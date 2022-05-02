@@ -337,6 +337,7 @@ def about(request):
     context = get_context(request)
     return render(request, "planapp/about.html", context)
 
+
 def all_goals(request):
     context = get_context(request)
 
@@ -356,10 +357,16 @@ def all_goals(request):
 
     else:
         form = GoalForm()
-        form.fields["default_pic"].queryset = Pic.objects.all().order_by("title")
+        form.fields["default_pic"].queryset = \
+            Pic.objects.all().order_by("title")
 
     context["form"] = form
-    goal_list = Goal.objects.filter(user=request.user).order_by("-priority", "title")
+    goal_list = Goal.objects.filter(
+        user=request.user
+    ).order_by(
+        "-priority",
+        "title"
+    )
     context["goal_list"] = goal_list
 
     return render(request, "planapp/all_goals.html", context)
@@ -412,10 +419,7 @@ def change_points(request):
             messages.success(
                 request,
                 str(
-                    "user's points counts changed from "
-                    + str(before)
-                    + " to "
-                    + str(amount)
+                    f"user's points counts changed from {before} to {amount}"
                 ),
             )
             return HttpResponseRedirect(reverse("all_goals"))
@@ -426,7 +430,9 @@ def change_points(request):
         form = ChangePointsForm()
 
     context["form"] = form
-    goal_list = Goal.objects.filter(user=request.user).order_by("-priority", "title")
+    goal_list = Goal.objects.filter(
+        user=request.user
+    ).order_by("-priority", "title")
     context["goal_list"] = goal_list
 
     return render(request, "planapp/changepoints.html", context)
@@ -438,7 +444,9 @@ def search_list(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("index"))
 
-    goal_list = Goal.objects.filter(user=request.user.id).order_by("-priority", "title")
+    goal_list = Goal.objects.filter(
+        user=request.user.id
+    ).order_by("-priority", "title")
     plan_list = Plan.objects.filter(goal__in=goal_list).order_by(
         "-default_priority", "title"
     )
@@ -457,6 +465,7 @@ def search_list(request):
 
     return render(request, "planapp/search-list.html", context)
 
+
 @login_required
 def home(request):
     context = get_context(request)
@@ -467,7 +476,14 @@ def home(request):
     right_list = []
 
     goal_list = Goal.objects.filter(user=request.user)
-    plan_list = Plan.objects.filter(goal__in=goal_list).filter(hide_from_homepage=False).order_by("-default_priority", "title")
+    plan_list = Plan.objects.filter(
+        goal__in=goal_list
+    ).filter(
+        hide_from_homepage=False
+    ).order_by(
+        "-default_priority",
+        "title"
+    )
     for p in plan_list:
         taskify(p)
         task_list = Task.objects.filter(plan=p).order_by("-priority", "title")
@@ -481,14 +497,30 @@ def home(request):
             )
 
     left_list = []
-    for todo in TodoList.objects.filter(user=request.user).filter(hide_from_homepage=False).order_by("-priority", "title"):
-        task_list = Task.objects.filter(todolist=todo).order_by("-priority", "title")
+    for todo in TodoList.objects.filter(
+        user=request.user
+    ).filter(
+        hide_from_homepage=False
+    ).order_by(
+        "-priority",
+        "title"
+    ):
+        task_list = Task.objects.filter(
+            todolist=todo
+        ).order_by(
+            "-priority",
+            "title"
+        )
         if task_list.count() > 0:
             task_values = []
             task_todolist = []
             for task in task_list:
                 if [task.title, task.description] not in task_values:
-                    task_count = Task.objects.filter(title=task.title, description=task.description, plan=task.plan).count()
+                    task_count = Task.objects.filter(
+                        title=task.title,
+                        description=task.description,
+                        plan=task.plan
+                    ).count()
                     task_todolist.append(
                         (
                             task,
@@ -506,6 +538,7 @@ def home(request):
     context["right_list"] = right_list
     context["left_list"] = left_list
     return render(request, "planapp/home.html", context)
+
 
 """
 #####

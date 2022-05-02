@@ -21,7 +21,7 @@ class Command(BaseCommand):
                 url="planapp/images/shopping.png",
                 attr_link="https://www.flaticon.com/free-icons/shopping-cart",
                 attr_title="shopping cart icons",
-                attr_description=("Shopping cart icons",
+                attr_description=("Shopping cart icons"
                                   "created by Freepik - Flaticon"
                                   )
             )
@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 url="planapp/images/search.png",
                 attr_link="https://www.flaticon.com/free-icons/search",
                 attr_title="search icons",
-                attr_description=("Search icons created by ",
+                attr_description=("Search icons created by "
                                   "Maxim Basinski Premium - Flaticon"
                                   )
             )
@@ -58,7 +58,7 @@ class Command(BaseCommand):
                     "free-icons/google-play-music"
                 ),
                 attr_title="google play music icons",
-                attr_description=("Google play music icons created ",
+                attr_description=("Google play music icons created "
                                   "by Pixel perfect - Flaticon"
                                   )
             )
@@ -70,7 +70,7 @@ class Command(BaseCommand):
                 url="planapp/images/star.png",
                 attr_link="https://www.flaticon.com/free-icons/star",
                 attr_title="star icons",
-                attr_description=("Star icons created by ",
+                attr_description=("Star icons created by "
                                   "Pixel perfect - Flaticon"
                                   )
             )
@@ -102,7 +102,7 @@ class Command(BaseCommand):
                 url="planapp/images/dollar.png",
                 attr_link="https://www.flaticon.com/free-icons/dollar-symbol",
                 attr_title="dollar symbol icons",
-                attr_description=("Dollar symbol icons created ",
+                attr_description=("Dollar symbol icons created "
                                   "by Good Ware - Flaticon"
                                   )
                 )
@@ -134,7 +134,7 @@ class Command(BaseCommand):
                 url="planapp/images/weight.png",
                 attr_link="https://www.flaticon.com/free-icons/fitness",
                 attr_title="fitness icons",
-                attr_description=("Fitness icons created ",
+                attr_description=("Fitness icons created "
                                   "by Smashicons - Flaticon"
                                   )
             )
@@ -176,7 +176,7 @@ class Command(BaseCommand):
                 url="planapp/images/hourglass.png",
                 attr_link="https://www.flaticon.com/free-icons/hourglass",
                 attr_title="hourglass icons",
-                attr_description=("Hourglass icons created ",
+                attr_description=("Hourglass icons created "
                                   "by prettycons - Flaticon"
                                   )
             )
@@ -188,7 +188,7 @@ class Command(BaseCommand):
                 url="planapp/images/x.png",
                 attr_link="https://www.flaticon.com/free-icons/close",
                 attr_title="close icons",
-                attr_description=("Close icons created by ",
+                attr_description=("Close icons created by "
                                   "Pixel perfect - Flaticon"
                                   )
             )

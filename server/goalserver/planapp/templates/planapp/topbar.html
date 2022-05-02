@@ -1,98 +1,98 @@
 <ul class="nav justify-content-center">
   {% if user.is_authenticated %}
     <li class="nav-item navbar-brand">
-      <a class="nav-link active" href="{% url 'home' %}">
+      <a id="topbar-home" class="nav-link active" href="{% url 'home' %}">
         <span class="badge badge-pill badge-primary">Home</span>
       </a>
     </li>
     <li class="nav-item navbar-brand">
-      <a class="nav-link active" href="{% url 'all_goals' %}">
+      <a id="topbar-all_goals" class="nav-link active" href="{% url 'all_goals' %}">
         <span class="badge badge-pill badge-success">View All Goals</span>
       </a>
     </li>
     <li class="nav-item navbar-brand">
-      <a class="nav-link active" href="{% url 'logout' %}">
+      <a id="topbar-logout" class="nav-link active" href="{% url 'logout' %}">
         <span class="badge badge-pill badge-warning">Logout</span>
       </a>
     </li>
     <li class="nav-item navbar-brand">
-      <a class="nav-link active" href="{% url 'quick_task' %}">
+      <a id="topbar-quick_task" class="nav-link active" href="{% url 'quick_task' %}">
         <span class="badge badge-pill badge-secondary">QuickTask</span>
       </a>
     </li>
     <li class="nav-item navbar-brand">
-      <a class="nav-link active" href="{% url 'task_todo' %}">
+      <a id="topbar-task_todo" class="nav-link active" href="{% url 'task_todo' %}">
         <span class="badge badge-pill badge-info">TodoList</span>
       </a>
     </li>
     <li class="nav-item navbar-brand">
-      <a class="nav-link active" href="{% url 'quicknote' %}">
+      <a id="topbar-quicknote" class="nav-link active" href="{% url 'quicknote' %}">
         <span class="badge badge-pill badge-primary">QuickNote</span>
       </a>
     </li>
     <li class="nav-item navbar-brand">
-      <a class="nav-link active" href="{% url 'userdata' %}">
+      <a id="topbar-userdata" class="nav-link active" href="{% url 'userdata' %}">
         <span class="badge badge-pill badge-danger">UserData</span>
       </a>
     </li>
     {% if points_enabled %}
       <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'prize' %}">
+        <a id="topbar-prize" class="nav-link active" href="{% url 'prize' %}">
           <span class="badge badge-pill badge-success">Prizes</span>
         </a>
       </li>
     {% endif %}
     {% if user.is_superuser %}
       <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'run_jobs' %}">
+        <a id="topbar-run_jobs" class="nav-link active" href="{% url 'run_jobs' %}">
           <span class="badge badge-pill badge-dark">Taskify</span>
         </a>
       </li>
       <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'planify' %}">
+        <a id="topbar-planify" class="nav-link active" href="{% url 'planify' %}">
           <span class="badge badge-pill badge-warning">Planify</span>
         </a>
       </li>
       <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="/admin/">
+        <a id="topbar-admin" class="nav-link active" href="/admin/">
           <span class="badge badge-pill badge-secondary">Admin</span>
         </a>
       </li>
       <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'create_backup' %}">
+        <a id="topbar-create_backup" class="nav-link active" href="{% url 'create_backup' %}">
           <span class="badge badge-pill badge-secondary">Create Backup</span>
         </a>
       </li>
       <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'enable_prizes' %}">
+        <a id="topbar-enable_prizes" class="nav-link active" href="{% url 'enable_prizes' %}">
           <span class="badge badge-pill badge-secondary">Enable Prizes</span>
         </a>
       </li>
       <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'issues' %}">
+        <a id="topbar-issues" class="nav-link active" href="{% url 'issues' %}">
           <span class="badge badge-pill badge-danger">Issues</span>
         </a>
       </li>
       <li class="nav-item navbar-brand">
-        <a class="nav-link active" href="{% url 'run_jobs' %}">
+        <a id="topbar-run_jobs" class="nav-link active" href="{% url 'run_jobs' %}">
           <span class="badge badge-pill badge-success">Run jobs</span>
         </a>
       </li>
     {% endif %}
   {% else %}
     <li class="nav-item navbar-brand">
-      <a class="nav-link active" href="{% url 'login' %}">
+      <a id="topbar-login" class="nav-link active" href="{% url 'login' %}">
         <span class="badge badge-pill badge-primary">Login</span>
       </a>
     </li>
     <li class="nav-item navbar-brand">
-      <a class="nav-link active" href="{% url 'create' %}">
+      <a id="topbar-create" class="nav-link active" href="{% url 'create' %}">
         <span class="badge badge-pill badge-success">Create Account</span>
       </a>
     </li>
   {% endif %}
   <li class="nav-item navbar-brand">
-    <a class="nav-link active" href="{% url 'about' %}">
+    <a id="topbar-about" class="nav-link active" href="{% url 'about' %}">
       <span class="badge badge-pill badge-warning">About</span>
     </a>
   </li>
