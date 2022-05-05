@@ -3,11 +3,11 @@ import unittest
 
 from django.contrib.auth.models import User
 from django.test import Client, RequestFactory, TestCase
-from selenium import webdriver
+
 # from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from .models import Goal, Plan, Task
+from .selenium_gp import SeleniumGP
 from .views import taskify
 
 
@@ -211,34 +211,41 @@ class TaskExpireTestCase(TestCase):
         errmsg = "Task failed to expire"
 
 
-class RemoteGoogleTestCase(unittest.TestCase):
-    # check if selenium is working
-    def setUp(self):
-        self.browser = webdriver.Remote(
-            command_executor="http://chrome:4444/wd/hub",
-            desired_capabilities=DesiredCapabilities.CHROME,
-        )
-        self.addCleanup(self.browser.quit)
+# class RemoteGoogleTestCase(unittest.TestCase):
+#     # check if selenium is working
+#     def setUp(self):
+#         self.browser = webdriver.Remote(
+#             command_executor="http://chrome:4444/wd/hub",
+#             desired_capabilities=DesiredCapabilities.CHROME,
+#         )
+#         self.addCleanup(self.browser.quit)
 
-    def testPageTitle(self):
-        self.browser.get("http://www.google.com")
-        self.assertIn("Google", self.browser.title)
+#     def testPageTitle(self):
+#         self.browser.get("http://www.google.com")
+#         self.assertIn("Google", self.browser.title)
 
 
 class SeleniumTestCase(unittest.TestCase):
     gp_ids = {
         "login_btn": "topbar-login",
         "create_account_btn": "topbar-create",
-        "about_btn": "topbar-about"
+        "about_btn": "topbar-about",
+        "home_btn": "topbar-home",
+        "submit": "submit"
     }
 
     def setUp(self):
-        self.browser = webdriver.Remote(
-            command_executor="http://chrome:4444/wd/hub",
-            desired_capabilities=DesiredCapabilities.CHROME,
-        )
-        self.username = "testuser"
+        self.sel = SeleniumGP("http://server:8000")
+        self.username = "testuser_selenium"
         self.password = "1234"
+        # if User.objects.filter(username=self.username).count() == 0:
+        #     self.test_user = User.objects.create_user(
+        #         username=self.username,
+        #         password=self.password,
+        #         is_staff=True,
+        #         is_superuser=True
+        #     )
+        #     self.test_user.save()
         self.test_user = User.objects.create_user(
             username=self.username,
             password=self.password,
@@ -246,22 +253,15 @@ class SeleniumTestCase(unittest.TestCase):
             is_superuser=True
         )
         self.test_user.save()
-        self.browser.get("http://server:8000")
-        self.addCleanup(self.browser.quit)
-        self.driver = webdriver.Chrome(options=set_chrome_options())
-        self.user = User.objects.get(username="test_user")
+        self.user = User.objects.get(username=self.username)
 
-    def get_element(self, element_name: str):
-        return self.driver.find_element_by_id(element_name)
-
-    def login(self):
-        self.get_element(self.gp_ids["login"]).click()
-        self.driver.find_element_by_name("username").send_keys(self.username)
-        self.driver.find_element_by_name("password").send_keys(self.password)
-        self.get_element("submit").click()
+    def test_sanity_check(self):
+        self.sel.goto("http://www.google.com")
+        self.assertIn("Google", self.sel.get_title)
 
     def test_title_page(self):
-        val = self.browser.title
+        self.sel.goto("http://server:8000")
+        val = self.sel.get_title()
         expected = "GoalsAndPlans"
         errmsg = (
             "expected ",
@@ -272,6 +272,8 @@ class SeleniumTestCase(unittest.TestCase):
         )
         self.assertEqual(val, expected, errmsg)
 
-    def test_login(self):
-        self.login()
-
+    def test_login_function(self):
+        self.sel.goto("http://server:8000")
+        self.assertEqual(True, self.sel.find_element("login_btn"))
+        self.sel.login()
+        self.assertEqual(True, self.find_element("home_btn"))
