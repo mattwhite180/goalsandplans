@@ -236,14 +236,14 @@ def message_generator(verb, obj):
         model_name = obj._meta.model_name
     except:
         model_name = "User"
-    return str(verb),
-    " a ",
-    str(model_name),
-    ": ",
-    str(name),
-    " (id=",
-    str(obj.id),
-    ")"
+    return [str(verb) 
+    + " a " 
+    + str(model_name) 
+    + ": " 
+    + str(name) 
+    + " (id=" 
+    + str(obj.id) 
+    + ")"][0]
 
 
 def unauthorized_message(request, obj):
