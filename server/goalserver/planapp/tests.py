@@ -1,6 +1,7 @@
 import datetime
 import unittest
 
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 from django.test import Client, RequestFactory, TestCase
 
@@ -225,55 +226,75 @@ class TaskExpireTestCase(TestCase):
 #         self.assertIn("Google", self.browser.title)
 
 
-class SeleniumTestCase(unittest.TestCase):
-    gp_ids = {
-        "login_btn": "topbar-login",
-        "create_account_btn": "topbar-create",
-        "about_btn": "topbar-about",
-        "home_btn": "topbar-home",
-        "submit": "submit"
-    }
+# class MySeleniumTests(StaticLiveServerTestCase):
+#     gp_ids = {
+#         "login_btn": "topbar-login",
+#         "create_account_btn": "topbar-create",
+#         "about_btn": "topbar-about",
+#         "home_btn": "topbar-home",
+#         "submit": "submit"
+#     }
 
-    def setUp(self):
-        self.sel = SeleniumGP("http://server:8000")
-        self.username = "testuser_selenium"
-        self.password = "1234"
-        # if User.objects.filter(username=self.username).count() == 0:
-        #     self.test_user = User.objects.create_user(
-        #         username=self.username,
-        #         password=self.password,
-        #         is_staff=True,
-        #         is_superuser=True
-        #     )
-        #     self.test_user.save()
-        self.test_user = User.objects.create_user(
-            username=self.username,
-            password=self.password,
-            is_staff=True,
-            is_superuser=True
-        )
-        self.test_user.save()
-        self.user = User.objects.get(username=self.username)
+#     @classmethod
+#     def setUpClass(cls):
+#         super().setUpClass()
+#         cls.username = "testuser_selenium"
+#         cls.password = "1234"
+#         cls.selenium = SeleniumGP(cls.live_server_url)
+#         cls.selenium.get_driver.implicitly_wait(10)
+#         cls.test_user = User.objects.create_user(
+#             username=cls.username,
+#             password=cls.password,
+#             is_staff=True,
+#             is_superuser=True
+#         )
+#         cls.test_user.save()
 
-    def test_sanity_check(self):
-        self.sel.goto("http://www.google.com")
-        self.assertIn("Google", self.sel.get_title)
+#     @classmethod
+#     def tearDownClass(cls):
+#         # cls.selenium.quit()
+#         super().tearDownClass()
 
-    def test_title_page(self):
-        self.sel.goto("http://server:8000")
-        val = self.sel.get_title()
-        expected = "GoalsAndPlans"
-        errmsg = (
-            "expected ",
-            str(expected),
-            " but got ",
-            str(val),
-            " for the title of website"
-        )
-        self.assertEqual(val, expected, errmsg)
+#     # def setUp(self):
+#     #     self.sel = SeleniumGP("http://server:8000")
+#     #     self.username = "testuser_selenium"
+#     #     self.password = "1234"
+#     #     # if User.objects.filter(username=self.username).count() == 0:
+#     #     #     self.test_user = User.objects.create_user(
+#     #     #         username=self.username,
+#     #     #         password=self.password,
+#     #     #         is_staff=True,
+#     #     #         is_superuser=True
+#     #     #     )
+#     #     #     self.test_user.save()
+#     #     self.test_user = User.objects.create_user(
+#     #         username=self.username,
+#     #         password=self.password,
+#     #         is_staff=True,
+#     #         is_superuser=True
+#     #     )
+#     #     self.test_user.save()
+#     #     self.user = User.objects.get(username=self.username)
 
-    def test_login_function(self):
-        self.sel.goto("http://server:8000")
-        self.assertEqual(True, self.sel.find_element("login_btn"))
-        self.sel.login()
-        self.assertEqual(True, self.find_element("home_btn"))
+#     def test_sanity_check(self):
+#         self.sel.goto("http://www.google.com", no_base=True)
+#         self.assertIn("Google", self.sel.get_title())
+
+#     def test_title_page(self):
+#         self.sel.goto()
+#         val = self.sel.get_title()
+#         expected = "GoalsAndPlans"
+#         errmsg = (
+#             "expected ",
+#             str(expected),
+#             " but got ",
+#             str(val),
+#             " for the title of website"
+#         )
+#         self.assertEqual(val, expected, errmsg)
+
+#     # def test_login_function(self):
+#     #     self.sel.goto("http://server:8000")
+#     #     self.assertEqual(True, self.sel.find_element("login_btn"))
+#     #     self.sel.login()
+#     #     self.assertEqual(True, self.find_element("home_btn"))

@@ -1,5 +1,14 @@
 {% if quicknote_list %}
-  {% for quicknote in quicknote_list %}
+
+  <p class="text-center">
+    <button id="quicknote_button" class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapsequicknote"
+      aria-expanded="false" aria-controls="collapsequicknote">
+      Show/Hide QuickNotes
+    </button>
+  </p>
+
+  <div class="collapse" id="collapsequicknote">
+    {% for quicknote in quicknote_list %}
     <div class="card">
       <h1 class="card-header">{{ quicknote.title }}</h1>
       <div class="card-body">
@@ -34,6 +43,7 @@
     </div>
     <br>
   {% endfor %}
+  </div>
 {% else %}
 <div class="card text-center">
   <div class="card-header">No quicknotes are created yet</div>
