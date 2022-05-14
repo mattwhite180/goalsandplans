@@ -1,3 +1,5 @@
+{% load static %}
+
 <p class="text-center">
   <button id="help" class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseGoal"
     aria-expanded="false" aria-controls="collapseGoal">
@@ -21,6 +23,9 @@
         <h5 id="goal-{{ goal.id }}-description class="card-title">{{ goal.description }}</h5>
         <div id="goal-{{ goal.id }}-priority class="card-text">Priority: <span class="badge badge-pill badge-warning">{{ goal.priority|slice:"2:" }}</span>
         </div>
+        {% if goal.default_pic %}
+          <div>Pic: <img src="{% static goal.default_pic.url %}" alt="{{ goal.default_pic.title }}"></div>
+        {% endif %}
         <a id="edit-goal-{{ goal.id }}" href="{% url 'edit_goal' goal.id %}" class="btn btn-primary">Edit Goal</a>
         <button id="delete-goal-{{ goal.id }}-warning" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" data-toggle="modal"
           data-target="#exampleModalCenter{{ goal.id }}">Delete Goal</button>
