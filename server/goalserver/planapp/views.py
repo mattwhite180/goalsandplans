@@ -192,9 +192,8 @@ def enable_prizes(request):
                 messages.success(
                     request,
                     (
-                        "enabled/disabled the user ",
-                        str(ud.user.username),
-                        "'s point"
+                        "enabled/disabled the user "
+                        f"{str(ud.user.username)}'s point"
                     ),
                 )
                 return HttpResponseRedirect(reverse("all_goals"))
@@ -233,26 +232,19 @@ def message_generator(verb, obj):
         name = "(instance name)"
 
     try:
-        model_name = obj._meta.model_name
-    except:
+        model_name = str(obj._meta.model_name)
+    except AttributeError:
         model_name = "User"
-    return [str(verb) 
-    + " a " 
-    + str(model_name) 
-    + ": " 
-    + str(name) 
-    + " (id=" 
-    + str(obj.id) 
-    + ")"][0]
+    return f"{verb} a {model_name}: {name} (id={str(obj.id)})"
 
 
 def unauthorized_message(request, obj):
     val = "object"
     try:
         val = str(obj._meta.model_name)
-    except:
+    except AttributeError:
         pass
-    messages.warning(request, "you are not the owner of this " + val)
+    messages.warning(request, f"you are not the owner of this {val}")
 
 
 def get_errors(f):
@@ -274,6 +266,7 @@ def point_changer(request, points):
         return True
     else:
         return False
+
 
 """
 #####
@@ -1115,8 +1108,8 @@ def redeem_prize(request, prize_id):
             point_changer(request, points_count)
             messages.success(
                 request,
-                "Redeemed ",
-                str(abs(points_count)),
+                "Redeemed "
+                f"{str(abs(points_count))}"
                 " points"
             )
         else:
